@@ -1,0 +1,115 @@
+DEBUG 2026-05-13 11:45:54,026 views User 1 fetched expenses | filters: category=None start=None end=None
+WARNING 2026-05-13 11:49:29,402 log Bad Request: /api/token/refresh/
+WARNING 2026-05-13 11:49:29,403 log "POST /api/token/refresh/ HTTP/1.1" 400 39
+WARNING 2026-05-13 11:59:07,849 log Not Found: /
+WARNING 2026-05-13 11:59:07,850 log "GET / HTTP/1.1" 404 2782
+WARNING 2026-05-13 11:59:08,463 log Not Found: /apple-touch-icon-precomposed.png
+WARNING 2026-05-13 11:59:08,465 log Not Found: /apple-touch-icon.png
+WARNING 2026-05-13 11:59:08,468 log Not Found: /favicon.ico
+WARNING 2026-05-13 11:59:08,468 log "GET /apple-touch-icon.png HTTP/1.1" 404 2860
+WARNING 2026-05-13 11:59:08,468 log "GET /apple-touch-icon-precomposed.png HTTP/1.1" 404 2896
+WARNING 2026-05-13 11:59:08,468 log "GET /favicon.ico HTTP/1.1" 404 2833
+WARNING 2026-05-13 11:59:53,442 log Not Found: /
+WARNING 2026-05-13 11:59:53,442 log "GET / HTTP/1.1" 404 2782
+ERROR 2026-05-13 12:00:41,566 log Internal Server Error: /
+Traceback (most recent call last):
+  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages/django/core/handlers/base.py", line 198, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/Users/bhawyagulati/Documents/Projects/Expense-Tracker /expensetracker/expensetracker/urls.py", line 8, in frontend
+    return render(request, 'index.html')
+  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages/django/shortcuts.py", line 25, in render
+    content = loader.render_to_string(template_name, context, request, using=using)
+  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages/django/template/loader.py", line 61, in render_to_string
+    template = get_template(template_name, using=using)
+  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages/django/template/loader.py", line 19, in get_template
+    raise TemplateDoesNotExist(template_name, chain=chain)
+django.template.exceptions.TemplateDoesNotExist: index.html
+ERROR 2026-05-13 12:00:41,567 log "GET / HTTP/1.1" 500 80275
+ERROR 2026-05-13 12:01:13,353 log Internal Server Error: /
+Traceback (most recent call last):
+  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages/django/core/handlers/base.py", line 198, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/Users/bhawyagulati/Documents/Projects/Expense-Tracker /expensetracker/expensetracker/urls.py", line 8, in frontend
+    return render(request, 'template/index.html')
+  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages/django/shortcuts.py", line 25, in render
+    content = loader.render_to_string(template_name, context, request, using=using)
+  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages/django/template/loader.py", line 61, in render_to_string
+    template = get_template(template_name, using=using)
+  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages/django/template/loader.py", line 19, in get_template
+    raise TemplateDoesNotExist(template_name, chain=chain)
+django.template.exceptions.TemplateDoesNotExist: template/index.html
+ERROR 2026-05-13 12:01:13,355 log "GET / HTTP/1.1" 500 80437
+ERROR 2026-05-13 12:01:19,246 log Internal Server Error: /
+Traceback (most recent call last):
+  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages/django/core/handlers/base.py", line 198, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/Users/bhawyagulati/Documents/Projects/Expense-Tracker /expensetracker/expensetracker/urls.py", line 8, in frontend
+    return render(request, 'index.html')
+  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages/django/shortcuts.py", line 25, in render
+    content = loader.render_to_string(template_name, context, request, using=using)
+  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages/django/template/loader.py", line 61, in render_to_string
+    template = get_template(template_name, using=using)
+  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages/django/template/loader.py", line 19, in get_template
+    raise TemplateDoesNotExist(template_name, chain=chain)
+django.template.exceptions.TemplateDoesNotExist: index.html
+ERROR 2026-05-13 12:01:19,248 log "GET / HTTP/1.1" 500 80275
+ERROR 2026-05-13 12:01:55,888 log Internal Server Error: /
+Traceback (most recent call last):
+  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages/django/core/handlers/base.py", line 198, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/Users/bhawyagulati/Documents/Projects/Expense-Tracker /expensetracker/expensetracker/urls.py", line 8, in frontend
+    return render(request, 'index.html')
+  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages/django/shortcuts.py", line 25, in render
+    content = loader.render_to_string(template_name, context, request, using=using)
+  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages/django/template/loader.py", line 61, in render_to_string
+    template = get_template(template_name, using=using)
+  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages/django/template/loader.py", line 19, in get_template
+    raise TemplateDoesNotExist(template_name, chain=chain)
+django.template.exceptions.TemplateDoesNotExist: index.html
+ERROR 2026-05-13 12:01:55,890 log "GET / HTTP/1.1" 500 80275
+ERROR 2026-05-13 12:02:59,494 log Internal Server Error: /
+Traceback (most recent call last):
+  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages/django/core/handlers/base.py", line 198, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/Users/bhawyagulati/Documents/Projects/Expense-Tracker /expensetracker/expensetracker/urls.py", line 8, in frontend
+    return render(request, 'index.html')
+  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages/django/shortcuts.py", line 25, in render
+    content = loader.render_to_string(template_name, context, request, using=using)
+  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages/django/template/loader.py", line 61, in render_to_string
+    template = get_template(template_name, using=using)
+  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages/django/template/loader.py", line 19, in get_template
+    raise TemplateDoesNotExist(template_name, chain=chain)
+django.template.exceptions.TemplateDoesNotExist: index.html
+ERROR 2026-05-13 12:02:59,496 log "GET / HTTP/1.1" 500 80769
+ERROR 2026-05-13 12:04:17,321 log Internal Server Error: /
+Traceback (most recent call last):
+  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages/django/core/handlers/base.py", line 198, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/Users/bhawyagulati/Documents/Projects/Expense-Tracker /expensetracker/expensetracker/urls.py", line 8, in frontend
+    return render(request, 'index.html')
+  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages/django/shortcuts.py", line 25, in render
+    content = loader.render_to_string(template_name, context, request, using=using)
+  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages/django/template/loader.py", line 61, in render_to_string
+    template = get_template(template_name, using=using)
+  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages/django/template/loader.py", line 19, in get_template
+    raise TemplateDoesNotExist(template_name, chain=chain)
+django.template.exceptions.TemplateDoesNotExist: index.html
+ERROR 2026-05-13 12:04:17,326 log "GET / HTTP/1.1" 500 80769
+DEBUG 2026-05-13 12:05:26,438 views User 2 fetched expenses | filters: category=None start=None end=None
+INFO 2026-05-13 12:05:59,540 views Expense created: id=2 amount=300.00 user=2
+DEBUG 2026-05-13 12:05:59,548 views User 2 fetched expenses | filters: category=None start=None end=None
+DEBUG 2026-05-13 12:07:59,171 views User 2 fetched expenses | filters: category=None start=None end=None
+DEBUG 2026-05-13 12:08:06,616 views User 2 fetched expenses | filters: category=transport start=None end=None
+DEBUG 2026-05-13 12:08:07,970 views User 2 fetched expenses | filters: category=food start=None end=None

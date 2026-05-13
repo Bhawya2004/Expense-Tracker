@@ -1,0 +1,8 @@
+POST   /api/token/              → login, returns access + refresh token
+POST   /api/token/refresh/      → swap refresh token for new access token
+GET     /api/users/             -> get total count of users
+GET    /api/expenses/           → list your expenses (supports ?category, ?start, ?end)
+POST   /api/expenses/           → create a new expense
+GET    /api/expenses/1/         → get expense #1
+PUT    /api/expenses/1/         → update expense #1
+DELETE /api/expenses/1/         → delete expense #1

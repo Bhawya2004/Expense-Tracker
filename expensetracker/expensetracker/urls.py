@@ -4,16 +4,8 @@ from django.shortcuts import render
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
 from expenses.views import *
 
-from django.http import HttpResponseRedirect
-
-def frontend(request):
-    if settings.DEBUG:
-        return HttpResponseRedirect(settings.FRONTEND_URL)
-    return render(request, 'index.html')
-
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', frontend),                                        # ← this line serves the frontend
     path('api/token/', TokenObtainPairView.as_view()),
     path('api/token/refresh/', TokenRefreshView.as_view()),
     path('api/register/', register_user),

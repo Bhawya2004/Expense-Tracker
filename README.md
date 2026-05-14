@@ -1,196 +1,109 @@
-# Expense Tracker API
+# 🚀 ExpenseTrack: Premium Full-Stack Dashboard
 
-A REST API built with Django and Django REST Framework that allows users to manage their personal expenses. Includes JWT authentication, category-based filtering, API rate limiting, and file-based logging.
+A modern, high-performance expense management application built with **React**, **Django REST Framework**, and **Google Sheets API**. This project features a stunning premium dark-mode UI, real-time Google Sheet synchronization, and a robust security architecture.
 
----
-
-## Tech Stack
-
-- **Backend** — Django 6.x, Django REST Framework
-- **Authentication** — JWT via `djangorestframework-simplejwt`
-- **Database** — SQLite (development)
-- **Frontend** — Vanilla HTML / CSS / JS (served via Django templates)
-- **Other** — `django-cors-headers`, Python `logging`
+![Expense Tracker Dashboard](https://img.shields.io/badge/Status-Complete-brightgreen)
+![Tech Stack](https://img.shields.io/badge/Stack-React%20%7C%20Django%20%7C%20Postgres-blue)
 
 ---
 
-## Features
+## ✨ Key Features
 
-- User registration and login with JWT authentication
-- Create, read, update, and delete expenses
-- Filter expenses by category and date range
-- API rate limiting (20 requests/day for anonymous, 100/day for authenticated users)
-- File-based logging to `expenses.log`
-- Clean frontend UI served at `/`
-
----
-
-## Project Structure
-
-```
-expensetracker/
-├── templates/
-│   └── index.html          # Frontend UI
-├── expenses/
-│   ├── models.py           # Expense model
-│   ├── serializers.py      # ExpenseSerializer
-│   ├── views.py            # ExpenseViewSet + register_user
-│   └── urls.py             # Router config
-├── expensetracker/
-│   ├── settings.py         # JWT + throttling + logging config
-│   └── urls.py             # Root URL config
-├── expenses.log            # Auto-generated log file
-└── manage.py
-```
+- 💎 **Premium UI**: Modern dark-mode dashboard with glassmorphism, smooth animations, and a focus on visual excellence.
+- 📊 **Google Sheets Sync**: Every expense is automatically mirrored to a private Google Sheet in YOUR drive.
+- 📱 **Mobile Responsive**: Fully optimized for phones and tablets with a collapsible sidebar and responsive cards.
+- 🔒 **Secure Auth**: JWT-based authentication (stateless) with automatic token refreshing.
+- 🔄 **Reliable OAuth**: Engineered to handle Google Sign-In via database-backed PKCE (No session-loss errors).
+- 🏷️ **Dynamic Categories**: Color-coded category management with real-time filtering.
+- 💰 **Budget Tracking**: Visual progress bars and real-time "Spent vs Remaining" calculations.
 
 ---
 
-## Setup Instructions
+## 🛠️ Technology Stack
 
-### 1. Clone the repository
+| Layer | Technologies |
+| :--- | :--- |
+| **Frontend** | React 18, Vite, Axios, Lucide Icons, CSS3 (BEM) |
+| **Backend** | Django 6.x, Django REST Framework, JWT (SimpleJWT) |
+| **Database** | **Neon PostgreSQL** (Production), SQLite (Fallback) |
+| **Integrations** | Google Sheets API, Google Drive API, OAuth2 |
+| **Deployment** | Vercel (Frontend), Render (Backend), WhiteNoise |
+
+---
+
+## 📂 Project Structure
 
 ```bash
-git clone <your-repo-url>
-cd expensetracker
+Expense-Tracker/
+├── frontend/             # React (Vite) Application
+│   ├── src/
+│   │   ├── components/   # Modular UI Components
+│   │   ├── api.js        # Centralized Axios with Interceptors
+│   │   └── index.css     # Global Design System
+├── expensetracker/       # Django Backend
+│   ├── expenses/         # Main logic, Models, Views, Sheets integration
+│   ├── settings.py       # Configured for Neon Postgres & CORS
+│   └── urls.py           # API Router
+├── requirements.txt      # Python Dependencies
+├── vercel.json           # Vercel Deployment Config
+└── .env                  # Environment Secrets
 ```
 
-### 2. Create and activate a virtual environment
+---
 
+## ⚙️ Setup & Installation
+
+### 1. Backend Setup
 ```bash
+# Clone the repo
+git clone https://github.com/Bhawya2004/Expense-Tracker.git
+cd Expense-Tracker
+
+# Setup Virtual Env
 python -m venv venv
-source venv/bin/activate        # Windows: venv\Scripts\activate
-```
+source venv/bin/activate
 
-### 3. Install dependencies
+# Install dependencies
+pip install -r requirements.txt
 
-```bash
-pip install django djangorestframework djangorestframework-simplejwt django-cors-headers
-```
-
-### 4. Run migrations
-
-```bash
+# Run migrations
+cd expensetracker
 python manage.py migrate
 ```
 
-### 5. Create a superuser
-
+### 2. Frontend Setup
 ```bash
-python manage.py createsuperuser
+cd ../frontend
+npm install
+npm run dev
 ```
 
-### 6. Start the server
-
-```bash
-python manage.py runserver
+### 3. Environment Configuration (.env)
+Create a `.env` file in the root directory with these keys:
+```ini
+SECRET_KEY=your_django_secret
+DEBUG=True
+DATABASE_URL=your_neon_postgres_url
+GOOGLE_OAUTH_CLIENT_ID=your_client_id
+GOOGLE_OAUTH_CLIENT_SECRET=your_client_secret
+GOOGLE_OAUTH_REDIRECT_URI=http://127.0.0.1:8000/api/google/callback/
+FRONTEND_URL=http://localhost:5173
 ```
-
-Visit `http://127.0.0.1:8000/` to open the frontend.
 
 ---
 
-## API Endpoints
+## 🌐 API Documentation
 
-### Authentication
+Detailed API documentation can be found in [API_DOCUMENTATION.md](file:///Users/bhawyagulati/Documents/Projects/Expense-Tracker%20/API_DOCUMENTATION.md).
 
 | Method | Endpoint | Description |
-|--------|----------|-------------|
-| POST | `/api/register/` | Register a new user |
-| POST | `/api/token/` | Login — returns access + refresh token |
-| POST | `/api/token/refresh/` | Get a new access token using refresh token |
-
-### Expenses
-
-All expense endpoints require `Authorization: Bearer <access_token>` header.
-
-| Method | Endpoint | Description |
-|--------|----------|-------------|
-| GET | `/api/expenses/` | List all expenses |
-| POST | `/api/expenses/` | Create a new expense |
-| GET | `/api/expenses/<id>/` | Get a single expense |
-| PUT | `/api/expenses/<id>/` | Update an expense |
-| DELETE | `/api/expenses/<id>/` | Delete an expense |
-
-### Filtering
-
-```
-GET /api/expenses/?category=food
-GET /api/expenses/?start=2026-01-01&end=2026-05-01
-GET /api/expenses/?category=food&start=2026-01-01
-```
+| :--- | :--- | :--- |
+| `POST` | `/api/register/` | Register new user |
+| `POST` | `/api/token/` | Login & get JWT |
+| `GET` | `/api/expenses/` | List current user expenses |
+| `POST` | `/api/google/auth-url/` | Get Google OAuth link |
 
 ---
 
-## Expense Model
-
-| Field | Type | Description |
-|-------|------|-------------|
-| `id` | Integer | Auto-generated primary key |
-| `user` | ForeignKey | Owner of the expense |
-| `amount` | DecimalField | Amount in ₹ (must be > 0) |
-| `category` | CharField | One of: food, transport, shopping, health, entertainment, other |
-| `description` | TextField | Optional description |
-| `date` | DateField | Date of the expense |
-| `created_at` | DateTimeField | Auto-set on creation |
-
----
-
-## Example Requests
-
-### Register
-
-```bash
-curl -X POST http://127.0.0.1:8000/api/register/ \
-  -H "Content-Type: application/json" \
-  -d '{"username": "alice", "password": "secret123"}'
-```
-
-### Login
-
-```bash
-curl -X POST http://127.0.0.1:8000/api/token/ \
-  -H "Content-Type: application/json" \
-  -d '{"username": "alice", "password": "secret123"}'
-```
-
-### Create Expense
-
-```bash
-curl -X POST http://127.0.0.1:8000/api/expenses/ \
-  -H "Authorization: Bearer <access_token>" \
-  -H "Content-Type: application/json" \
-  -d '{"amount": "250.00", "category": "food", "description": "Lunch", "date": "2026-05-13"}'
-```
-
-### Filter by Category
-
-```bash
-curl http://127.0.0.1:8000/api/expenses/?category=food \
-  -H "Authorization: Bearer <access_token>"
-```
-
----
-
-## Key Design Decisions
-
-**DecimalField for amount** — `FloatField` has floating point rounding errors. `DecimalField` ensures precise money calculations.
-
-**JWT over session auth** — Stateless authentication suits REST APIs. The short-lived access token (5 min) + long-lived refresh token (7 days) pattern avoids re-login while staying secure.
-
-**get_queryset filtering** — All queries start with `filter(user=request.user)` so users can never access each other's data, regardless of what filters they pass.
-
-**CATEGORY_CHOICES** — Constraining category to a fixed set at the model level prevents invalid data from ever reaching the database.
-
-**Rate limiting** — DRF's built-in throttling tracks request counts per user in Django's cache and returns `429 Too Many Requests` automatically — no extra view code needed.
-
----
-
-## Admin Panel
-
-Visit `http://127.0.0.1:8000/admin/` to manage users and expenses via Django's built-in admin interface.
-
----
-
-## License
-
-MIT
+## 📝 License
+MIT License. Feel free to use and modify for your own projects!

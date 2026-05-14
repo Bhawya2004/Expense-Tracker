@@ -12,20 +12,30 @@ https://docs.djangoproject.com/en/6.0/ref/settings/
 
 from pathlib import Path
 from datetime import timedelta
-# Build paths inside the project like this: BASE_DIR / 'subdir'.
+from decouple import config, Csv
+import os
+
 BASE_DIR = Path(__file__).resolve().parent.parent
 
+# ── Security ──
+SECRET_KEY = config('SECRET_KEY')
+DEBUG = config('DEBUG', default=False, cast=bool)
+ALLOWED_HOSTS = config('ALLOWED_HOSTS', default='127.0.0.1,localhost', cast=Csv())
 
-# Quick-start development settings - unsuitable for production
-# See https://docs.djangoproject.com/en/6.0/howto/deployment/checklist/
+# Allow OAuth2 over HTTP only in development
+if DEBUG:
+    os.environ['OAUTHLIB_INSECURE_TRANSPORT'] = '1'
 
-# SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = "django-insecure-(6%wl#ycj*gtebbswd_4f0q1th(y7n#9(za28$)y^q$fitz%i6"
+# ── Google Service Account (for sheet syncing fallback) ──
+GOOGLE_CREDENTIALS_FILE = os.path.join(BASE_DIR, 'credentials.json')
 
-# SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+# ── Google OAuth2 (user-based Google Sign-In) ──
+GOOGLE_OAUTH_CLIENT_ID = config('GOOGLE_OAUTH_CLIENT_ID', default='')
+GOOGLE_OAUTH_CLIENT_SECRET = config('GOOGLE_OAUTH_CLIENT_SECRET', default='')
+GOOGLE_OAUTH_REDIRECT_URI = config('GOOGLE_OAUTH_REDIRECT_URI', default='http://127.0.0.1:8000/api/google/callback/')
 
-ALLOWED_HOSTS = []
+# ── Frontend Link ──
+FRONTEND_URL = config('FRONTEND_URL', default='http://localhost:5173')
 
 
 # Application definition
@@ -45,6 +55,7 @@ INSTALLED_APPS = [
 MIDDLEWARE = [
     'corsheaders.middleware.CorsMiddleware',
     "django.middleware.security.SecurityMiddleware",
+    "whitenoise.middleware.WhiteNoiseMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
@@ -76,12 +87,20 @@ WSGI_APPLICATION = "expensetracker.wsgi.application"
 # Database
 # https://docs.djangoproject.com/en/6.0/ref/settings/#databases
 
+import dj_database_url
+
 DATABASES = {
-    "default": {
-        "ENGINE": "django.db.backends.sqlite3",
-        "NAME": BASE_DIR / "db.sqlite3",
-    }
+    'default': dj_database_url.config(
+        default=f'sqlite:///{BASE_DIR / "db.sqlite3"}',
+        env='DATABASE_URL', # Tell it to look for this in env
+        conn_max_age=600,
+        ssl_require=True if config('DATABASE_URL', default='') else False
+    )
 }
+
+# Explicitly load from decouple if os.environ is empty
+if config('DATABASE_URL', default=None):
+    DATABASES['default'] = dj_database_url.parse(config('DATABASE_URL'), conn_max_age=600, ssl_require=True)
 
 
 # Password validation
@@ -161,8 +180,7 @@ LOGGING = {
     },
 }
 
-# Interna
-# tionalization
+# Internationalization
 # https://docs.djangoproject.com/en/6.0/topics/i18n/
 
 LANGUAGE_CODE = "en-us"
@@ -178,3 +196,18 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/6.0/howto/static-files/
 
 STATIC_URL = "static/"
+STATIC_ROOT = BASE_DIR / "staticfiles"
+STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
+
+# ── CORS & CSRF (for session sharing between React and Django) ──
+CORS_ALLOW_CREDENTIALS = True
+CORS_ALLOWED_ORIGINS = config('CORS_ALLOWED_ORIGINS', 
+    default='http://localhost:5173,http://127.0.0.1:5173', 
+    cast=Csv()
+)
+
+# Allow sessions to work across different ports on localhost
+SESSION_COOKIE_SAMESITE = 'Lax'
+CSRF_COOKIE_SAMESITE = 'Lax'
+SESSION_COOKIE_HTTPONLY = True
+CSRF_COOKIE_HTTPONLY = False  # React might need to read CSRF token

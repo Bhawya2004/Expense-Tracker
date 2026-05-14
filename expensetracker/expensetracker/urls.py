@@ -3,8 +3,13 @@ from django.urls import path, include
 from django.shortcuts import render
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
 from expenses.views import *
+from django.http import JsonResponse
+
+def health_check(request):
+    return JsonResponse({"status": "healthy", "message": "Backend is running!"})
 
 urlpatterns = [
+    path('', health_check, name='health_check'),
     path('admin/', admin.site.urls),
     path('api/token/', TokenObtainPairView.as_view()),
     path('api/token/refresh/', TokenRefreshView.as_view()),

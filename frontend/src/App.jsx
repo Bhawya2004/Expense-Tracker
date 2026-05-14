@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { Analytics } from "@vercel/analytics/react";
 import api from './api';
 import AuthScreen from './components/AuthScreen';
 import BudgetModal from './components/BudgetModal';
@@ -276,6 +277,7 @@ const App = () => {
       <div id="toast" className={`${toast.show ? 'show' : ''} ${toast.type}`}>
         {toast.msg}
       </div>
+      <Analytics />
     </div>
   );
 };

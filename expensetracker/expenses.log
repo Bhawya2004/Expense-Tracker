@@ -111,3 +111,19 @@ DEBUG 2026-05-14 19:51:29,781 views User 1 fetched expenses | filters: category=
 DEBUG 2026-05-14 19:51:37,681 views User 1 fetched expenses | filters: category=None start=None end=None
 DEBUG 2026-05-14 19:51:50,972 views User 1 fetched expenses | filters: category=None start=None end=None
 DEBUG 2026-05-14 19:52:08,671 views User 1 fetched expenses | filters: category=None start=None end=None
+WARNING 2026-05-14 21:11:36,514 log Unauthorized: /api/budget/
+WARNING 2026-05-14 21:11:36,515 log "GET /api/budget/ HTTP/1.1" 401 172
+WARNING 2026-05-15 05:20:51,002 log Not Found: /apple-touch-icon-precomposed.png
+WARNING 2026-05-15 05:20:51,005 log Not Found: /apple-touch-icon.png
+WARNING 2026-05-15 05:20:51,007 log Not Found: /favicon.ico
+WARNING 2026-05-15 05:20:51,008 log "GET /apple-touch-icon-precomposed.png HTTP/1.1" 404 4176
+WARNING 2026-05-15 05:20:51,008 log "GET /apple-touch-icon.png HTTP/1.1" 404 4140
+WARNING 2026-05-15 05:20:51,008 log "GET /favicon.ico HTTP/1.1" 404 4113
+WARNING 2026-05-15 05:21:45,262 log Unauthorized: /api/budget/
+WARNING 2026-05-15 05:21:45,263 log "GET /api/budget/ HTTP/1.1" 401 172
+DEBUG 2026-05-15 05:21:55,119 views User 1 fetched expenses | filters: category=None start=None end=None
+DEBUG 2026-05-15 05:23:17,616 views User 6 fetched expenses | filters: category=None start=None end=None
+DEBUG 2026-05-15 05:24:52,552 views User 6 fetched expenses | filters: category=None start=None end=None
+DEBUG 2026-05-15 05:25:41,556 views User 6 fetched expenses | filters: category=None start=None end=None
+ERROR 2026-05-15 05:26:03,785 views No profile found for state: KpCmNNeYMfXpZdNQXERAxq6qUpQQFg
+DEBUG 2026-05-15 05:26:12,220 views User 6 fetched expenses | filters: category=None start=None end=None

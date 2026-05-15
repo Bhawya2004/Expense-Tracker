@@ -198,9 +198,13 @@ def google_callback(request):
 
         # Find the profile using the state parameter
         state = request.GET.get('state')
+        logger.info(f"Incoming OAuth state: {state}")
+        
         profile = UserProfile.objects.filter(pending_oauth_state=state).first()
         if not profile:
-            logger.error(f"No profile found for state: {state}")
+            # Let's see if we have any pending states at all
+            all_pending = UserProfile.objects.exclude(pending_oauth_state__isnull=True).count()
+            logger.error(f"No profile found for state: {state}. Total pending states in DB: {all_pending}")
             return HttpResponseRedirect(f"{settings.FRONTEND_URL}/?error=invalid_state")
 
         # Restore the PKCE code_verifier from the database
@@ -234,18 +238,19 @@ def google_callback(request):
                 logger.info(f"Created Google Sheet for {user.username}: {sheet_id}")
             except Exception as e:
                 logger.error(f"Failed to create sheet for {user.username}: {e}")
-                return redirect('/?error=sheet_creation_failed')
+                return redirect(f"{settings.FRONTEND_URL}/?error=sheet_creation_failed")
 
         # Clean up session
+        # pyrefly: ignore [parse-error]
         request.session.pop('google_oauth_state', None)
         request.session.pop('google_oauth_jwt', None)
 
         logger.info(f"Google OAuth completed for {user.username}")
-        return redirect('/?google=connected')
+        return redirect(f"{settings.FRONTEND_URL}/?google=connected")
 
     except Exception as e:
         logger.error(f"Google OAuth callback error: {e}", exc_info=True)
-        return redirect('/?error=oauth_failed')
+        return redirect(f"{settings.FRONTEND_URL}/?error=oauth_failed")
 
 
 # ── EXPENSES ──

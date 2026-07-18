@@ -1689,3 +1689,106 @@ INFO 2026-07-18 09:47:31,623 views Incoming OAuth state: HxChM6mpl4x3ZtJOaYBQes2
 INFO 2026-07-18 09:47:42,610 views Existing Google user logged in: bhawya12
 INFO 2026-07-18 09:47:46,446 views Google OAuth login callback completed successfully for bhawya12
 DEBUG 2026-07-18 09:47:56,396 views User 7 fetched expenses | filters: category=None start=None end=None
+DEBUG 2026-07-18 09:50:53,528 views User 7 fetched expenses | filters: category=None start=None end=None
+INFO 2026-07-18 10:19:02,246 views Incoming OAuth state: CAaEDDdNLZk9AumxgbDdacLFN6rG9r
+ERROR 2026-07-18 10:19:40,470 views Google OAuth callback error: connection to server at "ep-muddy-math-aqxvi8be.c-8.us-east-1.aws.neon.tech" (2600:1f18:1c1b:ea1c:876d:d50c:cb27:f70e), port 5432 failed: server closed the connection unexpectedly
+	This probably means the server terminated abnormally
+	before or while processing the request.
+server closed the connection unexpectedly
+	This probably means the server terminated abnormally
+	before or while processing the request.
+Traceback (most recent call last):
+  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages/django/db/backends/base/base.py", line 279, in ensure_connection
+    self.connect()
+    ~~~~~~~~~~~~^^
+  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages/django/utils/asyncio.py", line 26, in inner
+    return func(*args, **kwargs)
+  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages/django/db/backends/base/base.py", line 256, in connect
+    self.connection = self.get_new_connection(conn_params)
+                      ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages/django/utils/asyncio.py", line 26, in inner
+    return func(*args, **kwargs)
+  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages/django/db/backends/postgresql/base.py", line 333, in get_new_connection
+    connection = self.Database.connect(**conn_params)
+  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages/psycopg2/__init__.py", line 122, in connect
+    conn = _connect(dsn, connection_factory=connection_factory, **kwasync)
+psycopg2.OperationalError: connection to server at "ep-muddy-math-aqxvi8be.c-8.us-east-1.aws.neon.tech" (2600:1f18:1c1b:ea1c:876d:d50c:cb27:f70e), port 5432 failed: server closed the connection unexpectedly
+	This probably means the server terminated abnormally
+	before or while processing the request.
+server closed the connection unexpectedly
+	This probably means the server terminated abnormally
+	before or while processing the request.
+
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/Users/bhawyagulati/Documents/Projects/Expense-Tracker /expensetracker/expenses/views.py", line 233, in google_callback
+    oauth_state = GoogleOAuthState.objects.filter(state=state).first()
+  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages/django/db/models/query.py", line 1145, in first
+    for obj in queryset[:1]:
+               ~~~~~~~~^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages/django/db/models/query.py", line 390, in __iter__
+    self._fetch_all()
+    ~~~~~~~~~~~~~~~^^
+  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages/django/db/models/query.py", line 2000, in _fetch_all
+    self._result_cache = list(self._iterable_class(self))
+                         ~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages/django/db/models/query.py", line 95, in __iter__
+    results = compiler.execute_sql(
+        chunked_fetch=self.chunked_fetch, chunk_size=self.chunk_size
+    )
+  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages/django/db/models/sql/compiler.py", line 1622, in execute_sql
+    cursor = self.connection.cursor()
+  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages/django/utils/asyncio.py", line 26, in inner
+    return func(*args, **kwargs)
+  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages/django/db/backends/base/base.py", line 320, in cursor
+    return self._cursor()
+           ~~~~~~~~~~~~^^
+  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages/django/db/backends/base/base.py", line 296, in _cursor
+    self.ensure_connection()
+    ~~~~~~~~~~~~~~~~~~~~~~^^
+  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages/django/utils/asyncio.py", line 26, in inner
+    return func(*args, **kwargs)
+  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages/django/db/backends/base/base.py", line 278, in ensure_connection
+    with self.wrap_database_errors:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages/django/db/utils.py", line 94, in __exit__
+    raise dj_exc_value.with_traceback(traceback) from exc_value
+  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages/django/db/backends/base/base.py", line 279, in ensure_connection
+    self.connect()
+    ~~~~~~~~~~~~^^
+  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages/django/utils/asyncio.py", line 26, in inner
+    return func(*args, **kwargs)
+  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages/django/db/backends/base/base.py", line 256, in connect
+    self.connection = self.get_new_connection(conn_params)
+                      ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages/django/utils/asyncio.py", line 26, in inner
+    return func(*args, **kwargs)
+  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages/django/db/backends/postgresql/base.py", line 333, in get_new_connection
+    connection = self.Database.connect(**conn_params)
+  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages/psycopg2/__init__.py", line 122, in connect
+    conn = _connect(dsn, connection_factory=connection_factory, **kwasync)
+django.db.utils.OperationalError: connection to server at "ep-muddy-math-aqxvi8be.c-8.us-east-1.aws.neon.tech" (2600:1f18:1c1b:ea1c:876d:d50c:cb27:f70e), port 5432 failed: server closed the connection unexpectedly
+	This probably means the server terminated abnormally
+	before or while processing the request.
+server closed the connection unexpectedly
+	This probably means the server terminated abnormally
+	before or while processing the request.
+
+INFO 2026-07-18 10:20:21,172 views Incoming OAuth state: kde1kDpNxPO2mQHMxEMYr40GmoHCmE
+INFO 2026-07-18 10:20:39,387 views Existing Google user logged in: bhawya12
+INFO 2026-07-18 10:20:40,943 views Google OAuth login callback completed successfully for bhawya12
+ERROR 2026-07-18 10:20:58,623 views Initial sync in callback failed: HTTPSConnectionPool(host='sheets.googleapis.com', port=443): Max retries exceeded with url: /v4/spreadsheets/1oS-5DNEefVc7HS7JAA7C2WynxVnM1uK7LNZnlrxi7Ag?includeGridData=false (Caused by SSLError(SSLEOFError(8, '[SSL: UNEXPECTED_EOF_WHILE_READING] EOF occurred in violation of protocol (_ssl.c:1032)')))
+DEBUG 2026-07-18 10:21:12,226 views User 7 fetched expenses | filters: category=None start=None end=None
+INFO 2026-07-18 10:21:18,927 views Incoming OAuth state: aupBIeoZm6264KeszXL2uxkMgYnysO
+INFO 2026-07-18 10:21:38,148 views Linking Google account for existing user: bhawya12
+INFO 2026-07-18 10:21:39,373 views Google OAuth login callback completed successfully for bhawya12
+DEBUG 2026-07-18 10:21:49,814 views User 7 fetched expenses | filters: category=None start=None end=None
+WARNING 2026-07-18 11:40:14,687 log Unauthorized: /api/budget/
+WARNING 2026-07-18 11:40:14,690 log "GET /api/budget/ HTTP/1.1" 401 172
+DEBUG 2026-07-18 11:40:24,350 views User 7 fetched expenses | filters: category=None start=None end=None
+INFO 2026-07-18 11:40:57,883 views Expense created: id=17 amount=20.00 user=7
+DEBUG 2026-07-18 11:41:00,243 views User 7 fetched expenses | filters: category=None start=None end=None
+DEBUG 2026-07-18 11:41:28,635 views User 7 fetched expenses | filters: category=None start=2026-07-17 end=None
+DEBUG 2026-07-18 11:41:41,104 views User 7 fetched expenses | filters: category=None start=2026-07-18 end=None

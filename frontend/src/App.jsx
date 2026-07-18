@@ -214,7 +214,7 @@ const App = () => {
 
   const handleConnectGoogle = async () => {
     try {
-      const res = await api.get('/google/auth-url/');
+      const res = await api.get('/google/auth-url/?flow=connect');
       window.location.href = res.data.auth_url;
     } catch (err) {
       showToast('Failed to start Google sign-in', 'error');

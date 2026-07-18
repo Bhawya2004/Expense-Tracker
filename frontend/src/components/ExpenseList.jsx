@@ -103,6 +103,11 @@ const ExpenseList = ({ expenses, onDelete, onUpdate }) => {
                         type="date" 
                         value={editData.date} 
                         onChange={e => setEditData({...editData, date: e.target.value})}
+                        onClick={(e) => {
+                          try {
+                            e.target.showPicker();
+                          } catch (err) {}
+                        }}
                         style={{ background: 'var(--surface2)', border: '1px solid var(--accent)', color: 'var(--text)', padding: '0.5rem', borderRadius: '6px', fontSize: '0.85rem', width: '100%' }}
                       />
                     </div>

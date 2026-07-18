@@ -187,7 +187,8 @@ def google_auth_url(request):
     auth_url, state = flow.authorization_url(**auth_params)
 
     # Store state and code_verifier in GoogleOAuthState table
-    user = request.user if request.user.is_authenticated else None
+    # Only link to an active session user if the flow is explicitly 'connect' (connecting from inside the app)
+    user = request.user if (request.user.is_authenticated and flow_param == 'connect') else None
     GoogleOAuthState.objects.create(
         state=state,
         code_verifier=flow.code_verifier,
@@ -283,6 +284,13 @@ def google_callback(request):
         if created or is_new:
             profile.monthly_budget = 0
             profile.budget_month = datetime.today().strftime('%Y-%m')
+
+        # If the user's Google email changed or was linked to a new one, update the email
+        # and clear the sheet ID so that a new sheet is created in this Google Drive.
+        if user.email != email:
+            user.email = email
+            user.save()
+            profile.google_sheet_id = ''
 
         # Store OAuth tokens
         profile.google_access_token = credentials.token

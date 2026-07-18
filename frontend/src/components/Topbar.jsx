@@ -39,6 +39,11 @@ const Topbar = ({
           type="date" 
           value={startDate} 
           onChange={e => onDateChange(e.target.value, endDate)}
+          onClick={(e) => {
+            try {
+              e.target.showPicker();
+            } catch (err) {}
+          }}
           style={{ 
             background: 'none', 
             border: 'none', 
@@ -53,6 +58,11 @@ const Topbar = ({
           type="date" 
           value={endDate} 
           onChange={e => onDateChange(startDate, e.target.value)}
+          onClick={(e) => {
+            try {
+              e.target.showPicker();
+            } catch (err) {}
+          }}
           style={{ 
             background: 'none', 
             border: 'none', 

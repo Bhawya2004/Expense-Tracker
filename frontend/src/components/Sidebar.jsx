@@ -133,7 +133,17 @@ const Sidebar = ({ stats, onAddExpense, activeFilter, onFilterChange, onClearFil
             </div>
             <div className="field" style={{ margin: 0 }}>
               <label>Date</label>
-              <input name="date" type="date" value={formData.date} onChange={handleChange} />
+              <input 
+                name="date" 
+                type="date" 
+                value={formData.date} 
+                onChange={handleChange} 
+                onClick={(e) => {
+                  try {
+                    e.target.showPicker();
+                  } catch (err) {}
+                }}
+              />
             </div>
           </div>
           <button className="btn-add" type="submit" disabled={loading}>

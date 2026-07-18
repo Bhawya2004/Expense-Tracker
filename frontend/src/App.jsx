@@ -8,6 +8,7 @@ import Topbar from './components/Topbar';
 import Sidebar from './components/Sidebar';
 import SheetView from './components/SheetView';
 import ExpenseList from './components/ExpenseList';
+import AnalyticsDashboard from './components/AnalyticsDashboard';
 
 const App = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(!!localStorage.getItem('access'));
@@ -20,9 +21,35 @@ const App = () => {
   const [showBudgetModal, setShowBudgetModal] = useState(false);
   const [showGoogleModal, setShowGoogleModal] = useState(false);
   const [toast, setToast] = useState({ show: false, msg: '', type: 'success' });
+  const [startDate, setStartDate] = useState('');
+  const [endDate, setEndDate] = useState('');
 
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
+
+    // Extract access tokens and username from Google login redirect URL params
+    const access = params.get('access');
+    const refresh = params.get('refresh');
+    const userParam = params.get('username');
+    const isNew = params.get('new') === 'true';
+
+    if (access && refresh && userParam) {
+      localStorage.setItem('access', access);
+      localStorage.setItem('refresh', refresh);
+      localStorage.setItem('username', userParam);
+      setUsername(userParam);
+      setIsLoggedIn(true);
+      window.history.replaceState({}, '', '/');
+      
+      if (isNew) {
+        showToast('Account created via Google! 🚀', 'success');
+        setShowBudgetModal(true);
+      } else {
+        showToast(`Welcome back, ${userParam}! 👋`, 'success');
+      }
+      return;
+    }
+
     if (params.get('google') === 'connected') {
       window.history.replaceState({}, '', '/');
       if (isLoggedIn) {
@@ -57,7 +84,7 @@ const App = () => {
         setShowBudgetModal(true);
       }
 
-      loadExpenses(activeFilter);
+      loadExpenses(activeFilter, startDate, endDate);
     } catch (err) {
       if (err.response?.status === 404) {
         setShowBudgetModal(true);
@@ -65,9 +92,15 @@ const App = () => {
     }
   };
 
-  const loadExpenses = async (category = null) => {
+  const loadExpenses = async (category = activeFilter, start = startDate, end = endDate) => {
     let url = '/expenses/';
-    if (category) url += `?category=${category}`;
+    const queryParams = [];
+    if (category) queryParams.push(`category=${category}`);
+    if (start) queryParams.push(`start=${start}`);
+    if (end) queryParams.push(`end=${end}`);
+    if (queryParams.length > 0) {
+      url += `?${queryParams.join('&')}`;
+    }
     try {
       const res = await api.get(url);
       setExpenses(res.data);
@@ -157,7 +190,7 @@ const App = () => {
 
   const handleFilterChange = async (cat) => {
     setActiveFilter(cat);
-    loadExpenses(cat);
+    loadExpenses(cat, startDate, endDate);
     try {
       await api.post('/sheet/highlight/', { category: cat });
       refreshSheet();
@@ -166,11 +199,17 @@ const App = () => {
 
   const handleClearFilter = async () => {
     setActiveFilter(null);
-    loadExpenses();
+    loadExpenses(null, startDate, endDate);
     try {
       await api.post('/sheet/highlight/', { category: null });
       refreshSheet();
     } catch (e) {}
+  };
+
+  const handleDateChange = (start, end) => {
+    setStartDate(start);
+    setEndDate(end);
+    loadExpenses(activeFilter, start, end);
   };
 
   const handleConnectGoogle = async () => {
@@ -235,6 +274,9 @@ const App = () => {
         googleConnected={googleConnected}
         sheetUrl={sheetUrl}
         onConnectGoogle={handleConnectGoogle}
+        startDate={startDate}
+        endDate={endDate}
+        onDateChange={handleDateChange}
       />
 
       <div className="app-body">
@@ -251,6 +293,11 @@ const App = () => {
             sheetUrl={sheetUrl}
             googleConnected={googleConnected}
             onConnectGoogle={handleConnectGoogle}
+          />
+
+          <AnalyticsDashboard 
+            expenses={expenses}
+            monthlyBudget={monthlyBudget}
           />
           
           <ExpenseList 

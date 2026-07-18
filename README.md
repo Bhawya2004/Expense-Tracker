@@ -9,13 +9,12 @@ A modern, high-performance expense management application built with **React**, 
 
 ## ✨ Key Features
 
-- 💎 **Premium UI**: Modern dark-mode dashboard with glassmorphism, smooth animations, and a focus on visual excellence.
-- 📊 **Google Sheets Sync**: Every expense is automatically mirrored to a private Google Sheet in YOUR drive.
-- 📱 **Mobile Responsive**: Fully optimized for phones and tablets with a collapsible sidebar and responsive cards.
-- 🔒 **Secure Auth**: JWT-based authentication (stateless) with automatic token refreshing.
-- 🔄 **Reliable OAuth**: Engineered to handle Google Sign-In via database-backed PKCE (No session-loss errors).
-- 🏷️ **Dynamic Categories**: Color-coded category management with real-time filtering.
-- 💰 **Budget Tracking**: Visual progress bars and real-time "Spent vs Remaining" calculations.
+- 💎 **Premium UI & Charts**: Modern dark-mode dashboard featuring glassmorphism, interactive SVG charts (Category breakdown doughnut and weekly trend bar chart), and custom animations.
+- 📊 **Google Sheets Sync**: Every transaction is mirrored to a private Google Sheet automatically. Syncs run in background threads to keep the app interface fast.
+- 📆 **Date Range Filtering**: Filter transaction lists and analytics charts by specific starting and ending dates.
+- 🔒 **Unified Google Sign-In**: Register or Login instantly with Google from the auth screen. This immediately creates and authorizes your Google Sheet in a single step.
+- 💰 **Daily Budget & Saving Sync**: Google Sheets dynamically computes and tracks your Daily Budget (Monthly Budget / 30), Daily Expense, and Daily Saving. Exceeded budgets highlight in soft red.
+- 🏷️ **Dynamic Category Filtering**: Color-coded category tags with real-time sidebar filters.
 
 ---
 
@@ -100,8 +99,11 @@ Detailed API documentation can be found in [API_DOCUMENTATION.md](file:///Users/
 | :--- | :--- | :--- |
 | `POST` | `/api/register/` | Register new user |
 | `POST` | `/api/token/` | Login & get JWT |
-| `GET` | `/api/expenses/` | List current user expenses |
-| `POST` | `/api/google/auth-url/` | Get Google OAuth link |
+| `GET` | `/api/google/auth-url/` | Get Google OAuth link (`?flow=login` or `?flow=register`) |
+| `GET` | `/api/expenses/` | List current user expenses & filter by category/date |
+| `POST` | `/api/expenses/` | Create a new expense & auto-sync to Sheets |
+| `POST` | `/api/budget/update/` | Update monthly budget & auto-sync to Sheets |
+| `POST` | `/api/sheet/highlight/` | Highlight specific category rows in Google Sheet |
 
 ---
 

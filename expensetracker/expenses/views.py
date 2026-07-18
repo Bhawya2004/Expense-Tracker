@@ -19,6 +19,9 @@ logger = logging.getLogger('expenses')
 
 # ── Google OAuth2 scopes ──
 GOOGLE_SCOPES = [
+    'openid',
+    'https://www.googleapis.com/auth/userinfo.email',
+    'https://www.googleapis.com/auth/userinfo.profile',
     'https://www.googleapis.com/auth/spreadsheets',
     'https://www.googleapis.com/auth/drive.file'
 ]
@@ -48,6 +51,22 @@ def update_budget(request):
     sheet_url = ''
     if profile.google_sheet_id:
         sheet_url = f"https://docs.google.com/spreadsheets/d/{profile.google_sheet_id}"
+        
+        # Trigger background sheet sync when budget is updated
+        import threading
+        user_id = request.user.id
+        def run_sync():
+            from django.contrib.auth.models import User
+            try:
+                user = User.objects.get(id=user_id)
+                prof = user.profile
+                expenses = Expense.objects.filter(user=user).order_by('date')
+                sync_sheet(prof.google_sheet_id, expenses, prof.monthly_budget, profile=prof)
+            except Exception as e:
+                logger.error(f"Async sheet sync from update_budget failed: {e}")
+        t = threading.Thread(target=run_sync)
+        t.daemon = True
+        t.start()
 
     return Response({
         'monthly_budget': profile.monthly_budget,
@@ -133,11 +152,10 @@ def highlight_sheet(request):
 
 # ── GOOGLE OAUTH: Generate auth URL ──
 @api_view(['GET'])
+@permission_classes([AllowAny])
 def google_auth_url(request):
     """
     Returns a Google OAuth2 consent URL. The frontend redirects the user here.
-    We store the JWT access token in the OAuth 'state' param so we can identify
-    the user when Google redirects back.
     """
     flow = Flow.from_client_config(
         {
@@ -153,18 +171,28 @@ def google_auth_url(request):
     )
     flow.redirect_uri = settings.GOOGLE_OAUTH_REDIRECT_URI
 
-    auth_url, state = flow.authorization_url(
-        access_type='offline',   # We need a refresh_token
-        prompt='consent',        # Force consent to always get refresh_token
-        include_granted_scopes='true'
-    )
+    flow_param = request.GET.get('flow', 'register')
+    auth_params = {
+        'access_type': 'offline',
+        'include_granted_scopes': 'true'
+    }
 
-    # Store the state and code_verifier in UserProfile instead of session
-    # This is MUCH more reliable than browser cookies
-    profile = request.user.profile
-    profile.pending_oauth_state = state
-    profile.pending_oauth_verifier = flow.code_verifier
-    profile.save()
+    if flow_param == 'register':
+        # Force consent screen to always get refresh_token during registration
+        auth_params['prompt'] = 'consent'
+    else:
+        # Avoid forcing consent screen during login, allowing account/session remembrance
+        auth_params['prompt'] = 'select_account'
+
+    auth_url, state = flow.authorization_url(**auth_params)
+
+    # Store state and code_verifier in GoogleOAuthState table
+    user = request.user if request.user.is_authenticated else None
+    GoogleOAuthState.objects.create(
+        state=state,
+        code_verifier=flow.code_verifier,
+        user=user
+    )
 
     return Response({'auth_url': auth_url})
 
@@ -175,7 +203,8 @@ def google_auth_url(request):
 def google_callback(request):
     """
     Google redirects here after the user approves access.
-    We exchange the code for tokens, store them, create the sheet.
+    We exchange the code for tokens, store them, login/register the user,
+    and initialize their Google Sheet.
     """
     code = request.GET.get('code')
     if not code:
@@ -196,26 +225,64 @@ def google_callback(request):
         )
         flow.redirect_uri = settings.GOOGLE_OAUTH_REDIRECT_URI
 
-        # Find the profile using the state parameter
+        # Find the OAuth state in the database
         state = request.GET.get('state')
         logger.info(f"Incoming OAuth state: {state}")
         
-        profile = UserProfile.objects.filter(pending_oauth_state=state).first()
-        if not profile:
-            # Let's see if we have any pending states at all
-            all_pending = UserProfile.objects.exclude(pending_oauth_state__isnull=True).count()
-            logger.error(f"No profile found for state: {state}. Total pending states in DB: {all_pending}")
+        oauth_state = GoogleOAuthState.objects.filter(state=state).first()
+        if not oauth_state:
+            logger.error(f"No pending OAuth state found for state: {state}")
             return HttpResponseRedirect(f"{settings.FRONTEND_URL}/?error=invalid_state")
 
         # Restore the PKCE code_verifier from the database
-        flow.code_verifier = profile.pending_oauth_verifier
+        flow.code_verifier = oauth_state.code_verifier
 
         # Exchange authorization code for tokens
         flow.fetch_token(code=code)
         credentials = flow.credentials
 
-        # We now have the user from the profile we found
-        user = profile.user
+        # Fetch user profile info from Google
+        import requests
+        userinfo_response = requests.get(
+            'https://www.googleapis.com/oauth2/v3/userinfo',
+            headers={'Authorization': f'Bearer {credentials.token}'}
+        )
+        if userinfo_response.status_code != 200:
+            logger.error(f"Failed to fetch userinfo from Google: {userinfo_response.text}")
+            return redirect(f"{settings.FRONTEND_URL}/?error=google_userinfo_failed")
+
+        user_info = userinfo_response.json()
+        email = user_info.get('email')
+        if not email:
+            logger.error("No email found in userinfo response")
+            return redirect(f"{settings.FRONTEND_URL}/?error=no_email_provided")
+
+        # Determine user: check if linking an existing logged-in user, otherwise login/register
+        is_new = False
+        if oauth_state.user:
+            user = oauth_state.user
+            logger.info(f"Linking Google account for existing user: {user.username}")
+        else:
+            user = User.objects.filter(email=email).first()
+            if not user:
+                # Username from email prefix
+                base_username = email.split('@')[0]
+                username = base_username
+                counter = 1
+                while User.objects.filter(username=username).exists():
+                    username = f"{base_username}_{counter}"
+                    counter += 1
+                user = User.objects.create_user(username=username, email=email)
+                is_new = True
+                logger.info(f"Created new Google user: {username}")
+            else:
+                logger.info(f"Existing Google user logged in: {user.username}")
+
+        # Ensure user profile exists
+        profile, created = UserProfile.objects.get_or_create(user=user)
+        if created or is_new:
+            profile.monthly_budget = 0
+            profile.budget_month = datetime.today().strftime('%Y-%m')
 
         # Store OAuth tokens
         profile.google_access_token = credentials.token
@@ -224,10 +291,10 @@ def google_callback(request):
             from django.utils import timezone
             import pytz
             profile.google_token_expiry = credentials.expiry.replace(tzinfo=pytz.UTC)
-        # Clear temporary fields
-        profile.pending_oauth_state = None
-        profile.pending_oauth_verifier = None
         profile.save()
+
+        # Delete the temp state record
+        oauth_state.delete()
 
         # Create the Google Sheet in the user's own Drive (if not already created)
         if not profile.google_sheet_id:
@@ -238,15 +305,38 @@ def google_callback(request):
                 logger.info(f"Created Google Sheet for {user.username}: {sheet_id}")
             except Exception as e:
                 logger.error(f"Failed to create sheet for {user.username}: {e}")
-                return redirect(f"{settings.FRONTEND_URL}/?error=sheet_creation_failed")
+                # Log error, but allow flow to proceed
 
-        # Clean up session
-        # pyrefly: ignore [parse-error]
-        request.session.pop('google_oauth_state', None)
-        request.session.pop('google_oauth_jwt', None)
+        # Sync existing expenses immediately so the spreadsheet is not empty/unformatted
+        if profile.google_sheet_id:
+            import threading
+            user_id = user.id
+            def run_callback_sync():
+                from django.contrib.auth.models import User
+                try:
+                    u = User.objects.get(id=user_id)
+                    p = u.profile
+                    exps = Expense.objects.filter(user=u).order_by('date')
+                    sync_sheet(p.google_sheet_id, exps, p.monthly_budget, profile=p)
+                except Exception as e:
+                    logger.error(f"Initial sync in callback failed: {e}")
+            t = threading.Thread(target=run_callback_sync)
+            t.daemon = True
+            t.start()
 
-        logger.info(f"Google OAuth completed for {user.username}")
-        return redirect(f"{settings.FRONTEND_URL}/?google=connected")
+        # Generate JWT tokens
+        from rest_framework_simplejwt.tokens import RefreshToken
+        refresh = RefreshToken.for_user(user)
+        access_token = str(refresh.access_token)
+        refresh_token = str(refresh)
+
+        # Redirect to frontend with JWT credentials
+        redirect_url = f"{settings.FRONTEND_URL}/?access={access_token}&refresh={refresh_token}&username={user.username}&google=connected"
+        if is_new:
+            redirect_url += "&new=true"
+
+        logger.info(f"Google OAuth login callback completed successfully for {user.username}")
+        return redirect(redirect_url)
 
     except Exception as e:
         logger.error(f"Google OAuth callback error: {e}", exc_info=True)
@@ -276,14 +366,22 @@ class ExpenseViewSet(viewsets.ModelViewSet):
         return queryset
 
     def _sync(self):
-        user = self.request.user
-        try:
-            profile = user.profile
-            if profile.google_sheet_id:
-                expenses = Expense.objects.filter(user=user).order_by('date')
-                sync_sheet(profile.google_sheet_id, expenses, profile.monthly_budget, profile=profile)
-        except Exception as e:
-            logger.error(f"Sheet sync failed for {user.username}: {e}")
+        user_id = self.request.user.id
+        import threading
+        def run_sync():
+            from django.contrib.auth.models import User
+            try:
+                user = User.objects.get(id=user_id)
+                profile = user.profile
+                if profile.google_sheet_id:
+                    expenses = Expense.objects.filter(user=user).order_by('date')
+                    sync_sheet(profile.google_sheet_id, expenses, profile.monthly_budget, profile=profile)
+            except Exception as e:
+                logger.error(f"Async sheet sync failed for user {user_id}: {e}")
+
+        t = threading.Thread(target=run_sync)
+        t.daemon = True
+        t.start()
 
     def perform_create(self, serializer):
         expense = serializer.save(user=self.request.user)

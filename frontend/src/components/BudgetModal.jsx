@@ -8,10 +8,13 @@ const BudgetModal = ({ show, onClose, onBudgetSet, initialValue = '' }) => {
   const inputRef = useRef(null);
 
   useEffect(() => {
-    if (show && inputRef.current) {
-      inputRef.current.focus();
+    if (show) {
+      setAmount(initialValue);
+      if (inputRef.current) {
+        inputRef.current.focus();
+      }
     }
-  }, [show]);
+  }, [show, initialValue]);
 
   const handleSubmit = async (e) => {
     if (e) e.preventDefault();
@@ -39,7 +42,28 @@ const BudgetModal = ({ show, onClose, onBudgetSet, initialValue = '' }) => {
 
   return (
     <div id="budget-modal" className="show">
-      <div className="budget-box">
+      <div className="budget-box" style={{ position: 'relative' }}>
+        <button 
+          onClick={onClose} 
+          style={{
+            position: 'absolute',
+            top: '1.2rem',
+            right: '1.2rem',
+            background: 'none',
+            border: 'none',
+            color: 'var(--muted)',
+            fontSize: '1.2rem',
+            cursor: 'pointer',
+            padding: '0.2rem',
+            transition: 'color 0.2s',
+            lineHeight: 1
+          }}
+          onMouseEnter={(e) => e.target.style.color = 'var(--text)'}
+          onMouseLeave={(e) => e.target.style.color = 'var(--muted)'}
+          title="Close"
+        >
+          ✕
+        </button>
         <div className="budget-icon">💰</div>
         <div className="budget-title">Set your <span>monthly<br/>budget</span></div>
         <div className="budget-sub">

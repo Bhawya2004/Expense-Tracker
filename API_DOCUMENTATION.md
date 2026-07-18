@@ -77,3 +77,30 @@ This document outlines all the available API endpoints in the Expense Tracker ba
 * **Endpoint:** `DELETE /api/expenses/<id>/`
 * **Purpose:** Deletes an expense from the database and updates the Google Sheet to reflect the removed transaction.
 * **Why we use it:** Allows users to undo or remove transactions that were added by mistake.
+
+---
+
+## 🔗 Google Sheets & OAuth Integrations
+
+### 13. Generate Google OAuth URL
+* **Endpoint:** `GET /api/google/auth-url/`
+* **Query Parameters:**
+  * `?flow=register` (default, requests full consent/offline access to get Google Sheet write scopes and refresh token)
+  * `?flow=login` (requests account selection without forcing re-authorization if already consented)
+* **Purpose:** Returns the Google login consent authorization URL.
+* **Why we use it:** Redirects the user to Google to securely link their Google Drive and Google Sheets to the expense tracker.
+
+### 14. Google OAuth Callback
+* **Endpoint:** `GET /api/google/callback/`
+* **Purpose:** Receives the Google auth code, logs in/registers the user, generates JWT tokens, and redirects back to the frontend with token parameters: `?access=...&refresh=...&username=...&google=connected`.
+* **Why we use it:** Completes the Google authentication flow and issues session tokens.
+
+### 15. Highlight Sheet Category Rows
+* **Endpoint:** `POST /api/sheet/highlight/`
+* **Request Body:**
+  ```json
+  { "category": "food" }
+  ```
+  *(Pass `null` to clear highlights)*
+* **Purpose:** Highlights all rows matching the specified category in the user's active Google Sheet in its theme color, while leaving columns D to H unchanged (preserving red saving overrun flags).
+* **Why we use it:** Triggered on hover/click filter actions on the dashboard sidebar to visually isolate matching transactions in the embedded Google Sheet view.

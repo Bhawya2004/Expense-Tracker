@@ -68,11 +68,13 @@ def update_budget(request):
         t.daemon = True
         t.start()
 
+    total_savings = calculate_total_savings(request.user, profile.monthly_budget)
     return Response({
         'monthly_budget': profile.monthly_budget,
         'budget_month': profile.budget_month,
         'google_connected': bool(profile.google_refresh_token),
-        'sheet_url': sheet_url
+        'sheet_url': sheet_url,
+        'total_savings': total_savings
     })
 
 
@@ -116,6 +118,26 @@ def delete_user(request):
         return Response({'error': 'Failed to delete user.'}, status=500)
 
 
+def calculate_total_savings(user, monthly_budget):
+    import pytz
+    from datetime import datetime
+    ist = pytz.timezone('Asia/Kolkata')
+    today_date = datetime.now(ist).date()
+    
+    daily_budget = float(monthly_budget) / 30.0
+    from collections import defaultdict
+    daily_totals = defaultdict(float)
+    expenses = Expense.objects.filter(user=user)
+    for e in expenses:
+        if e.date < today_date:
+            daily_totals[str(e.date)] += float(e.amount)
+    
+    total_savings = 0.0
+    for date_str, daily_exp in daily_totals.items():
+        total_savings += (daily_budget - daily_exp)
+    return round(total_savings, 2)
+
+
 # ── GET BUDGET ──
 @api_view(['GET'])
 def get_budget(request):
@@ -124,12 +146,15 @@ def get_budget(request):
         sheet_url = ''
         if profile.google_sheet_id:
             sheet_url = f"https://docs.google.com/spreadsheets/d/{profile.google_sheet_id}"
+            
+        total_savings = calculate_total_savings(request.user, profile.monthly_budget)
         return Response({
             'monthly_budget': profile.monthly_budget,
             'budget_month': profile.budget_month,
             'google_sheet_id': profile.google_sheet_id,
             'google_connected': bool(profile.google_refresh_token),
-            'sheet_url': sheet_url
+            'sheet_url': sheet_url,
+            'total_savings': total_savings
         })
     except UserProfile.DoesNotExist:
         return Response({'error': 'Profile not found'}, status=404)

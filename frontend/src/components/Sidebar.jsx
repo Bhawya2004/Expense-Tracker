@@ -85,7 +85,13 @@ const Sidebar = ({ stats, onAddExpense, activeFilter, onFilterChange, onClearFil
               style={{ width: `${stats.percent}%` }}
             ></div>
           </div>
-          <div className="stat-row" style={{ marginTop: '0.25rem' }}>
+          <div className="stat-row" style={{ marginTop: '0.4rem' }}>
+            <span className="stat-label">total savings till now</span>
+            <span className={`stat-val ${stats.totalSavings < 0 ? 'savings-negative' : 'savings-positive'}`} style={{ fontWeight: 'bold' }}>
+              {stats.totalSavings < 0 ? '-' : ''}₹{Math.abs(stats.totalSavings).toLocaleString('en-IN', { minimumFractionDigits: 2 })}
+            </span>
+          </div>
+          <div className="stat-row">
             <span className="stat-label">expenses</span>
             <span className="stat-val">{stats.count}</span>
           </div>

@@ -106,33 +106,77 @@ def sync_sheet(sheet_id, expenses, monthly_budget, profile=None):
         logger.error(f"Failed to reset sheet formatting: {e}")
     
     import calendar
-    from collections import defaultdict
-    from datetime import datetime
-
-    # Calculate daily totals across all expenses
+    from collections import defaultdict    # Calculate daily totals across all expenses
     daily_totals = defaultdict(float)
     for e in expenses:
         daily_totals[str(e.date)] += float(e.amount)
 
     remaining = float(monthly_budget)
     rows = []
+    
+    # We will build rows and keep track of cell formatting requests
+    # Header is row 1. Next row to write is row 2.
+    current_row_idx = 2
+    
+    # Group expenses by date (in order, since expenses are pre-sorted by date ascending)
+    from collections import OrderedDict
+    expenses_by_date = OrderedDict()
     for e in expenses:
-        remaining -= float(e.amount)
+        d_str = str(e.date)
+        if d_str not in expenses_by_date:
+            expenses_by_date[d_str] = []
+        expenses_by_date[d_str].append(e)
         
-        daily_budget = round(float(monthly_budget) / 30.0, 2)
-        daily_exp = round(daily_totals[str(e.date)], 2)
+    expense_row_formats = [] # List of tuples: (row_idx, category, is_exceeded_saving)
+    day_ended_rows = []      # List of row_idx
+    
+    daily_budget = round(float(monthly_budget) / 30.0, 2)
+    
+    for date_str, date_expenses in expenses_by_date.items():
+        daily_exp = round(daily_totals[date_str], 2)
         daily_saving = round(daily_budget - daily_exp, 2)
-
-        rows.append([
-            str(e.date),
-            e.description or '—',
-            e.category,
-            float(e.amount),
-            round(remaining, 2),
-            daily_budget,
-            daily_exp,
-            daily_saving
-        ])
+        is_exceeded = (daily_saving < 0)
+        
+        # Add all expenses for this date
+        for e in date_expenses:
+            remaining -= float(e.amount)
+            rows.append([
+                str(e.date),
+                e.description or '—',
+                e.category,
+                float(e.amount),
+                round(remaining, 2),
+                daily_budget,
+                daily_exp,
+                daily_saving
+            ])
+            expense_row_formats.append((current_row_idx, e.category, is_exceeded))
+            current_row_idx += 1
+            
+        # Insert the highlighted "day is ended" summary row after all expenses for this day
+        # ONLY if the date is in the past (the day has really ended).
+        import pytz
+        from datetime import datetime
+        ist = pytz.timezone('Asia/Kolkata')
+        today_date = datetime.now(ist).date()
+        try:
+            date_obj = datetime.strptime(date_str, '%Y-%m-%d').date()
+        except Exception:
+            date_obj = today_date
+            
+        if date_obj < today_date:
+            rows.append([
+                date_str,
+                'day is ended',
+                '',
+                '',
+                '',
+                '',
+                '',
+                ''
+            ])
+            day_ended_rows.append(current_row_idx)
+            current_row_idx += 1
         
     if rows:
         worksheet.append_rows(rows)
@@ -149,20 +193,45 @@ def sync_sheet(sheet_id, expenses, monthly_budget, profile=None):
         }
         
         red_fmt = {'red': 1.0, 'green': 0.8, 'blue': 0.8}  # light red highlight
+        day_ended_color = {'red': 0.92, 'green': 0.92, 'blue': 0.96} # soft lavender-gray
 
         try:
             requests = []
-            for idx, e in enumerate(expenses):
-                row_idx = idx + 1  # 0-indexed in Google Sheets API (row 2 is index 1)
-                
-                # 1. Category color mapping
-                color = COLOR_MAP.get(e.category.lower(), COLOR_MAP['other'])
+            
+            # 1. Format the "day is ended" rows
+            for row_idx in day_ended_rows:
                 requests.append({
                     "repeatCell": {
                         "range": {
                             "sheetId": int(worksheet.id),
-                            "startRowIndex": row_idx,
-                            "endRowIndex": row_idx + 1,
+                            "startRowIndex": row_idx - 1,
+                            "endRowIndex": row_idx,
+                            "startColumnIndex": 0,
+                            "endColumnIndex": 8
+                        },
+                        "cell": {
+                            "userEnteredFormat": {
+                                "backgroundColor": day_ended_color,
+                                "textFormat": {
+                                    "italic": True,
+                                    "bold": True,
+                                    "foregroundColor": {"red": 0.4, "green": 0.4, "blue": 0.5}
+                                }
+                            }
+                        },
+                        "fields": "userEnteredFormat(backgroundColor,textFormat)"
+                    }
+                })
+
+            # 2. Format the category and exceeded savings cells for normal expense rows
+            for row_idx, category, is_exceeded in expense_row_formats:
+                color = COLOR_MAP.get(category.lower(), COLOR_MAP['other'])
+                requests.append({
+                    "repeatCell": {
+                        "range": {
+                            "sheetId": int(worksheet.id),
+                            "startRowIndex": row_idx - 1,
+                            "endRowIndex": row_idx,
                             "startColumnIndex": 2,  # Column C (Category)
                             "endColumnIndex": 3
                         },
@@ -179,18 +248,13 @@ def sync_sheet(sheet_id, expenses, monthly_budget, profile=None):
                     }
                 })
                 
-                # 2. Daily saving highlight if negative (exceeded daily budget)
-                daily_budget_val = float(monthly_budget) / 30.0
-                daily_exp_val = daily_totals[str(e.date)]
-                daily_saving_val = daily_budget_val - daily_exp_val
-                
-                if daily_saving_val < 0:
+                if is_exceeded:
                     requests.append({
                         "repeatCell": {
                             "range": {
                                 "sheetId": int(worksheet.id),
-                                "startRowIndex": row_idx,
-                                "endRowIndex": row_idx + 1,
+                                "startRowIndex": row_idx - 1,
+                                "endRowIndex": row_idx,
                                 "startColumnIndex": 7,  # Column H (Daily Saving)
                                 "endColumnIndex": 8
                             },
@@ -213,11 +277,10 @@ def sync_sheet(sheet_id, expenses, monthly_budget, profile=None):
             logger.error(f"Failed to apply sheet formatting: {err}")
 
 
-
 def highlight_category(sheet_id, category, profile=None):
     """
     Highlight rows in the Google Sheet that match the given category.
-    If category is None, clear all highlights (whilst preserving red alert highlights).
+    If category is None, clear all highlights (whilst preserving red alerts and day ended rows).
     """
     worksheet = get_user_worksheet(sheet_id, profile=profile)
     all_values = worksheet.get_all_values()
@@ -225,18 +288,87 @@ def highlight_category(sheet_id, category, profile=None):
         return  # Only header, nothing to highlight
 
     data_rows = all_values[1:]  # Skip header
-    num_rows = len(data_rows)
-
-    # Reset all columns except Column H (Daily Saving) to white background first (A to G)
-    white_fmt = {'backgroundColor': {'red': 1, 'green': 1, 'blue': 1}}
-    worksheet.format(f'A2:G{num_rows + 1}', white_fmt)
-
-    if not category:
-        return  # Just clearing highlights
-
-    # Find rows that match the category (column C = index 2)
-    highlight_fmt = {'backgroundColor': {'red': 1, 'green': 0.95, 'blue': 0.6}}
+    requests = []
+    
+    day_ended_color = {'red': 0.92, 'green': 0.92, 'blue': 0.96}
+    highlight_color = {'red': 1.0, 'green': 0.95, 'blue': 0.6} # premium light yellow
+    white_color = {'red': 1.0, 'green': 1.0, 'blue': 1.0}
+    
     for i, row in enumerate(data_rows):
-        if len(row) > 2 and row[2].lower() == category.lower():
-            row_num = i + 2  # +2 because 1-indexed and skip header
-            worksheet.format(f'A{row_num}:G{row_num}', highlight_fmt)
+        row_idx = i + 2  # Skip header (row 1) and make it 1-based index
+        start_row = row_idx - 1
+        end_row = row_idx
+        
+        if len(row) > 1 and row[1] == 'day is ended':
+            # Keep the "day is ended" styling
+            requests.append({
+                "repeatCell": {
+                    "range": {
+                        "sheetId": int(worksheet.id),
+                        "startRowIndex": start_row,
+                        "endRowIndex": end_row,
+                        "startColumnIndex": 0,
+                        "endColumnIndex": 8
+                    },
+                    "cell": {
+                        "userEnteredFormat": {
+                            "backgroundColor": day_ended_color,
+                            "textFormat": {
+                                "italic": True,
+                                "bold": True,
+                                "foregroundColor": {"red": 0.4, "green": 0.4, "blue": 0.5}
+                            }
+                        }
+                    },
+                    "fields": "userEnteredFormat(backgroundColor,textFormat)"
+                }
+            })
+        else:
+            # Reset standard row columns A to G to white (preserving column H red alerts)
+            requests.append({
+                "repeatCell": {
+                    "range": {
+                        "sheetId": int(worksheet.id),
+                        "startRowIndex": start_row,
+                        "endRowIndex": end_row,
+                        "startColumnIndex": 0,
+                        "endColumnIndex": 7
+                    },
+                    "cell": {
+                        "userEnteredFormat": {
+                            "backgroundColor": white_color,
+                            "textFormat": {
+                                "bold": False,
+                                "foregroundColor": {"red": 0, "green": 0, "blue": 0}
+                            }
+                        }
+                    },
+                    "fields": "userEnteredFormat(backgroundColor,textFormat)"
+                }
+            })
+            
+            # Apply yellow highlight if matching category
+            if category and len(row) > 2 and row[2].lower() == category.lower():
+                requests.append({
+                    "repeatCell": {
+                        "range": {
+                            "sheetId": int(worksheet.id),
+                            "startRowIndex": start_row,
+                            "endRowIndex": end_row,
+                            "startColumnIndex": 0,
+                            "endColumnIndex": 7
+                        },
+                        "cell": {
+                            "userEnteredFormat": {
+                                "backgroundColor": highlight_color
+                            }
+                        },
+                        "fields": "userEnteredFormat(backgroundColor)"
+                    }
+                })
+                
+    if requests:
+        try:
+            worksheet.spreadsheet.batch_update({"requests": requests})
+        except Exception as e:
+            logger.error(f"Failed to batch update highlights: {e}")

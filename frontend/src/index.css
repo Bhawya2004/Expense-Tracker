@@ -124,6 +124,8 @@ input[type="date"]::-webkit-calendar-picker-indicator { cursor: pointer; }
 .stat-val.big { font-family: 'Syne', sans-serif; font-size: 1.3rem; font-weight: 700; color: var(--accent); }
 .stat-val.remaining { color: #35d4f1; }
 .stat-val.over-budget { color: var(--danger); }
+.stat-val.savings-positive { color: #81c784; }
+.stat-val.savings-negative { color: var(--danger); }
 
 /* budget bar */
 .budget-bar-track { height: 5px; background: var(--border); border-radius: 3px; overflow: hidden; margin-top: 0.3rem; }

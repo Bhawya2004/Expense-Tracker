@@ -243,13 +243,33 @@ const App = () => {
       top = Object.entries(cats).sort((a, b) => b[1] - a[1])[0][0];
     }
 
+    // Calculate total daily savings accumulated across all unique dates recorded strictly before today
+    const dailyTotals = {};
+    const tzOffset = new Date().getTimezoneOffset() * 60000;
+    const todayStr = new Date(Date.now() - tzOffset).toISOString().slice(0, 10);
+
+    expenses.forEach(e => {
+      if (e.date < todayStr) {
+        const dStr = e.date;
+        dailyTotals[dStr] = (dailyTotals[dStr] || 0) + parseFloat(e.amount);
+      }
+    });
+
+    const dailyBudget = monthlyBudget / 30.0;
+    let totalSavings = 0;
+    Object.keys(dailyTotals).forEach(dStr => {
+      const dailyExp = dailyTotals[dStr];
+      totalSavings += (dailyBudget - dailyExp);
+    });
+
     return {
       budget: monthlyBudget,
       total,
       remaining,
       percent,
       count: expenses.length,
-      top
+      top,
+      totalSavings: Math.round(totalSavings * 100) / 100
     };
   };
 

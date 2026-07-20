@@ -20,7 +20,10 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # ── Security ──
 SECRET_KEY = config('SECRET_KEY')
 DEBUG = config('DEBUG', default=False, cast=bool)
-ALLOWED_HOSTS = config('ALLOWED_HOSTS', default='127.0.0.1,localhost,bhawya2004.me,expense-tracker.bhawya2004.me,.onrender.com', cast=Csv())
+ALLOWED_HOSTS = config('ALLOWED_HOSTS', default='127.0.0.1,localhost,bhawya2004.me,expense-tracker.bhawya2004.me', cast=Csv())
+# Ensure Render domains are always allowed in production regardless of environment overrides
+if '.onrender.com' not in ALLOWED_HOSTS:
+    ALLOWED_HOSTS.append('.onrender.com')
 
 # Allow OAuth2 over HTTP only in development
 if DEBUG:

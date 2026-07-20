@@ -20,7 +20,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # ── Security ──
 SECRET_KEY = config('SECRET_KEY')
 DEBUG = config('DEBUG', default=False, cast=bool)
-ALLOWED_HOSTS = config('ALLOWED_HOSTS', default='127.0.0.1,localhost', cast=Csv())
+ALLOWED_HOSTS = config('ALLOWED_HOSTS', default='127.0.0.1,localhost,bhawya2004.me,expense-tracker.bhawya2004.me', cast=Csv())
 
 # Allow OAuth2 over HTTP only in development
 if DEBUG:
@@ -35,7 +35,7 @@ GOOGLE_OAUTH_CLIENT_SECRET = config('GOOGLE_OAUTH_CLIENT_SECRET', default='')
 GOOGLE_OAUTH_REDIRECT_URI = config('GOOGLE_OAUTH_REDIRECT_URI', default='http://127.0.0.1:8000/api/google/callback/')
 
 # ── Frontend Link ──
-FRONTEND_URL = config('FRONTEND_URL', default='http://localhost:5173')
+FRONTEND_URL = config('FRONTEND_URL', default='https://expense-tracker.bhawya2004.me')
 
 
 # Application definition
@@ -202,7 +202,7 @@ STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
 # ── CORS & CSRF (for session sharing between React and Django) ──
 CORS_ALLOW_CREDENTIALS = True
 CORS_ALLOWED_ORIGINS = config('CORS_ALLOWED_ORIGINS', 
-    default='http://localhost:5173,http://127.0.0.1:5173', 
+    default='http://localhost:5173,http://127.0.0.1:5173,https://bhawya2004.me,https://expense-tracker.bhawya2004.me', 
     cast=Csv()
 )
 

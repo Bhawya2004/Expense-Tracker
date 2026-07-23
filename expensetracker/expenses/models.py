@@ -2,9 +2,17 @@ from django.contrib.auth.models import User
 from django.db import models
 
 class UserProfile(models.Model):
+    BUDGET_MODE_CHOICES = [
+        ('monthly', 'Monthly Budget'),
+        ('balance', 'Current Balance & Daily Limit'),
+    ]
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='profile')
+    budget_mode = models.CharField(max_length=20, choices=BUDGET_MODE_CHOICES, default='monthly')
     monthly_budget = models.DecimalField(max_digits=10, decimal_places=2, default=0)
     budget_month = models.CharField(max_length=7, blank=True)
+    current_balance = models.DecimalField(max_digits=10, decimal_places=2, default=0)
+    fixed_daily_budget = models.DecimalField(max_digits=10, decimal_places=2, default=0)
+    balance_setup_date = models.DateField(null=True, blank=True)
     google_sheet_id = models.CharField(max_length=200, blank=True)
     # Google OAuth2 tokens — stored per-user so each user's sheet lives in THEIR Drive
     google_access_token = models.TextField(blank=True, default='')
@@ -15,7 +23,7 @@ class UserProfile(models.Model):
     pending_oauth_verifier = models.CharField(max_length=255, blank=True, null=True)
 
     def __str__(self):
-        return f"{self.user.username} - Budget: {self.monthly_budget} ({self.budget_month})"
+        return f"{self.user.username} - Mode: {self.budget_mode} - Budget: {self.monthly_budget} ({self.budget_month})"
 
 class Expense(models.Model):
     CATEGORY_CHOICES = [

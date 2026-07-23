@@ -10,10 +10,11 @@ A modern, high-performance expense management application built with **React**, 
 ## ✨ Key Features
 
 - 💎 **Premium UI & Charts**: Modern dark-mode dashboard featuring glassmorphism, interactive SVG charts (Category breakdown doughnut and weekly trend bar chart), and custom animations.
-- 📊 **Google Sheets Sync**: Every transaction is mirrored to a private Google Sheet automatically. Syncs run in background threads to keep the app interface fast.
+- 💰 **Dual Budget Modes**: Set a standard monthly budget (with 30-day daily divisions) or input a custom starting balance and daily limit (ideal for mid-month onboarding).
+- 📊 **Google Sheets Sync**: Every transaction is mirrored to a private Google Sheet automatically. Syncs run in background threads protected by thread locks to keep the app fast and safe from race conditions.
 - 📆 **Date Range Filtering**: Filter transaction lists and analytics charts by specific starting and ending dates.
 - 🔒 **Unified Google Sign-In**: Register or Login instantly with Google from the auth screen. This immediately creates and authorizes your Google Sheet in a single step.
-- 💰 **Daily Budget & Saving Sync**: Google Sheets dynamically computes and tracks your Daily Budget (Monthly Budget / 30), Daily Expense, and Daily Saving. Exceeded budgets highlight in soft red.
+- 📉 **Daily Budget & Saving Sync**: Google Sheets dynamically computes and tracks your Daily Budget, Daily Expense, and Daily Saving. Exceeded budgets highlight in soft red.
 - 🏷️ **Dynamic Category Filtering**: Color-coded category tags with real-time sidebar filters.
 
 ---

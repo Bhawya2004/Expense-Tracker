@@ -1843,3 +1843,20 @@ INFO 2026-07-19 13:19:00,465 views Google OAuth login callback completed success
 DEBUG 2026-07-19 13:19:07,000 views User 7 fetched expenses | filters: category=None start=None end=None
 DEBUG 2026-07-19 13:22:48,149 views User 7 fetched expenses | filters: category=None start=None end=None
 DEBUG 2026-07-19 13:25:53,366 views User 7 fetched expenses | filters: category=None start=None end=None
+DEBUG 2026-07-23 10:04:03,065 views User 7 fetched expenses | filters: category=None start=None end=None
+INFO 2026-07-23 10:04:30,092 views Incoming OAuth state: PAKLuSLiQdydgPdQtcRG9m2C0YkWJG
+INFO 2026-07-23 10:04:37,423 views Existing Google user logged in: bhawya12
+INFO 2026-07-23 10:04:38,463 views Incoming OAuth state: PAKLuSLiQdydgPdQtcRG9m2C0YkWJG
+INFO 2026-07-23 10:04:38,917 views Google OAuth login callback completed successfully for bhawya12
+ERROR 2026-07-23 10:04:50,881 views No pending OAuth state found for state: PAKLuSLiQdydgPdQtcRG9m2C0YkWJG
+INFO 2026-07-23 10:25:31,472 views Incoming OAuth state: kQad3GMZ1HQJMSZPkQlI7ov5lbvJ2t
+INFO 2026-07-23 10:25:38,981 views Existing Google user logged in: bhawya12
+INFO 2026-07-23 10:25:41,157 views Google OAuth login callback completed successfully for bhawya12
+INFO 2026-07-23 10:49:41,893 views Incoming OAuth state: x0UN1JYn3fylYwItXl4JTnLXfrSTWM
+INFO 2026-07-23 10:49:47,971 views Existing Google user logged in: bfreestorage002
+INFO 2026-07-23 10:49:57,434 views Created Google Sheet for bfreestorage002: 1mvmB0ssxqpww7uWR4PRwICHDJqYS_yUFCsIcbX9F8qE
+INFO 2026-07-23 10:49:57,451 views Google OAuth login callback completed successfully for bfreestorage002
+DEBUG 2026-07-23 10:50:08,311 views User 10 fetched expenses | filters: category=None start=None end=None
+DEBUG 2026-07-23 10:50:57,250 views User 10 fetched expenses | filters: category=None start=None end=None
+INFO 2026-07-23 10:51:05,862 views Expense created: id=39 amount=90.00 user=10
+DEBUG 2026-07-23 10:51:09,654 views User 10 fetched expenses | filters: category=None start=None end=None

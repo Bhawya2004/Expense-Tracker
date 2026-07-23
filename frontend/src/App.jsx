@@ -13,7 +13,11 @@ import AnalyticsDashboard from './components/AnalyticsDashboard';
 const App = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(!!localStorage.getItem('access'));
   const [username, setUsername] = useState(localStorage.getItem('username') || '');
+  const [budgetMode, setBudgetMode] = useState('monthly');
   const [monthlyBudget, setMonthlyBudget] = useState(0);
+  const [currentBalance, setCurrentBalance] = useState(0);
+  const [fixedDailyBudget, setFixedDailyBudget] = useState(0);
+  const [balanceSetupDate, setBalanceSetupDate] = useState(null);
   const [expenses, setExpenses] = useState([]);
   const [activeFilter, setActiveFilter] = useState(null);
   const [googleConnected, setGoogleConnected] = useState(false);
@@ -75,13 +79,19 @@ const App = () => {
     try {
       const budgetRes = await api.get('/budget/');
       const budgetData = budgetRes.data;
+      setBudgetMode(budgetData.budget_mode || 'monthly');
       setMonthlyBudget(parseFloat(budgetData.monthly_budget) || 0);
+      setCurrentBalance(parseFloat(budgetData.current_balance) || 0);
+      setFixedDailyBudget(parseFloat(budgetData.fixed_daily_budget) || 0);
+      setBalanceSetupDate(budgetData.balance_setup_date);
       setGoogleConnected(budgetData.google_connected);
       setSheetUrl(budgetData.sheet_url);
 
       const currentMonth = new Date().toISOString().slice(0, 7);
-      if (budgetData.budget_month !== currentMonth) {
-        setShowBudgetModal(true);
+      if (!budgetData.budget_mode || budgetData.budget_mode === 'monthly') {
+        if (budgetData.budget_month !== currentMonth) {
+          setShowBudgetModal(true);
+        }
       }
 
       loadExpenses(activeFilter, startDate, endDate);
@@ -221,10 +231,16 @@ const App = () => {
     }
   };
 
-  const handleBudgetSet = (amount, isGoogleConnected) => {
-    setMonthlyBudget(amount);
-    showToast(`Budget ₹${amount.toLocaleString('en-IN')} set!`, 'success');
-    if (!isGoogleConnected) {
+  const handleBudgetSet = (data) => {
+    setBudgetMode(data.budget_mode);
+    setMonthlyBudget(parseFloat(data.monthly_budget) || 0);
+    setCurrentBalance(parseFloat(data.current_balance) || 0);
+    setFixedDailyBudget(parseFloat(data.fixed_daily_budget) || 0);
+    setBalanceSetupDate(data.balance_setup_date);
+    setGoogleConnected(data.google_connected);
+    
+    showToast(`Budget configuration updated successfully!`, 'success');
+    if (!data.google_connected) {
       setShowGoogleModal(true);
     } else {
       loadAppData();
@@ -233,8 +249,6 @@ const App = () => {
 
   const calculateStats = () => {
     const total = expenses.reduce((s, e) => s + parseFloat(e.amount), 0);
-    const remaining = monthlyBudget - total;
-    const percent = monthlyBudget > 0 ? Math.min((total / monthlyBudget) * 100, 100) : 0;
     
     let top = '—';
     if (expenses.length) {
@@ -249,13 +263,23 @@ const App = () => {
     const todayStr = new Date(Date.now() - tzOffset).toISOString().slice(0, 10);
 
     expenses.forEach(e => {
-      if (e.date < todayStr) {
+      const isAfterSetup = budgetMode === 'monthly' || !balanceSetupDate || e.date >= balanceSetupDate;
+      if (e.date < todayStr && isAfterSetup) {
         const dStr = e.date;
         dailyTotals[dStr] = (dailyTotals[dStr] || 0) + parseFloat(e.amount);
       }
     });
 
-    const dailyBudget = monthlyBudget / 30.0;
+    let budgetLimit = monthlyBudget;
+    let remaining = monthlyBudget - total;
+    let dailyBudget = monthlyBudget / 30.0;
+    
+    if (budgetMode === 'balance') {
+      budgetLimit = currentBalance;
+      remaining = currentBalance - total;
+      dailyBudget = fixedDailyBudget;
+    }
+
     let totalSavings = 0;
     Object.keys(dailyTotals).forEach(dStr => {
       const dailyExp = dailyTotals[dStr];
@@ -263,10 +287,10 @@ const App = () => {
     });
 
     return {
-      budget: monthlyBudget,
+      budget: budgetLimit,
       total,
       remaining,
-      percent,
+      percent: budgetLimit > 0 ? Math.min((total / budgetLimit) * 100, 100) : 0,
       count: expenses.length,
       top,
       totalSavings: Math.round(totalSavings * 100) / 100
@@ -283,6 +307,8 @@ const App = () => {
       </>
     );
   }
+
+  const activeStats = calculateStats();
 
   return (
     <div id="app-screen" style={{ display: 'block' }}>
@@ -301,11 +327,12 @@ const App = () => {
 
       <div className="app-body">
         <Sidebar 
-          stats={calculateStats()}
+          stats={activeStats}
           onAddExpense={handleAddExpense}
           activeFilter={activeFilter}
           onFilterChange={handleFilterChange}
           onClearFilter={handleClearFilter}
+          budgetMode={budgetMode}
         />
 
         <div className="main-content" style={{ overflowY: 'auto' }}>
@@ -317,7 +344,7 @@ const App = () => {
 
           <AnalyticsDashboard 
             expenses={expenses}
-            monthlyBudget={monthlyBudget}
+            monthlyBudget={activeStats.budget}
           />
           
           <ExpenseList 
@@ -332,7 +359,10 @@ const App = () => {
         show={showBudgetModal}
         onClose={() => setShowBudgetModal(false)}
         onBudgetSet={handleBudgetSet}
-        initialValue={monthlyBudget || ''}
+        initialMode={budgetMode}
+        initialMonthlyBudget={monthlyBudget || ''}
+        initialCurrentBalance={currentBalance || ''}
+        initialFixedDailyBudget={fixedDailyBudget || ''}
       />
 
       <GoogleConnectModal 

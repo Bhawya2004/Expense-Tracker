@@ -59,20 +59,27 @@ const AnalyticsDashboard = ({ expenses, monthlyBudget }) => {
     return { ...stat, strokeLength, strokeOffset };
   });
 
-  // 2. Calculate Daily Trend (last 7 days of expenses)
-  const getPastNDays = (n) => {
+  // 2. Calculate Weekly Trend (Monday to Sunday of the current week)
+  const getCurrentWeekDates = () => {
     const list = [];
-    for (let i = n - 1; i >= 0; i--) {
-      const d = new Date();
-      d.setDate(d.getDate() - i);
+    const today = new Date();
+    const currentDay = today.getDay();
+    const distanceToMonday = currentDay === 0 ? 6 : currentDay - 1;
+    
+    const monday = new Date(today);
+    monday.setDate(today.getDate() - distanceToMonday);
+    
+    for (let i = 0; i < 7; i++) {
+      const d = new Date(monday);
+      d.setDate(monday.getDate() + i);
       list.push(d.toISOString().split('T')[0]);
     }
     return list;
   };
 
-  const past7Days = getPastNDays(7);
+  const currentWeekDays = getCurrentWeekDates();
   const dailyTotals = {};
-  past7Days.forEach(date => {
+  currentWeekDays.forEach(date => {
     dailyTotals[date] = 0;
   });
 
@@ -82,7 +89,7 @@ const AnalyticsDashboard = ({ expenses, monthlyBudget }) => {
     }
   });
 
-  const trendData = past7Days.map(date => ({
+  const trendData = currentWeekDays.map(date => ({
     date,
     amount: dailyTotals[date],
     formattedDate: new Date(date).toLocaleDateString('en-IN', { day: 'numeric', month: 'short' })

@@ -37,13 +37,43 @@ This document outlines all the available API endpoints in the Expense Tracker ba
 
 ### 6. Get Current Budget
 * **Endpoint:** `GET /api/budget/`
-* **Purpose:** Retrieves the current authenticated user's `monthly_budget`, the `budget_month` (when it was last set), and the `sheet_url` to access their Google Sheet.
-* **Why we use it:** The frontend uses this to display budget progress bars and embedded Google Sheets, and to determine if it should ask the user to set a budget for the new month.
+* **Purpose:** Retrieves the current authenticated user's budget settings.
+* **Response Body:**
+  ```json
+  {
+    "budget_mode": "monthly", // or "balance"
+    "monthly_budget": "6000.00",
+    "current_balance": "2500.00",
+    "fixed_daily_budget": "150.00",
+    "balance_setup_date": "2026-07-23", // setup date in YYYY-MM-DD
+    "budget_month": "2026-07",
+    "google_sheet_id": "...",
+    "google_connected": true,
+    "sheet_url": "...",
+    "total_savings": 110.00
+  }
+  ```
+* **Why we use it:** The frontend uses this to display budget progress bars, dynamic sidebar statistics, embedded Google Sheets, and to determine the active tracking scenario.
 
 ### 7. Update Budget
 * **Endpoint:** `POST /api/budget/update/`
-* **Purpose:** Updates the user's `monthly_budget` and sets the `budget_month` to the current month.
-* **Why we use it:** When a user logs in for the first time or starts a new month, they submit this to update their spending limits.
+* **Purpose:** Updates the user's budget configuration.
+* **Request Body (Monthly Mode):**
+  ```json
+  {
+    "budget_mode": "monthly",
+    "monthly_budget": 6000
+  }
+  ```
+* **Request Body (Balance Mode):**
+  ```json
+  {
+    "budget_mode": "balance",
+    "current_balance": 2500,
+    "fixed_daily_budget": 150
+  }
+  ```
+* **Why we use it:** When a user logs in for the first time or wants to adjust their spending targets, they submit this to toggle modes and specify budget parameters.
 
 ---
 

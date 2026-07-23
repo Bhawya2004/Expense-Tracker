@@ -44,8 +44,19 @@ def update_budget(request):
     except UserProfile.DoesNotExist:
         profile = UserProfile.objects.create(user=request.user)
 
-    profile.monthly_budget = request.data.get('monthly_budget', 0)
-    profile.budget_month = datetime.today().strftime('%Y-%m')
+    profile.budget_mode = request.data.get('budget_mode', 'monthly')
+    
+    if profile.budget_mode == 'balance':
+        profile.current_balance = request.data.get('current_balance', 0)
+        profile.fixed_daily_budget = request.data.get('fixed_daily_budget', 0)
+        # Always set balance_setup_date to today in user's timezone when updating/setting balance mode
+        import pytz
+        ist = pytz.timezone('Asia/Kolkata')
+        profile.balance_setup_date = datetime.now(ist).date()
+    else:
+        profile.monthly_budget = request.data.get('monthly_budget', 0)
+        profile.budget_month = datetime.today().strftime('%Y-%m')
+
     profile.save()
 
     sheet_url = ''
@@ -60,7 +71,10 @@ def update_budget(request):
             try:
                 user = User.objects.get(id=user_id)
                 prof = user.profile
-                expenses = Expense.objects.filter(user=user).order_by('date')
+                expenses = Expense.objects.filter(user=user)
+                if prof.budget_mode == 'balance' and prof.balance_setup_date:
+                    expenses = expenses.filter(date__gte=prof.balance_setup_date)
+                expenses = expenses.order_by('date')
                 sync_sheet(prof.google_sheet_id, expenses, prof.monthly_budget, profile=prof)
             except Exception as e:
                 logger.error(f"Async sheet sync from update_budget failed: {e}")
@@ -68,9 +82,13 @@ def update_budget(request):
         t.daemon = True
         t.start()
 
-    total_savings = calculate_total_savings(request.user, profile.monthly_budget)
+    total_savings = calculate_total_savings(request.user)
     return Response({
+        'budget_mode': profile.budget_mode,
         'monthly_budget': profile.monthly_budget,
+        'current_balance': profile.current_balance,
+        'fixed_daily_budget': profile.fixed_daily_budget,
+        'balance_setup_date': profile.balance_setup_date,
         'budget_month': profile.budget_month,
         'google_connected': bool(profile.google_refresh_token),
         'sheet_url': sheet_url,
@@ -118,16 +136,29 @@ def delete_user(request):
         return Response({'error': 'Failed to delete user.'}, status=500)
 
 
-def calculate_total_savings(user, monthly_budget):
+def calculate_total_savings(user):
+    try:
+        profile = user.profile
+    except UserProfile.DoesNotExist:
+        return 0.0
+
     import pytz
     from datetime import datetime
     ist = pytz.timezone('Asia/Kolkata')
     today_date = datetime.now(ist).date()
     
-    daily_budget = float(monthly_budget) / 30.0
+    if profile.budget_mode == 'balance':
+        daily_budget = float(profile.fixed_daily_budget)
+        setup_date = profile.balance_setup_date
+        expenses = Expense.objects.filter(user=user)
+        if setup_date:
+            expenses = expenses.filter(date__gte=setup_date)
+    else:
+        daily_budget = float(profile.monthly_budget) / 30.0
+        expenses = Expense.objects.filter(user=user)
+
     from collections import defaultdict
     daily_totals = defaultdict(float)
-    expenses = Expense.objects.filter(user=user)
     for e in expenses:
         if e.date < today_date:
             daily_totals[str(e.date)] += float(e.amount)
@@ -147,9 +178,13 @@ def get_budget(request):
         if profile.google_sheet_id:
             sheet_url = f"https://docs.google.com/spreadsheets/d/{profile.google_sheet_id}"
             
-        total_savings = calculate_total_savings(request.user, profile.monthly_budget)
+        total_savings = calculate_total_savings(request.user)
         return Response({
+            'budget_mode': profile.budget_mode,
             'monthly_budget': profile.monthly_budget,
+            'current_balance': profile.current_balance,
+            'fixed_daily_budget': profile.fixed_daily_budget,
+            'balance_setup_date': profile.balance_setup_date,
             'budget_month': profile.budget_month,
             'google_sheet_id': profile.google_sheet_id,
             'google_connected': bool(profile.google_refresh_token),
@@ -349,7 +384,10 @@ def google_callback(request):
                 try:
                     u = User.objects.get(id=user_id)
                     p = u.profile
-                    exps = Expense.objects.filter(user=u).order_by('date')
+                    exps = Expense.objects.filter(user=u)
+                    if p.budget_mode == 'balance' and p.balance_setup_date:
+                        exps = exps.filter(date__gte=p.balance_setup_date)
+                    exps = exps.order_by('date')
                     sync_sheet(p.google_sheet_id, exps, p.monthly_budget, profile=p)
                 except Exception as e:
                     logger.error(f"Initial sync in callback failed: {e}")
@@ -383,6 +421,12 @@ class ExpenseViewSet(viewsets.ModelViewSet):
 
     def get_queryset(self):
         queryset = Expense.objects.filter(user=self.request.user)
+        try:
+            profile = self.request.user.profile
+            if profile.budget_mode == 'balance' and profile.balance_setup_date:
+                queryset = queryset.filter(date__gte=profile.balance_setup_date)
+        except UserProfile.DoesNotExist:
+            pass
 
         category = self.request.query_params.get('category')
         if category:
@@ -407,7 +451,10 @@ class ExpenseViewSet(viewsets.ModelViewSet):
                 user = User.objects.get(id=user_id)
                 profile = user.profile
                 if profile.google_sheet_id:
-                    expenses = Expense.objects.filter(user=user).order_by('date')
+                    expenses = Expense.objects.filter(user=user)
+                    if profile.budget_mode == 'balance' and profile.balance_setup_date:
+                        expenses = expenses.filter(date__gte=profile.balance_setup_date)
+                    expenses = expenses.order_by('date')
                     sync_sheet(profile.google_sheet_id, expenses, profile.monthly_budget, profile=profile)
             except Exception as e:
                 logger.error(f"Async sheet sync failed for user {user_id}: {e}")

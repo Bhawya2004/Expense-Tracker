@@ -82,8 +82,27 @@ def get_user_worksheet(sheet_id, profile=None):
     return sheet.get_worksheet(0)
 
 
+import threading
+from collections import defaultdict
+
+# Thread locks to prevent concurrent write race conditions on the same Google Sheet
+_sheet_locks = defaultdict(threading.Lock)
+_locks_lock = threading.Lock()
+
+def get_sheet_lock(sheet_id):
+    with _locks_lock:
+        return _sheet_locks[sheet_id]
+
+
 def sync_sheet(sheet_id, expenses, monthly_budget, profile=None):
-    """Sync all expenses to the Google Sheet."""
+    """Sync all expenses to the Google Sheet with thread locking."""
+    lock = get_sheet_lock(sheet_id)
+    with lock:
+        _sync_sheet_inner(sheet_id, expenses, monthly_budget, profile)
+
+
+def _sync_sheet_inner(sheet_id, expenses, monthly_budget, profile=None):
+    """Core synchronization logic."""
     worksheet = get_user_worksheet(sheet_id, profile=profile)
     # Clear all data starting from row 1 to refresh everything including headers dynamically
     worksheet.batch_clear(['A1:Z1000'])
@@ -111,7 +130,13 @@ def sync_sheet(sheet_id, expenses, monthly_budget, profile=None):
     for e in expenses:
         daily_totals[str(e.date)] += float(e.amount)
 
-    remaining = float(monthly_budget)
+    if profile and profile.budget_mode == 'balance':
+        remaining = float(profile.current_balance)
+        daily_budget = round(float(profile.fixed_daily_budget), 2)
+    else:
+        remaining = float(monthly_budget)
+        daily_budget = round(float(monthly_budget) / 30.0, 2)
+        
     rows = []
     
     # We will build rows and keep track of cell formatting requests
@@ -129,8 +154,6 @@ def sync_sheet(sheet_id, expenses, monthly_budget, profile=None):
         
     expense_row_formats = [] # List of tuples: (row_idx, category, is_exceeded_saving)
     day_ended_rows = []      # List of row_idx
-    
-    daily_budget = round(float(monthly_budget) / 30.0, 2)
     
     for date_str, date_expenses in expenses_by_date.items():
         daily_exp = round(daily_totals[date_str], 2)

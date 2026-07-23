@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 
-const Sidebar = ({ stats, onAddExpense, activeFilter, onFilterChange, onClearFilter }) => {
+const Sidebar = ({ stats, onAddExpense, activeFilter, onFilterChange, onClearFilter, budgetMode = 'monthly' }) => {
   const getToday = () => new Date().toISOString().split('T')[0];
 
   const [formData, setFormData] = useState({
@@ -32,10 +32,15 @@ const Sidebar = ({ stats, onAddExpense, activeFilter, onFilterChange, onClearFil
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!formData.amount || !formData.date) return;
+    if (!formData.amount || parseFloat(formData.amount) <= 0) return;
     
     setLoading(true);
-    const success = await onAddExpense(formData);
+    const success = await onAddExpense({
+      amount: parseFloat(formData.amount),
+      description: formData.description,
+      category: formData.category,
+      date: formData.date
+    });
     setLoading(false);
     
     if (success) {
@@ -65,7 +70,7 @@ const Sidebar = ({ stats, onAddExpense, activeFilter, onFilterChange, onClearFil
         <div className="section-title">Summary</div>
         <div className="stats-strip">
           <div className="stat-row">
-            <span className="stat-label">monthly budget</span>
+            <span className="stat-label">{budgetMode === 'balance' ? 'starting balance' : 'monthly budget'}</span>
             <span className="stat-val">₹{stats.budget.toLocaleString('en-IN', { minimumFractionDigits: 2 })}</span>
           </div>
           <div className="stat-row">

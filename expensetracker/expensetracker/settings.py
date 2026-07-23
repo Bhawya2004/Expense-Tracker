@@ -38,7 +38,7 @@ GOOGLE_OAUTH_CLIENT_SECRET = config('GOOGLE_OAUTH_CLIENT_SECRET', default='')
 GOOGLE_OAUTH_REDIRECT_URI = config('GOOGLE_OAUTH_REDIRECT_URI', default='http://127.0.0.1:8000/api/google/callback/')
 
 # ── Frontend Link ──
-FRONTEND_URL = config('FRONTEND_URL', default='https://expense-tracker.bhawya2004.me')
+FRONTEND_URL = config('FRONTEND_URL', default='http://localhost:5173' if DEBUG else 'https://expense-tracker.bhawya2004.me')
 
 
 # Application definition

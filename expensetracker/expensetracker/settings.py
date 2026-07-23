@@ -25,9 +25,11 @@ ALLOWED_HOSTS = config('ALLOWED_HOSTS', default='127.0.0.1,localhost,bhawya2004.
 if '.onrender.com' not in ALLOWED_HOSTS:
     ALLOWED_HOSTS.append('.onrender.com')
 
-# Allow OAuth2 over HTTP only in development
+# Allow OAuth2 over HTTP only in development, and append emulator host loopback
 if DEBUG:
     os.environ['OAUTHLIB_INSECURE_TRANSPORT'] = '1'
+    if '10.0.2.2' not in ALLOWED_HOSTS:
+        ALLOWED_HOSTS.append('10.0.2.2')
 
 # ── Google Service Account (for sheet syncing fallback) ──
 GOOGLE_CREDENTIALS_FILE = os.path.join(BASE_DIR, 'credentials.json')

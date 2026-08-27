@@ -373,7 +373,7 @@ def firebase_login(request):
 
 
 # ── HEALTH MONITORING ──
-@api_view(['GET'])
+@api_view(['GET', 'HEAD'])
 @permission_classes([AllowAny])
 def health_check(request):
     """

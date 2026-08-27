@@ -1,7 +1,22 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 
 const SheetView = ({ sheetUrl, googleConnected, onConnectGoogle }) => {
   const [isOpen, setIsOpen] = useState(false);
+  const [isHovered, setIsHovered] = useState(false);
+
+  useEffect(() => {
+    const mainContent = document.querySelector('.main-content');
+    if (mainContent) {
+      if (isHovered && isOpen) {
+        mainContent.style.overflowY = 'hidden';
+      } else {
+        mainContent.style.overflowY = 'auto';
+      }
+    }
+    return () => {
+      if (mainContent) mainContent.style.overflowY = 'auto';
+    };
+  }, [isHovered, isOpen]);
 
   return (
     <div className="sheet-dropdown-container" style={{ marginBottom: '2rem' }}>
@@ -64,17 +79,21 @@ const SheetView = ({ sheetUrl, googleConnected, onConnectGoogle }) => {
         }}
       >
         {googleConnected && sheetUrl ? (
-          <div style={{ 
-            height: '550px', 
-            width: '100%', 
-            border: '1px solid var(--border)', 
-            borderRadius: '12px', 
-            overflow: 'hidden',
-            boxShadow: '0 10px 40px rgba(0,0,0,0.4)'
-          }}>
+          <div 
+            onMouseEnter={() => setIsHovered(true)}
+            onMouseLeave={() => setIsHovered(false)}
+            style={{ 
+              height: '550px', 
+              width: '100%', 
+              border: '1px solid var(--border)', 
+              borderRadius: '12px', 
+              overflow: 'hidden',
+              boxShadow: '0 10px 40px rgba(0,0,0,0.4)'
+            }}
+          >
             <iframe 
               key={sheetUrl}
-              src={`${sheetUrl}/edit?widget=true&headers=false`}
+              src={`${sheetUrl}/preview?chrome=false&widget=true&headers=false`}
               title="Google Sheet"
               style={{ width: '100%', height: '100%', border: 'none', background: '#fff' }}
             ></iframe>

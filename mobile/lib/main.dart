@@ -4,6 +4,9 @@ import 'package:flutter/material.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'dart:math';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_auth/firebase_auth.dart' as fb_auth;
+import 'package:google_sign_in/google_sign_in.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 
 // ── DEPLOYED PRODUCTION BASE API URL ──
@@ -11,7 +14,15 @@ String getBaseUrl() {
   return 'https://expense-tracker-lils.onrender.com/api';
 }
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  try {
+    await Firebase.initializeApp();
+  } catch (e) {
+    if (kDebugMode) {
+      print("Firebase initialization error: $e");
+    }
+  }
   runApp(const ExpenseTrackerApp());
 }
 
@@ -102,6 +113,29 @@ class ApiService {
       await _storage.write(key: 'access', value: res.data['access']);
       await _storage.write(key: 'refresh', value: res.data['refresh']);
       await _storage.write(key: 'username', value: username);
+      return res.data;
+    } catch (e) {
+      return null;
+    }
+  }
+
+  Future<Map<String, dynamic>?> loginWithFirebase(String idToken) async {
+    try {
+      final res = await _dio.post('/token/firebase/', data: {
+        'id_token': idToken,
+      });
+      await _storage.write(key: 'access', value: res.data['access']);
+      await _storage.write(key: 'refresh', value: res.data['refresh']);
+      await _storage.write(key: 'username', value: res.data['username']);
+      return res.data;
+    } catch (e) {
+      return null;
+    }
+  }
+
+  Future<Map<String, dynamic>?> createGoogleSheet() async {
+    try {
+      final res = await _dio.post('/sheet/create/');
       return res.data;
     } catch (e) {
       return null;
@@ -304,17 +338,59 @@ class _AuthScreenState extends State<AuthScreen> {
   String errorMsg = '';
 
   void _loginWithGoogle() async {
-    final success = await Navigator.push<bool>(
-      context,
-      MaterialPageRoute(
-        builder: (_) => GoogleOAuthWebViewScreen(
-          flow: isLoginTab ? 'login' : 'register',
-        ),
-      ),
-    );
-    
-    if (success == true) {
-      Navigator.pushReplacement(context, MaterialPageRoute(builder: (_) => const DashboardScreen()));
+    setState(() {
+      errorMsg = '';
+      loading = true;
+    });
+
+    try {
+      final GoogleSignIn googleSignIn = GoogleSignIn(
+        scopes: ['email'],
+      );
+      
+      // Attempt to sign in native Google prompt
+      final GoogleSignInAccount? googleUser = await googleSignIn.signIn();
+      if (googleUser == null) {
+        setState(() {
+          loading = false;
+        });
+        return; // User cancelled flow
+      }
+
+      final GoogleSignInAuthentication googleAuth = await googleUser.authentication;
+
+      // Authenticate with Firebase using Google credentials
+      final fb_auth.AuthCredential credential = fb_auth.GoogleAuthProvider.credential(
+        idToken: googleAuth.idToken,
+        accessToken: googleAuth.accessToken,
+      );
+
+      final fb_auth.UserCredential userCredential = await fb_auth.FirebaseAuth.instance.signInWithCredential(credential);
+      final fb_auth.User? fbUser = userCredential.user;
+
+      if (fbUser != null) {
+        final idToken = await fbUser.getIdToken();
+        if (idToken != null) {
+          final success = await _api.loginWithFirebase(idToken);
+          if (success != null && mounted) {
+            Navigator.pushReplacement(context, MaterialPageRoute(builder: (_) => const DashboardScreen()));
+            return;
+          }
+        }
+      }
+
+      setState(() {
+        errorMsg = 'Failed to authenticate via Firebase.';
+        loading = false;
+      });
+    } catch (e) {
+      if (kDebugMode) {
+        print("Google/Firebase Sign-In Error: $e");
+      }
+      setState(() {
+        errorMsg = 'Google Authentication failed: $e';
+        loading = false;
+      });
     }
   }
 
@@ -557,14 +633,37 @@ class _DashboardScreenState extends State<DashboardScreen> {
   bool loading = true;
 
   void _connectGoogle() async {
-    final success = await Navigator.push<bool>(
-      context,
-      MaterialPageRoute(
-        builder: (_) => const GoogleOAuthWebViewScreen(flow: 'connect'),
-      ),
-    );
-    if (success == true) {
-      _loadData();
+    setState(() {
+      loading = true;
+    });
+    try {
+      final res = await _api.createGoogleSheet();
+      if (res != null) {
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text('Google Sheet created and shared successfully! Check your Gmail.')),
+          );
+        }
+        _loadData();
+      } else {
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text('Failed to create Google Sheet.')),
+          );
+        }
+        setState(() {
+          loading = false;
+        });
+      }
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Error connecting Google Sheet: $e')),
+        );
+      }
+      setState(() {
+        loading = false;
+      });
     }
   }
 
@@ -1628,117 +1727,7 @@ class _AddExpenseSheetState extends State<AddExpenseSheet> {
   }
 }
 
-// ── GOOGLE OAUTH IN-APP WEBVIEW SCREEN ──
-class GoogleOAuthWebViewScreen extends StatefulWidget {
-  final String flow;
-  const GoogleOAuthWebViewScreen({Key? key, required this.flow}) : super(key: key);
 
-  @override
-  State<GoogleOAuthWebViewScreen> createState() => _GoogleOAuthWebViewScreenState();
-}
-
-class _GoogleOAuthWebViewScreenState extends State<GoogleOAuthWebViewScreen> {
-  late final WebViewController _controller;
-  bool loading = true;
-
-  @override
-  void initState() {
-    super.initState();
-
-    _controller = WebViewController()
-      ..setJavaScriptMode(JavaScriptMode.unrestricted)
-      ..setNavigationDelegate(
-        NavigationDelegate(
-          onPageStarted: (url) {
-            setState(() => loading = true);
-          },
-          onPageFinished: (url) {
-            setState(() => loading = false);
-          },
-          onNavigationRequest: (request) async {
-            final url = request.url;
-
-            // Map local dev loopbacks to Android emulator host loopback
-            if (Platform.isAndroid && (url.startsWith('http://127.0.0.1:8000') || url.startsWith('http://localhost:8000'))) {
-              final newUrl = url
-                  .replaceAll('http://127.0.0.1:8000', 'http://10.0.2.2:8000')
-                  .replaceAll('http://localhost:8000', 'http://10.0.2.2:8000');
-              _controller.loadRequest(Uri.parse(newUrl));
-              return NavigationDecision.prevent;
-            }
-
-            // Check if the URL contains access and refresh tokens (indicating redirect back to frontend)
-            if (url.contains('access=') && url.contains('refresh=')) {
-              final uri = Uri.parse(url);
-              final access = uri.queryParameters['access'];
-              final refresh = uri.queryParameters['refresh'];
-              final username = uri.queryParameters['username'];
-
-              if (access != null && refresh != null) {
-                const storage = FlutterSecureStorage();
-                await storage.write(key: 'access', value: access);
-                await storage.write(key: 'refresh', value: refresh);
-                if (username != null) {
-                  await storage.write(key: 'username', value: username);
-                }
-
-                // Close WebView and navigate to Dashboard
-                Navigator.pop(context, true);
-                return NavigationDecision.prevent;
-              }
-            }
-            return NavigationDecision.navigate;
-          },
-        ),
-      );
-
-    _fetchAndLoadUrl();
-  }
-
-  void _fetchAndLoadUrl() async {
-    try {
-      final apiBase = getBaseUrl();
-      final storage = const FlutterSecureStorage();
-      final token = await storage.read(key: 'access');
-
-      final dio = Dio();
-      final options = Options(headers: {});
-      if (token != null) {
-        options.headers!['Authorization'] = 'Bearer $token';
-      }
-
-      final res = await dio.get(
-        '$apiBase/google/auth-url/?flow=${widget.flow}',
-        options: options,
-      );
-      final authUrl = res.data['auth_url'];
-      if (authUrl != null) {
-        _controller.loadRequest(Uri.parse(authUrl));
-      } else {
-        Navigator.pop(context, false);
-      }
-    } catch (e) {
-      Navigator.pop(context, false);
-    }
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Google Sign-In', style: TextStyle(fontWeight: FontWeight.bold)),
-        backgroundColor: const Color(0xFF161616),
-      ),
-      body: Stack(
-        children: [
-          WebViewWidget(controller: _controller),
-          if (loading)
-            const Center(child: CircularProgressIndicator(color: Color(0xFFC8F135))),
-        ],
-      ),
-    );
-  }
-}
 
 // ── GOOGLE SHEET SYNC EMBEDDED VIEWER SCREEN ──
 class GoogleSheetWebViewScreen extends StatelessWidget {

@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
 import api from '../api';
+import { auth, googleProvider } from '../firebaseConfig';
+import { signInWithPopup } from 'firebase/auth';
 
 const AuthScreen = ({ onLoginSuccess }) => {
   const [tab, setTab] = useState('login');
@@ -26,41 +28,30 @@ const AuthScreen = ({ onLoginSuccess }) => {
         username: formData.username,
         password: formData.password,
       });
-      const { access, refresh } = res.data;
-      localStorage.setItem('access', access);
-      localStorage.setItem('refresh', refresh);
+      localStorage.setItem('access', res.data.access);
+      localStorage.setItem('refresh', res.data.refresh);
       localStorage.setItem('username', formData.username);
-      onLoginSuccess(formData.username);
+      onLoginSuccess(formData.username, false);
     } catch (err) {
-      setError(err.response?.data?.detail || 'Login failed');
+      setError(err.response?.data?.detail || 'Invalid username or password.');
     } finally {
       setLoading(false);
     }
   };
 
   const handleRegister = async (e) => {
-    if (e) e.preventDefault();
-    if (!formData.username || !formData.password) return setError('Username and password are required.');
-
+    e.preventDefault();
+    if (!formData.username || !formData.password || !formData.email) return setError('Please fill in all fields.');
+    
     setLoading(true);
     try {
       await api.post('/register/', {
         username: formData.username,
         email: formData.email,
         password: formData.password,
-        monthly_budget: 0,
       });
-
-      // Auto-login after registration
-      const res = await api.post('/token/', {
-        username: formData.username,
-        password: formData.password,
-      });
-      const { access, refresh } = res.data;
-      localStorage.setItem('access', access);
-      localStorage.setItem('refresh', refresh);
-      localStorage.setItem('username', formData.username);
-      onLoginSuccess(formData.username, true); // true indicates a new registration
+      // automatically log in after successful registration
+      await handleLogin();
     } catch (err) {
       const data = err.response?.data;
       setError(data ? Object.values(data).flat().join(' ') : 'Registration failed');
@@ -73,10 +64,19 @@ const AuthScreen = ({ onLoginSuccess }) => {
     setLoading(true);
     setError('');
     try {
-      const res = await api.get(`/google/auth-url/?flow=${tab}`);
-      window.location.href = res.data.auth_url;
+      const result = await signInWithPopup(auth, googleProvider);
+      const idToken = await result.user.getIdToken();
+      
+      const res = await api.post('/token/firebase/', { id_token: idToken });
+      
+      localStorage.setItem('access', res.data.access);
+      localStorage.setItem('refresh', res.data.refresh);
+      localStorage.setItem('username', res.data.username);
+      
+      onLoginSuccess(res.data.username, res.data.is_new);
     } catch (err) {
-      setError('Failed to initiate Google Login.');
+      console.error(err);
+      setError(err.response?.data?.error || 'Google Authentication failed.');
     } finally {
       setLoading(false);
     }

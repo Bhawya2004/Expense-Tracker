@@ -13,3 +13,5 @@ gunicorn
 whitenoise
 requests
 pytz
+firebase-admin
+

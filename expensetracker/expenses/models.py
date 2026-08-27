@@ -14,13 +14,6 @@ class UserProfile(models.Model):
     fixed_daily_budget = models.DecimalField(max_digits=10, decimal_places=2, default=0)
     balance_setup_date = models.DateField(null=True, blank=True)
     google_sheet_id = models.CharField(max_length=200, blank=True)
-    # Google OAuth2 tokens — stored per-user so each user's sheet lives in THEIR Drive
-    google_access_token = models.TextField(blank=True, default='')
-    google_refresh_token = models.TextField(blank=True, default='')
-    google_token_expiry = models.DateTimeField(null=True, blank=True)
-    # Temporary storage for OAuth state/verifier to avoid session loss errors
-    pending_oauth_state = models.CharField(max_length=255, blank=True, null=True)
-    pending_oauth_verifier = models.CharField(max_length=255, blank=True, null=True)
 
     def __str__(self):
         return f"{self.user.username} - Mode: {self.budget_mode} - Budget: {self.monthly_budget} ({self.budget_month})"
@@ -48,13 +41,3 @@ class Expense(models.Model):
 
     def __str__(self):
         return f"{self.category} - {self.amount} ({self.date})"
-
-
-class GoogleOAuthState(models.Model):
-    state = models.CharField(max_length=255, unique=True)
-    code_verifier = models.CharField(max_length=255)
-    user = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True)
-    created_at = models.DateTimeField(auto_now_add=True)
-
-    def __str__(self):
-        return f"OAuth State: {self.state}"

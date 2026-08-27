@@ -1897,3 +1897,214 @@ DEBUG 2026-07-23 17:04:04,469 views User 7 fetched expenses | filters: category=
 DEBUG 2026-07-23 17:04:46,817 views User 7 fetched expenses | filters: category=None start=None end=None
 DEBUG 2026-07-23 17:09:59,136 views User 7 fetched expenses | filters: category=None start=None end=None
 DEBUG 2026-07-23 17:13:12,762 views User 7 fetched expenses | filters: category=None start=None end=None
+WARNING 2026-08-27 09:36:59,573 log Unauthorized: /api/budget/
+WARNING 2026-08-27 09:36:59,574 log "GET /api/budget/ HTTP/1.1" 401 172
+WARNING 2026-08-27 09:36:59,581 log Unauthorized: /api/budget/
+WARNING 2026-08-27 09:36:59,582 log "GET /api/budget/ HTTP/1.1" 401 172
+WARNING 2026-08-27 09:36:59,610 log Unauthorized: /api/token/refresh/
+WARNING 2026-08-27 09:36:59,611 log Unauthorized: /api/token/refresh/
+WARNING 2026-08-27 09:36:59,612 log "POST /api/token/refresh/ HTTP/1.1" 401 54
+WARNING 2026-08-27 09:36:59,613 log "POST /api/token/refresh/ HTTP/1.1" 401 54
+ERROR 2026-08-27 09:37:26,747 views Firebase token verification failed: A project ID is required to access the auth service.
+            1. Use a service account credential, or
+            2. set the project ID explicitly via Firebase App options, or
+            3. set the project ID via the GOOGLE_CLOUD_PROJECT environment variable.
+Traceback (most recent call last):
+  File "/Users/bhawyagulati/Documents/Projects/Expense-Tracker-Mobile/expensetracker/expenses/views.py", line 284, in firebase_login
+    decoded_token = auth.verify_id_token(id_token)
+  File "/Users/bhawyagulati/Documents/Projects/Expense-Tracker-Mobile/venv/lib/python3.13/site-packages/firebase_admin/auth.py", line 226, in verify_id_token
+    client = _get_client(app)
+  File "/Users/bhawyagulati/Documents/Projects/Expense-Tracker-Mobile/venv/lib/python3.13/site-packages/firebase_admin/auth.py", line 177, in _get_client
+    return _utils.get_app_service(app, _AUTH_ATTRIBUTE, Client)
+           ~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/bhawyagulati/Documents/Projects/Expense-Tracker-Mobile/venv/lib/python3.13/site-packages/firebase_admin/_utils.py", line 104, in get_app_service
+    return app._get_service(name, initializer) # pylint: disable=protected-access
+           ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^
+  File "/Users/bhawyagulati/Documents/Projects/Expense-Tracker-Mobile/venv/lib/python3.13/site-packages/firebase_admin/__init__.py", line 303, in _get_service
+    self._services[name] = initializer(self)
+                           ~~~~~~~~~~~^^^^^^
+  File "/Users/bhawyagulati/Documents/Projects/Expense-Tracker-Mobile/venv/lib/python3.13/site-packages/firebase_admin/_auth_client.py", line 35, in __init__
+    raise ValueError("""A project ID is required to access the auth service.
+    ...<2 lines>...
+    3. set the project ID via the GOOGLE_CLOUD_PROJECT environment variable.""")
+ValueError: A project ID is required to access the auth service.
+            1. Use a service account credential, or
+            2. set the project ID explicitly via Firebase App options, or
+            3. set the project ID via the GOOGLE_CLOUD_PROJECT environment variable.
+WARNING 2026-08-27 09:37:26,757 log Unauthorized: /api/token/firebase/
+WARNING 2026-08-27 09:37:26,758 log "POST /api/token/firebase/ HTTP/1.1" 401 301
+INFO 2026-08-27 09:42:20,508 views Logged in existing Django user via Firebase Auth: bfreestorage002
+ERROR 2026-08-27 09:42:24,349 log Internal Server Error: /api/budget/
+Traceback (most recent call last):
+  File "/Users/bhawyagulati/Documents/Projects/Expense-Tracker-Mobile/venv/lib/python3.13/site-packages/django/core/handlers/exception.py", line 56, in inner
+    response = get_response(request)
+  File "/Users/bhawyagulati/Documents/Projects/Expense-Tracker-Mobile/venv/lib/python3.13/site-packages/django/core/handlers/base.py", line 199, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/Users/bhawyagulati/Documents/Projects/Expense-Tracker-Mobile/venv/lib/python3.13/site-packages/django/views/decorators/csrf.py", line 64, in _view_wrapper
+    return view_func(request, *args, **kwargs)
+  File "/Users/bhawyagulati/Documents/Projects/Expense-Tracker-Mobile/venv/lib/python3.13/site-packages/django/views/generic/base.py", line 105, in view
+    return self.dispatch(request, *args, **kwargs)
+           ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/bhawyagulati/Documents/Projects/Expense-Tracker-Mobile/venv/lib/python3.13/site-packages/rest_framework/views.py", line 526, in dispatch
+    response = self.handle_exception(exc)
+  File "/Users/bhawyagulati/Documents/Projects/Expense-Tracker-Mobile/venv/lib/python3.13/site-packages/rest_framework/views.py", line 474, in handle_exception
+    self.raise_uncaught_exception(exc)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^
+  File "/Users/bhawyagulati/Documents/Projects/Expense-Tracker-Mobile/venv/lib/python3.13/site-packages/rest_framework/views.py", line 485, in raise_uncaught_exception
+    raise exc
+  File "/Users/bhawyagulati/Documents/Projects/Expense-Tracker-Mobile/venv/lib/python3.13/site-packages/rest_framework/views.py", line 523, in dispatch
+    response = handler(request, *args, **kwargs)
+  File "/Users/bhawyagulati/Documents/Projects/Expense-Tracker-Mobile/venv/lib/python3.13/site-packages/rest_framework/decorators.py", line 50, in handler
+    return func(*args, **kwargs)
+  File "/Users/bhawyagulati/Documents/Projects/Expense-Tracker-Mobile/expensetracker/expenses/views.py", line 193, in get_budget
+    'google_connected': bool(profile.google_refresh_token),
+                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'UserProfile' object has no attribute 'google_refresh_token'
+ERROR 2026-08-27 09:42:24,354 log "GET /api/budget/ HTTP/1.1" 500 21299
+ERROR 2026-08-27 09:42:52,466 log Internal Server Error: /api/budget/
+Traceback (most recent call last):
+  File "/Users/bhawyagulati/Documents/Projects/Expense-Tracker-Mobile/venv/lib/python3.13/site-packages/django/core/handlers/exception.py", line 56, in inner
+    response = get_response(request)
+  File "/Users/bhawyagulati/Documents/Projects/Expense-Tracker-Mobile/venv/lib/python3.13/site-packages/django/core/handlers/base.py", line 199, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/Users/bhawyagulati/Documents/Projects/Expense-Tracker-Mobile/venv/lib/python3.13/site-packages/django/views/decorators/csrf.py", line 64, in _view_wrapper
+    return view_func(request, *args, **kwargs)
+  File "/Users/bhawyagulati/Documents/Projects/Expense-Tracker-Mobile/venv/lib/python3.13/site-packages/django/views/generic/base.py", line 105, in view
+    return self.dispatch(request, *args, **kwargs)
+           ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/bhawyagulati/Documents/Projects/Expense-Tracker-Mobile/venv/lib/python3.13/site-packages/rest_framework/views.py", line 526, in dispatch
+    response = self.handle_exception(exc)
+  File "/Users/bhawyagulati/Documents/Projects/Expense-Tracker-Mobile/venv/lib/python3.13/site-packages/rest_framework/views.py", line 474, in handle_exception
+    self.raise_uncaught_exception(exc)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^
+  File "/Users/bhawyagulati/Documents/Projects/Expense-Tracker-Mobile/venv/lib/python3.13/site-packages/rest_framework/views.py", line 485, in raise_uncaught_exception
+    raise exc
+  File "/Users/bhawyagulati/Documents/Projects/Expense-Tracker-Mobile/venv/lib/python3.13/site-packages/rest_framework/views.py", line 523, in dispatch
+    response = handler(request, *args, **kwargs)
+  File "/Users/bhawyagulati/Documents/Projects/Expense-Tracker-Mobile/venv/lib/python3.13/site-packages/rest_framework/decorators.py", line 50, in handler
+    return func(*args, **kwargs)
+  File "/Users/bhawyagulati/Documents/Projects/Expense-Tracker-Mobile/expensetracker/expenses/views.py", line 193, in get_budget
+    'google_connected': bool(profile.google_refresh_token),
+                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'UserProfile' object has no attribute 'google_refresh_token'
+ERROR 2026-08-27 09:42:52,476 log "GET /api/budget/ HTTP/1.1" 500 21299
+ERROR 2026-08-27 09:42:55,549 log Internal Server Error: /api/budget/
+Traceback (most recent call last):
+  File "/Users/bhawyagulati/Documents/Projects/Expense-Tracker-Mobile/venv/lib/python3.13/site-packages/django/core/handlers/exception.py", line 56, in inner
+    response = get_response(request)
+  File "/Users/bhawyagulati/Documents/Projects/Expense-Tracker-Mobile/venv/lib/python3.13/site-packages/django/core/handlers/base.py", line 199, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/Users/bhawyagulati/Documents/Projects/Expense-Tracker-Mobile/venv/lib/python3.13/site-packages/django/views/decorators/csrf.py", line 64, in _view_wrapper
+    return view_func(request, *args, **kwargs)
+  File "/Users/bhawyagulati/Documents/Projects/Expense-Tracker-Mobile/venv/lib/python3.13/site-packages/django/views/generic/base.py", line 105, in view
+    return self.dispatch(request, *args, **kwargs)
+           ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/bhawyagulati/Documents/Projects/Expense-Tracker-Mobile/venv/lib/python3.13/site-packages/rest_framework/views.py", line 526, in dispatch
+    response = self.handle_exception(exc)
+  File "/Users/bhawyagulati/Documents/Projects/Expense-Tracker-Mobile/venv/lib/python3.13/site-packages/rest_framework/views.py", line 474, in handle_exception
+    self.raise_uncaught_exception(exc)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^
+  File "/Users/bhawyagulati/Documents/Projects/Expense-Tracker-Mobile/venv/lib/python3.13/site-packages/rest_framework/views.py", line 485, in raise_uncaught_exception
+    raise exc
+  File "/Users/bhawyagulati/Documents/Projects/Expense-Tracker-Mobile/venv/lib/python3.13/site-packages/rest_framework/views.py", line 523, in dispatch
+    response = handler(request, *args, **kwargs)
+  File "/Users/bhawyagulati/Documents/Projects/Expense-Tracker-Mobile/venv/lib/python3.13/site-packages/rest_framework/decorators.py", line 50, in handler
+    return func(*args, **kwargs)
+  File "/Users/bhawyagulati/Documents/Projects/Expense-Tracker-Mobile/expensetracker/expenses/views.py", line 193, in get_budget
+    'google_connected': bool(profile.google_refresh_token),
+                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'UserProfile' object has no attribute 'google_refresh_token'
+ERROR 2026-08-27 09:42:55,554 log "GET /api/budget/ HTTP/1.1" 500 21299
+ERROR 2026-08-27 09:42:58,638 log Internal Server Error: /api/budget/
+Traceback (most recent call last):
+  File "/Users/bhawyagulati/Documents/Projects/Expense-Tracker-Mobile/venv/lib/python3.13/site-packages/django/core/handlers/exception.py", line 56, in inner
+    response = get_response(request)
+  File "/Users/bhawyagulati/Documents/Projects/Expense-Tracker-Mobile/venv/lib/python3.13/site-packages/django/core/handlers/base.py", line 199, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/Users/bhawyagulati/Documents/Projects/Expense-Tracker-Mobile/venv/lib/python3.13/site-packages/django/views/decorators/csrf.py", line 64, in _view_wrapper
+    return view_func(request, *args, **kwargs)
+  File "/Users/bhawyagulati/Documents/Projects/Expense-Tracker-Mobile/venv/lib/python3.13/site-packages/django/views/generic/base.py", line 105, in view
+    return self.dispatch(request, *args, **kwargs)
+           ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/bhawyagulati/Documents/Projects/Expense-Tracker-Mobile/venv/lib/python3.13/site-packages/rest_framework/views.py", line 526, in dispatch
+    response = self.handle_exception(exc)
+  File "/Users/bhawyagulati/Documents/Projects/Expense-Tracker-Mobile/venv/lib/python3.13/site-packages/rest_framework/views.py", line 474, in handle_exception
+    self.raise_uncaught_exception(exc)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^
+  File "/Users/bhawyagulati/Documents/Projects/Expense-Tracker-Mobile/venv/lib/python3.13/site-packages/rest_framework/views.py", line 485, in raise_uncaught_exception
+    raise exc
+  File "/Users/bhawyagulati/Documents/Projects/Expense-Tracker-Mobile/venv/lib/python3.13/site-packages/rest_framework/views.py", line 523, in dispatch
+    response = handler(request, *args, **kwargs)
+  File "/Users/bhawyagulati/Documents/Projects/Expense-Tracker-Mobile/venv/lib/python3.13/site-packages/rest_framework/decorators.py", line 50, in handler
+    return func(*args, **kwargs)
+  File "/Users/bhawyagulati/Documents/Projects/Expense-Tracker-Mobile/expensetracker/expenses/views.py", line 193, in get_budget
+    'google_connected': bool(profile.google_refresh_token),
+                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'UserProfile' object has no attribute 'google_refresh_token'
+ERROR 2026-08-27 09:42:58,641 log "GET /api/budget/ HTTP/1.1" 500 21299
+ERROR 2026-08-27 09:43:19,392 log Internal Server Error: /api/budget/
+Traceback (most recent call last):
+  File "/Users/bhawyagulati/Documents/Projects/Expense-Tracker-Mobile/venv/lib/python3.13/site-packages/django/core/handlers/exception.py", line 56, in inner
+    response = get_response(request)
+  File "/Users/bhawyagulati/Documents/Projects/Expense-Tracker-Mobile/venv/lib/python3.13/site-packages/django/core/handlers/base.py", line 199, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/Users/bhawyagulati/Documents/Projects/Expense-Tracker-Mobile/venv/lib/python3.13/site-packages/django/views/decorators/csrf.py", line 64, in _view_wrapper
+    return view_func(request, *args, **kwargs)
+  File "/Users/bhawyagulati/Documents/Projects/Expense-Tracker-Mobile/venv/lib/python3.13/site-packages/django/views/generic/base.py", line 105, in view
+    return self.dispatch(request, *args, **kwargs)
+           ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/bhawyagulati/Documents/Projects/Expense-Tracker-Mobile/venv/lib/python3.13/site-packages/rest_framework/views.py", line 526, in dispatch
+    response = self.handle_exception(exc)
+  File "/Users/bhawyagulati/Documents/Projects/Expense-Tracker-Mobile/venv/lib/python3.13/site-packages/rest_framework/views.py", line 474, in handle_exception
+    self.raise_uncaught_exception(exc)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^
+  File "/Users/bhawyagulati/Documents/Projects/Expense-Tracker-Mobile/venv/lib/python3.13/site-packages/rest_framework/views.py", line 485, in raise_uncaught_exception
+    raise exc
+  File "/Users/bhawyagulati/Documents/Projects/Expense-Tracker-Mobile/venv/lib/python3.13/site-packages/rest_framework/views.py", line 523, in dispatch
+    response = handler(request, *args, **kwargs)
+  File "/Users/bhawyagulati/Documents/Projects/Expense-Tracker-Mobile/venv/lib/python3.13/site-packages/rest_framework/decorators.py", line 50, in handler
+    return func(*args, **kwargs)
+  File "/Users/bhawyagulati/Documents/Projects/Expense-Tracker-Mobile/expensetracker/expenses/views.py", line 193, in get_budget
+    'google_connected': bool(profile.google_refresh_token),
+                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'UserProfile' object has no attribute 'google_refresh_token'
+ERROR 2026-08-27 09:43:19,395 log "GET /api/budget/ HTTP/1.1" 500 21299
+ERROR 2026-08-27 09:43:22,332 log Internal Server Error: /api/budget/
+Traceback (most recent call last):
+  File "/Users/bhawyagulati/Documents/Projects/Expense-Tracker-Mobile/venv/lib/python3.13/site-packages/django/core/handlers/exception.py", line 56, in inner
+    response = get_response(request)
+  File "/Users/bhawyagulati/Documents/Projects/Expense-Tracker-Mobile/venv/lib/python3.13/site-packages/django/core/handlers/base.py", line 199, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/Users/bhawyagulati/Documents/Projects/Expense-Tracker-Mobile/venv/lib/python3.13/site-packages/django/views/decorators/csrf.py", line 64, in _view_wrapper
+    return view_func(request, *args, **kwargs)
+  File "/Users/bhawyagulati/Documents/Projects/Expense-Tracker-Mobile/venv/lib/python3.13/site-packages/django/views/generic/base.py", line 105, in view
+    return self.dispatch(request, *args, **kwargs)
+           ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/bhawyagulati/Documents/Projects/Expense-Tracker-Mobile/venv/lib/python3.13/site-packages/rest_framework/views.py", line 526, in dispatch
+    response = self.handle_exception(exc)
+  File "/Users/bhawyagulati/Documents/Projects/Expense-Tracker-Mobile/venv/lib/python3.13/site-packages/rest_framework/views.py", line 474, in handle_exception
+    self.raise_uncaught_exception(exc)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^
+  File "/Users/bhawyagulati/Documents/Projects/Expense-Tracker-Mobile/venv/lib/python3.13/site-packages/rest_framework/views.py", line 485, in raise_uncaught_exception
+    raise exc
+  File "/Users/bhawyagulati/Documents/Projects/Expense-Tracker-Mobile/venv/lib/python3.13/site-packages/rest_framework/views.py", line 523, in dispatch
+    response = handler(request, *args, **kwargs)
+  File "/Users/bhawyagulati/Documents/Projects/Expense-Tracker-Mobile/venv/lib/python3.13/site-packages/rest_framework/decorators.py", line 50, in handler
+    return func(*args, **kwargs)
+  File "/Users/bhawyagulati/Documents/Projects/Expense-Tracker-Mobile/expensetracker/expenses/views.py", line 193, in get_budget
+    'google_connected': bool(profile.google_refresh_token),
+                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'UserProfile' object has no attribute 'google_refresh_token'
+ERROR 2026-08-27 09:43:22,334 log "GET /api/budget/ HTTP/1.1" 500 21299
+DEBUG 2026-08-27 09:46:23,773 views User 10 fetched expenses | filters: category=None start=None end=None
+DEBUG 2026-08-27 09:46:26,792 views User 10 fetched expenses | filters: category=None start=None end=None
+INFO 2026-08-27 09:47:06,596 views Expense created: id=121 amount=70.00 user=10
+DEBUG 2026-08-27 09:47:09,514 views User 10 fetched expenses | filters: category=None start=None end=None
+ERROR 2026-08-27 09:47:11,422 views Async sheet sync failed for user 10: APIError: [403]: The caller does not have permission
+DEBUG 2026-08-27 09:49:19,882 views User 10 fetched expenses | filters: category=None start=None end=None
+DEBUG 2026-08-27 09:49:24,368 views User 10 fetched expenses | filters: category=None start=None end=None
+DEBUG 2026-08-27 09:49:40,034 views User 10 fetched expenses | filters: category=None start=None end=None
+DEBUG 2026-08-27 09:49:44,471 views User 10 fetched expenses | filters: category=None start=None end=None
+DEBUG 2026-08-27 09:49:47,581 views User 10 fetched expenses | filters: category=None start=None end=None
+DEBUG 2026-08-27 10:21:55,032 views User 10 fetched expenses | filters: category=None start=None end=None
+DEBUG 2026-08-27 10:21:58,221 views User 10 fetched expenses | filters: category=None start=None end=None

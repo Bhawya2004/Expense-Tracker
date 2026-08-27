@@ -28,16 +28,40 @@ if '.onrender.com' not in ALLOWED_HOSTS:
 # Allow OAuth2 over HTTP only in development, and append emulator host loopback
 if DEBUG:
     os.environ['OAUTHLIB_INSECURE_TRANSPORT'] = '1'
-    if '10.0.2.2' not in ALLOWED_HOSTS:
-        ALLOWED_HOSTS.append('10.0.2.2')
+    if '*' not in ALLOWED_HOSTS:
+        ALLOWED_HOSTS.append('*')
 
-# ── Google Service Account (for sheet syncing fallback) ──
+# ── Google Service Account (for sheet syncing) ──
 GOOGLE_CREDENTIALS_FILE = os.path.join(BASE_DIR, 'credentials.json')
 
-# ── Google OAuth2 (user-based Google Sign-In) ──
-GOOGLE_OAUTH_CLIENT_ID = config('GOOGLE_OAUTH_CLIENT_ID', default='')
-GOOGLE_OAUTH_CLIENT_SECRET = config('GOOGLE_OAUTH_CLIENT_SECRET', default='')
-GOOGLE_OAUTH_REDIRECT_URI = config('GOOGLE_OAUTH_REDIRECT_URI', default='http://127.0.0.1:8000/api/google/callback/')
+# ── Firebase Admin SDK Setup ──
+import firebase_admin
+from firebase_admin import credentials
+
+firebase_json = config('FIREBASE_SERVICE_ACCOUNT_JSON', default='')
+if firebase_json:
+    try:
+        import json
+        cred_dict = json.loads(firebase_json)
+        cred = credentials.Certificate(cred_dict)
+        firebase_admin.initialize_app(cred)
+    except Exception as e:
+        print(f"Error initializing Firebase with JSON env var: {e}")
+else:
+    # Try local file fallback
+    firebase_file = os.path.join(BASE_DIR, 'firebase-service-account.json')
+    if os.path.exists(firebase_file):
+        try:
+            cred = credentials.Certificate(firebase_file)
+            firebase_admin.initialize_app(cred)
+        except Exception as e:
+            print(f"Error initializing Firebase with local JSON file: {e}")
+    else:
+        try:
+            firebase_admin.initialize_app()
+        except Exception as e:
+            print(f"Firebase default initialization failed/skipped: {e}")
+
 
 # ── Frontend Link ──
 FRONTEND_URL = config('FRONTEND_URL', default='http://localhost:5173' if DEBUG else 'https://expense-tracker.bhawya2004.me')
@@ -144,8 +168,8 @@ REST_FRAMEWORK = {
 }
 
 SIMPLE_JWT = {
-    'ACCESS_TOKEN_LIFETIME': timedelta(days=7),
-    'REFRESH_TOKEN_LIFETIME': timedelta(days=30),
+    'ACCESS_TOKEN_LIFETIME': timedelta(days=30),
+    'REFRESH_TOKEN_LIFETIME': timedelta(days=90),
 }
 
 LOGGING = {

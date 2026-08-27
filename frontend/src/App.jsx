@@ -29,42 +29,6 @@ const App = () => {
   const [endDate, setEndDate] = useState('');
 
   useEffect(() => {
-    const params = new URLSearchParams(window.location.search);
-
-    // Extract access tokens and username from Google login redirect URL params
-    const access = params.get('access');
-    const refresh = params.get('refresh');
-    const userParam = params.get('username');
-    const isNew = params.get('new') === 'true';
-
-    if (access && refresh && userParam) {
-      localStorage.setItem('access', access);
-      localStorage.setItem('refresh', refresh);
-      localStorage.setItem('username', userParam);
-      setUsername(userParam);
-      setIsLoggedIn(true);
-      window.history.replaceState({}, '', '/');
-      
-      if (isNew) {
-        showToast('Account created via Google! 🚀', 'success');
-        setShowBudgetModal(true);
-      } else {
-        showToast(`Welcome back, ${userParam}! 👋`, 'success');
-      }
-      return;
-    }
-
-    if (params.get('google') === 'connected') {
-      window.history.replaceState({}, '', '/');
-      if (isLoggedIn) {
-        showToast('Google connected! Your sheet is ready 📊', 'success');
-      }
-    }
-    if (params.get('error')) {
-      window.history.replaceState({}, '', '/');
-      showToast('Google connection failed: ' + params.get('error'), 'error');
-    }
-
     if (isLoggedIn) {
       loadAppData();
     }
@@ -224,10 +188,16 @@ const App = () => {
 
   const handleConnectGoogle = async () => {
     try {
-      const res = await api.get('/google/auth-url/?flow=connect');
-      window.location.href = res.data.auth_url;
+      showToast('Creating and sharing your Google Sheet... 📊', 'success');
+      const res = await api.post('/sheet/create/');
+      setGoogleConnected(true);
+      setSheetUrl(res.data.sheet_url);
+      setShowGoogleModal(false);
+      showToast('Google Sheet created and shared successfully! Check your Gmail / Drive 🚀', 'success');
+      loadAppData();
     } catch (err) {
-      showToast('Failed to start Google sign-in', 'error');
+      console.error(err);
+      showToast(err.response?.data?.error || 'Failed to create Google Sheet', 'error');
     }
   };
 

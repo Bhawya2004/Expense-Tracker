@@ -56,14 +56,28 @@ def get_user_sheets_client(profile):
 
 def create_user_sheet_oauth(profile, username):
     """
-    Create a new Google Sheet in the USER's own Google Drive
-    using their OAuth2 credentials.
+    Deprecated: Keep signature for backwards compatibility if needed.
+    """
+    return create_user_sheet_service_account(profile, username, profile.user.email)
+
+
+def create_user_sheet_service_account(profile, username, email):
+    """
+    Create a new Google Sheet using the Service Account client
+    and share it with the user's Gmail email.
     Returns the sheet ID.
     """
-    client = get_user_sheets_client(profile)
+    client = get_sheets_client()
     sheet = client.create(f"Expense Tracker - {username}")
-    # Share so it can be embedded in an iframe
+    
+    # Share with user's Gmail so it shows up in their Drive, and let anyone read for the iframe embed
+    try:
+        sheet.share(email, perm_type='user', role='writer', notify=False)
+    except Exception as e:
+        logger.error(f"Failed to share sheet with user email {email}: {e}")
+        
     sheet.share(None, perm_type='anyone', role='reader')
+    
     # Add headers
     worksheet = sheet.get_worksheet(0)
     worksheet.append_row(['Date', 'Description', 'Category', 'Amount (₹)', 'Remaining Budget (₹)', 'Daily Budget (₹)', 'Daily Expense (₹)', 'Daily Saving (₹)'])
@@ -73,13 +87,11 @@ def create_user_sheet_oauth(profile, username):
 
 
 def get_user_worksheet(sheet_id, profile=None):
-    """Get a worksheet. Uses user's OAuth client if profile is provided, else service account."""
-    if profile and profile.google_refresh_token:
-        client = get_user_sheets_client(profile)
-    else:
-        client = get_sheets_client()
+    """Get a worksheet. Uses the backend Service Account client."""
+    client = get_sheets_client()
     sheet = client.open_by_key(sheet_id)
     return sheet.get_worksheet(0)
+
 
 
 import threading

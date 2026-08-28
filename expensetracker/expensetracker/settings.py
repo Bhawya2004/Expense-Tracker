@@ -43,6 +43,8 @@ if firebase_json:
     try:
         import json
         cred_dict = json.loads(firebase_json)
+        if isinstance(cred_dict, dict) and 'private_key' in cred_dict:
+            cred_dict['private_key'] = cred_dict['private_key'].replace('\\n', '\n')
         cred = credentials.Certificate(cred_dict)
         firebase_admin.initialize_app(cred)
     except Exception as e:

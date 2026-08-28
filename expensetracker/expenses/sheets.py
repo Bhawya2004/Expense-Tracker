@@ -17,6 +17,22 @@ SCOPES = [
 
 # ── Service Account client (kept as fallback for syncing existing sheets) ──
 def get_sheets_client():
+    import os
+    import json
+    google_creds_json = os.environ.get('GOOGLE_CREDENTIALS_JSON')
+    if google_creds_json:
+        try:
+            creds_dict = json.loads(google_creds_json)
+            if isinstance(creds_dict, dict) and 'private_key' in creds_dict:
+                creds_dict['private_key'] = creds_dict['private_key'].replace('\\n', '\n')
+            creds = ServiceAccountCredentials.from_service_account_info(
+                creds_dict,
+                scopes=SCOPES
+            )
+            return gspread.authorize(creds)
+        except Exception as e:
+            logger.error(f"Failed to load GOOGLE_CREDENTIALS_JSON env var: {e}")
+
     creds = ServiceAccountCredentials.from_service_account_file(
         settings.GOOGLE_CREDENTIALS_FILE,
         scopes=SCOPES

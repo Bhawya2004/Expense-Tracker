@@ -759,10 +759,13 @@ class _DashboardScreenState extends State<DashboardScreen> {
 
   void _openGoogleSheet() {
     if (sheetUrl.isNotEmpty) {
+      final previewUrl = sheetUrl.endsWith('/preview') 
+          ? sheetUrl 
+          : '$sheetUrl/preview?chrome=false&widget=true&headers=false';
       Navigator.push(
         context,
         MaterialPageRoute(
-          builder: (_) => GoogleSheetWebViewScreen(url: sheetUrl),
+          builder: (_) => GoogleSheetWebViewScreen(url: previewUrl),
         ),
       );
     }

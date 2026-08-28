@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'dart:math';
@@ -133,9 +134,12 @@ class ApiService {
     }
   }
 
-  Future<Map<String, dynamic>?> createGoogleSheet() async {
+  Future<Map<String, dynamic>?> createGoogleSheet({String? sheetUrl}) async {
     try {
-      final res = await _dio.post('/sheet/create/');
+      final res = await _dio.post(
+        '/sheet/create/',
+        data: sheetUrl != null ? {'sheet_url': sheetUrl} : null,
+      );
       return res.data;
     } catch (e) {
       return null;
@@ -628,27 +632,113 @@ class _DashboardScreenState extends State<DashboardScreen> {
   double totalSavings = 0;
   bool googleConnected = false;
   String sheetUrl = '';
+  String serviceAccountEmail = '';
   
   List<dynamic> expenses = [];
   bool loading = true;
 
   void _connectGoogle() async {
+    final TextEditingController urlCtrl = TextEditingController();
+    final String emailToUse = serviceAccountEmail.isNotEmpty 
+        ? serviceAccountEmail 
+        : 'expense-tracker-bot@expense-tracker-496312.iam.gserviceaccount.com';
+
+    final String? sheetUrlResult = await showDialog<String>(
+      context: context,
+      builder: (context) => AlertDialog(
+        backgroundColor: const Color(0xFF161616),
+        title: const Text('Connect Google Sheet', style: TextStyle(color: Color(0xFFC8F135), fontWeight: FontWeight.bold, fontSize: 18)),
+        content: SingleChildScrollView(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              const Text(
+                'To sync your transactions, please follow these steps:',
+                style: TextStyle(color: Colors.white, fontSize: 13),
+              ),
+              const SizedBox(height: 12),
+              const Text(
+                '1. Create a new Google Sheet in your Drive.',
+                style: TextStyle(color: Color(0xFFB0B0B0), fontSize: 12),
+              ),
+              const SizedBox(height: 8),
+              GestureDetector(
+                onLongPress: () {
+                  Clipboard.setData(ClipboardData(text: emailToUse));
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(content: Text('Service Account email copied to clipboard!')),
+                  );
+                },
+                child: Container(
+                  padding: const EdgeInsets.all(8),
+                  decoration: BoxDecoration(
+                    color: Colors.white.withOpacity(0.03),
+                    border: Border.all(color: const Color(0xFF2A2A2A)),
+                    borderRadius: BorderRadius.circular(6),
+                  ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const Text(
+                        '2. Share it with this email as Editor (Long press to copy):',
+                        style: TextStyle(color: Color(0xFFB0B0B0), fontSize: 11),
+                      ),
+                      const SizedBox(height: 4),
+                      Text(
+                        emailToUse,
+                        style: const TextStyle(color: Color(0xFFC8F135), fontSize: 11, fontWeight: FontWeight.bold),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+              const SizedBox(height: 15),
+              TextField(
+                controller: urlCtrl,
+                style: const TextStyle(color: Colors.white, fontSize: 13),
+                decoration: const InputDecoration(
+                  labelText: 'PASTE GOOGLE SHEET LINK',
+                  labelStyle: TextStyle(color: Color(0xFFB0B0B0), fontSize: 11),
+                  border: OutlineInputBorder(),
+                  focusedBorder: OutlineInputBorder(borderSide: BorderSide(color: Color(0xFFC8F135))),
+                ),
+              ),
+            ],
+          ),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text('Cancel', style: TextStyle(color: Color(0xFFB0B0B0))),
+          ),
+          ElevatedButton(
+            onPressed: () => Navigator.pop(context, urlCtrl.text.trim()),
+            style: ElevatedButton.styleFrom(backgroundColor: const Color(0xFFC8F135)),
+            child: const Text('Link', style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold)),
+          ),
+        ],
+      ),
+    );
+
+    if (sheetUrlResult == null || sheetUrlResult.isEmpty) return;
+
     setState(() {
       loading = true;
     });
     try {
-      final res = await _api.createGoogleSheet();
+      final res = await _api.createGoogleSheet(sheetUrl: sheetUrlResult);
       if (res != null) {
         if (mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text('Google Sheet created and shared successfully! Check your Gmail.')),
+            const SnackBar(content: Text('Google Sheet linked and synced successfully!')),
           );
         }
         _loadData();
       } else {
         if (mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text('Failed to create Google Sheet.')),
+            const SnackBar(content: Text('Failed to link Google Sheet. Make sure you shared it as Editor.')),
           );
         }
         setState(() {
@@ -703,6 +793,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
         totalSavings = double.tryParse(budgetData['total_savings']?.toString() ?? '0') ?? 0;
         googleConnected = budgetData['google_connected'] ?? false;
         sheetUrl = budgetData['sheet_url'] ?? '';
+        serviceAccountEmail = budgetData['service_account_email'] ?? '';
       });
     }
 

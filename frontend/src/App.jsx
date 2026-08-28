@@ -22,6 +22,7 @@ const App = () => {
   const [activeFilter, setActiveFilter] = useState(null);
   const [googleConnected, setGoogleConnected] = useState(false);
   const [sheetUrl, setSheetUrl] = useState('');
+  const [serviceAccountEmail, setServiceAccountEmail] = useState('');
   const [showBudgetModal, setShowBudgetModal] = useState(false);
   const [showGoogleModal, setShowGoogleModal] = useState(false);
   const [toast, setToast] = useState({ show: false, msg: '', type: 'success' });
@@ -50,6 +51,7 @@ const App = () => {
       setBalanceSetupDate(budgetData.balance_setup_date);
       setGoogleConnected(budgetData.google_connected);
       setSheetUrl(budgetData.sheet_url);
+      setServiceAccountEmail(budgetData.service_account_email || '');
 
       const currentMonth = new Date().toISOString().slice(0, 7);
       if (!budgetData.budget_mode || budgetData.budget_mode === 'monthly') {
@@ -186,18 +188,22 @@ const App = () => {
     loadExpenses(activeFilter, start, end);
   };
 
-  const handleConnectGoogle = async () => {
-    try {
-      showToast('Creating and sharing your Google Sheet... 📊', 'success');
-      const res = await api.post('/sheet/create/');
-      setGoogleConnected(true);
-      setSheetUrl(res.data.sheet_url);
-      setShowGoogleModal(false);
-      showToast('Google Sheet created and shared successfully! Check your Gmail / Drive 🚀', 'success');
-      loadAppData();
-    } catch (err) {
-      console.error(err);
-      showToast(err.response?.data?.error || 'Failed to create Google Sheet', 'error');
+  const handleConnectGoogle = async (sheetUrlInput) => {
+    if (sheetUrlInput && typeof sheetUrlInput === 'string') {
+      try {
+        showToast('Linking your Google Sheet... 📊', 'success');
+        const res = await api.post('/sheet/create/', { sheet_url: sheetUrlInput });
+        setGoogleConnected(true);
+        setSheetUrl(res.data.sheet_url);
+        setShowGoogleModal(false);
+        showToast('Google Sheet linked and synced successfully! 🚀', 'success');
+        loadAppData();
+      } catch (err) {
+        console.error(err);
+        showToast(err.response?.data?.error || 'Failed to connect Google Sheet', 'error');
+      }
+    } else {
+      setShowGoogleModal(true);
     }
   };
 
@@ -337,6 +343,7 @@ const App = () => {
 
       <GoogleConnectModal 
         show={showGoogleModal}
+        serviceAccountEmail={serviceAccountEmail}
         onConnect={handleConnectGoogle}
         onSkip={() => setShowGoogleModal(false)}
       />

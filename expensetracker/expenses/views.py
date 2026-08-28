@@ -20,6 +20,15 @@ from firebase_admin import auth
 
 logger = logging.getLogger('expenses')
 
+def _get_service_account_email():
+    try:
+        import json
+        with open(settings.GOOGLE_CREDENTIALS_FILE) as f:
+            creds_data = json.load(f)
+            return creds_data.get('client_email', '')
+    except Exception:
+        return 'expense-tracker-bot@expense-tracker-496312.iam.gserviceaccount.com'
+
 # ── Google OAuth2 scopes ──
 GOOGLE_SCOPES = [
     'openid',
@@ -95,7 +104,8 @@ def update_budget(request):
         'budget_month': profile.budget_month,
         'google_connected': bool(profile.google_sheet_id),
         'sheet_url': sheet_url,
-        'total_savings': total_savings
+        'total_savings': total_savings,
+        'service_account_email': _get_service_account_email()
     })
 
 
@@ -192,7 +202,8 @@ def get_budget(request):
             'google_sheet_id': profile.google_sheet_id,
             'google_connected': bool(profile.google_sheet_id),
             'sheet_url': sheet_url,
-            'total_savings': total_savings
+            'total_savings': total_savings,
+            'service_account_email': _get_service_account_email()
         })
     except UserProfile.DoesNotExist:
         return Response({'error': 'Profile not found'}, status=404)
@@ -218,13 +229,70 @@ def highlight_sheet(request):
 @api_view(['POST'])
 def generate_user_sheet(request):
     """
-    Creates a new Google Sheet via Service Account, shares it with the user's email,
-    and links it to their profile.
+    Creates or connects a Google Sheet for the user profile.
+    If 'sheet_url' is passed, parses the sheet ID, verifies access, and connects it.
+    Otherwise, attempts to create one via Service Account with a fallback response.
     """
     try:
         profile = request.user.profile
     except UserProfile.DoesNotExist:
         profile = UserProfile.objects.create(user=request.user)
+
+    sheet_url_input = request.data.get('sheet_url')
+    if sheet_url_input:
+        import re
+        match = re.search(r'/d/([a-zA-Z0-9-_]+)', sheet_url_input)
+        if match:
+            sheet_id = match.group(1)
+        else:
+            sheet_id = sheet_url_input.strip()
+
+        try:
+            from expenses.sheets import get_user_worksheet, sync_sheet
+            # Try to get worksheet using Service Account to verify sharing permissions
+            worksheet = get_user_worksheet(sheet_id, profile=profile)
+            
+            # Share sheet as reader with anyone so it can be embedded in iframe
+            try:
+                # Open the sheet and share it
+                from expenses.sheets import get_sheets_client
+                client = get_sheets_client()
+                sheet = client.open_by_key(sheet_id)
+                sheet.share(None, perm_type='anyone', role='reader')
+            except Exception as share_err:
+                logger.warning(f"Could not share sheet with anyone: {share_err}")
+
+            profile.google_sheet_id = sheet_id
+            profile.save()
+
+            # Sync existing expenses immediately
+            import threading
+            user_id = request.user.id
+            def run_initial_sync():
+                try:
+                    u = User.objects.get(id=user_id)
+                    p = u.profile
+                    exps = Expense.objects.filter(user=u)
+                    if p.budget_mode == 'balance' and p.balance_setup_date:
+                        exps = exps.filter(date__gte=p.balance_setup_date)
+                    exps = exps.order_by('date')
+                    sync_sheet(p.google_sheet_id, exps, p.monthly_budget, profile=p)
+                except Exception as ex:
+                    logger.error(f"Background sheet sync failed: {ex}")
+            t = threading.Thread(target=run_initial_sync)
+            t.daemon = True
+            t.start()
+
+            return Response({
+                'message': 'Sheet connected successfully',
+                'google_sheet_id': sheet_id,
+                'sheet_url': f"https://docs.google.com/spreadsheets/d/{sheet_id}"
+            })
+        except Exception as e:
+            email = _get_service_account_email()
+            return Response({
+                'error': f"Failed to access Google Sheet. Make sure you shared it with the service account email: {email} as Editor."
+            }, status=400)
 
     if profile.google_sheet_id:
         return Response({
@@ -264,7 +332,10 @@ def generate_user_sheet(request):
         })
     except Exception as e:
         logger.error(f"Failed to generate user sheet: {e}")
-        return Response({'error': str(e)}, status=500)
+        email = _get_service_account_email()
+        return Response({
+            'error': f"Google has restricted storage quotas for service accounts. Please create a new Google Sheet on your own Drive, share it with {email} as Editor, and paste the URL here to link it."
+        }, status=400)
 
 
 # ── FIREBASE AUTHENTICATION ──
@@ -366,7 +437,8 @@ def firebase_login(request):
             'username': user.username,
             'email': user.email,
             'is_new': is_new,
-            'google_connected': True
+            'google_connected': bool(profile.google_sheet_id),
+            'service_account_email': _get_service_account_email()
         }, status=200)
 
     except Exception as e:

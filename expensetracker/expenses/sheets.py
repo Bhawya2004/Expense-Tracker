@@ -110,7 +110,34 @@ def sync_sheet(sheet_id, expenses, monthly_budget, profile=None):
     """Sync all expenses to the Google Sheet with thread locking."""
     lock = get_sheet_lock(sheet_id)
     with lock:
-        _sync_sheet_inner(sheet_id, expenses, monthly_budget, profile)
+        try:
+            _sync_sheet_inner(sheet_id, expenses, monthly_budget, profile)
+        except (gspread.exceptions.APIError, gspread.exceptions.SpreadsheetNotFound) as e:
+            is_permission_denied = False
+            if isinstance(e, gspread.exceptions.APIError):
+                status_code = getattr(e.response, 'status_code', None)
+                if status_code == 403:
+                    is_permission_denied = True
+            elif isinstance(e, gspread.exceptions.SpreadsheetNotFound):
+                is_permission_denied = True
+
+            if is_permission_denied and profile:
+                logger.warning(f"Access lost/denied on sheet {sheet_id} for user {profile.user.id}. Regenerating Service Account sheet.")
+                try:
+                    new_sheet_id = create_user_sheet_service_account(
+                        profile, 
+                        profile.user.username, 
+                        profile.user.email or f"{profile.user.username}@gmail.com"
+                    )
+                    profile.google_sheet_id = new_sheet_id
+                    profile.save(update_fields=['google_sheet_id'])
+                    
+                    # Retry inner sync on new sheet
+                    _sync_sheet_inner(new_sheet_id, expenses, monthly_budget, profile)
+                except Exception as sync_err:
+                    logger.error(f"Failed to sync regenerated sheet for user {profile.user.id}: {sync_err}")
+            else:
+                raise e
 
 
 def _sync_sheet_inner(sheet_id, expenses, monthly_budget, profile=None):

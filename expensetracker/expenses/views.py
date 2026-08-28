@@ -333,26 +333,28 @@ def firebase_login(request):
                 profile.google_sheet_id = sheet_id
                 profile.save()
                 logger.info(f"Created Google Sheet via service account for {user.username}: {sheet_id}")
-
-                # Sync any existing expenses in background
-                import threading
-                user_id = user.id
-                def run_initial_sync():
-                    try:
-                        u = User.objects.get(id=user_id)
-                        p = u.profile
-                        exps = Expense.objects.filter(user=u)
-                        if p.budget_mode == 'balance' and p.balance_setup_date:
-                            exps = exps.filter(date__gte=p.balance_setup_date)
-                        exps = exps.order_by('date')
-                        sync_sheet(p.google_sheet_id, exps, p.monthly_budget, profile=p)
-                    except Exception as ex:
-                        logger.error(f"Background initial sheet sync failed: {ex}")
-                t = threading.Thread(target=run_initial_sync)
-                t.daemon = True
-                t.start()
             except Exception as e:
                 logger.error(f"Failed to auto-create Google Sheet for {user.username}: {e}", exc_info=True)
+
+        # Trigger background sync on login to ensure sheet is fully up to date / self-healed
+        if profile.google_sheet_id:
+            import threading
+            user_id = user.id
+            def run_initial_sync():
+                try:
+                    from expenses.sheets import sync_sheet
+                    u = User.objects.get(id=user_id)
+                    p = u.profile
+                    exps = Expense.objects.filter(user=u)
+                    if p.budget_mode == 'balance' and p.balance_setup_date:
+                        exps = exps.filter(date__gte=p.balance_setup_date)
+                    exps = exps.order_by('date')
+                    sync_sheet(p.google_sheet_id, exps, p.monthly_budget, profile=p)
+                except Exception as ex:
+                    logger.error(f"Background initial sheet sync failed: {ex}")
+            t = threading.Thread(target=run_initial_sync)
+            t.daemon = True
+            t.start()
 
         # Generate SimpleJWT tokens
         from rest_framework_simplejwt.tokens import RefreshToken

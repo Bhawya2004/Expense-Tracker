@@ -67,7 +67,9 @@ def update_budget(request):
         profile.balance_setup_date = datetime.now(ist).date()
     else:
         profile.monthly_budget = request.data.get('monthly_budget', 0)
-        profile.budget_month = datetime.today().strftime('%Y-%m')
+        import pytz
+        ist = pytz.timezone('Asia/Kolkata')
+        profile.budget_month = datetime.now(ist).strftime('%Y-%m')
 
     profile.save()
 
@@ -168,7 +170,9 @@ def calculate_total_savings(user):
             expenses = expenses.filter(date__gte=setup_date)
     else:
         daily_budget = float(profile.monthly_budget) / 30.0
-        expenses = Expense.objects.filter(user=user)
+        # In monthly mode, compute savings for the current month expenses
+        current_month_str = today_date.strftime('%Y-%m')
+        expenses = Expense.objects.filter(user=user, date__startswith=current_month_str)
 
     from collections import defaultdict
     daily_totals = defaultdict(float)
@@ -191,6 +195,18 @@ def get_budget(request):
         if profile.google_sheet_id:
             sheet_url = f"https://docs.google.com/spreadsheets/d/{profile.google_sheet_id}"
             
+        import pytz
+        from datetime import datetime
+        ist = pytz.timezone('Asia/Kolkata')
+        now_ist = datetime.now(ist)
+        current_calendar_month = now_ist.strftime('%Y-%m')
+        month_name = now_ist.strftime('%B %Y')
+
+        is_new_month = False
+        if profile.budget_mode == 'monthly':
+            if not profile.budget_month or profile.budget_month != current_calendar_month:
+                is_new_month = True
+
         total_savings = calculate_total_savings(request.user)
         return Response({
             'budget_mode': profile.budget_mode,
@@ -199,6 +215,9 @@ def get_budget(request):
             'fixed_daily_budget': profile.fixed_daily_budget,
             'balance_setup_date': profile.balance_setup_date,
             'budget_month': profile.budget_month,
+            'current_calendar_month': current_calendar_month,
+            'month_name': month_name,
+            'is_new_month': is_new_month,
             'google_sheet_id': profile.google_sheet_id,
             'google_connected': bool(profile.google_sheet_id),
             'sheet_url': sheet_url,

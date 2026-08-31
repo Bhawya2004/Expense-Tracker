@@ -8,7 +8,9 @@ const BudgetModal = ({
   initialMode = 'monthly',
   initialMonthlyBudget = '',
   initialCurrentBalance = '',
-  initialFixedDailyBudget = ''
+  initialFixedDailyBudget = '',
+  isNewMonth = false,
+  monthName = ''
 }) => {
   const [budgetMode, setBudgetMode] = useState(initialMode);
   const [monthlyBudgetInput, setMonthlyBudgetInput] = useState(initialMonthlyBudget);
@@ -93,10 +95,12 @@ const BudgetModal = ({
         >
           ✕
         </button>
-        <div className="budget-icon">💰</div>
-        <div className="budget-title">Set your <span>budget mode</span></div>
+        <div className="budget-icon">{isNewMonth ? '🗓️' : '💰'}</div>
+        <div className="budget-title">{isNewMonth ? `New Month: Set your budget` : `Set your budget mode`}</div>
         <div className="budget-sub" style={{ marginBottom: '1.2rem' }}>
-          Choose how you want to track your spending. You can set a standard monthly budget or enter your custom balance with a daily limit.
+          {isNewMonth 
+            ? `Welcome to ${monthName || 'the new month'}! Set your fresh monthly budget or balance to start tracking.`
+            : 'Choose how you want to track your spending. You can set a standard monthly budget or enter your custom balance with a daily limit.'}
         </div>
 
         {/* Tab Selector */}

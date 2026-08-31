@@ -33,7 +33,7 @@ class ExpenseTrackerApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'ExpenseTrack',
+      title: 'Expense Tracker',
       debugShowCheckedModeBanner: false,
       theme: ThemeData.dark().copyWith(
         scaffoldBackgroundColor: const Color(0xFF0D0D0D),
@@ -785,10 +785,23 @@ class _DashboardScreenState extends State<DashboardScreen> {
     final budgetData = await _api.getBudget();
     final expenseData = await _api.getExpenses();
 
+    bool promptNewMonth = false;
+    String monthPromptName = '';
+
     if (budgetData != null) {
+      final currentCalMonth = DateTime.now().toIso8601String().substring(0, 7);
+      final bMonth = budgetData['budget_month']?.toString() ?? '';
+      final bMode = budgetData['budget_mode'] ?? 'monthly';
+      final isNew = budgetData['is_new_month'] == true || (bMode == 'monthly' && (bMonth.isEmpty || bMonth != currentCalMonth));
+      monthPromptName = budgetData['month_name']?.toString() ?? '';
+
+      if (bMode == 'monthly' && isNew) {
+        promptNewMonth = true;
+      }
+
       setState(() {
         username = savedUser;
-        budgetMode = budgetData['budget_mode'] ?? 'monthly';
+        budgetMode = bMode;
         monthlyBudget = double.tryParse(budgetData['monthly_budget']?.toString() ?? '0') ?? 0;
         currentBalance = double.tryParse(budgetData['current_balance']?.toString() ?? '0') ?? 0;
         fixedDailyBudget = double.tryParse(budgetData['fixed_daily_budget']?.toString() ?? '0') ?? 0;
@@ -806,9 +819,22 @@ class _DashboardScreenState extends State<DashboardScreen> {
       });
     }
     setState(() => loading = false);
+
+    if (promptNewMonth && mounted) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        _showBudgetDialog(isNewMonth: true, monthName: monthPromptName);
+      });
+    }
   }
 
   double get _totalSpent {
+    if (budgetMode == 'monthly') {
+      final currentCalMonth = DateTime.now().toIso8601String().substring(0, 7);
+      return expenses.where((e) {
+        final date = e['date']?.toString() ?? '';
+        return date.startsWith(currentCalMonth);
+      }).fold(0.0, (sum, e) => sum + (double.tryParse(e['amount']?.toString() ?? '0') ?? 0));
+    }
     return expenses.fold(0.0, (sum, e) => sum + (double.tryParse(e['amount']?.toString() ?? '0') ?? 0));
   }
 
@@ -881,7 +907,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
     });
   }
 
-  void _showBudgetDialog() {
+  void _showBudgetDialog({bool isNewMonth = false, String monthName = ''}) {
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
@@ -892,6 +918,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
         initialMonthlyBudget: monthlyBudget,
         initialCurrentBalance: currentBalance,
         initialFixedDailyBudget: fixedDailyBudget,
+        isNewMonth: isNewMonth,
+        newMonthName: monthName,
         onSave: (payload) async {
           final res = await _api.updateBudget(payload);
           if (res != null) {
@@ -1477,6 +1505,8 @@ class BudgetSetupSheet extends StatefulWidget {
   final double initialMonthlyBudget;
   final double initialCurrentBalance;
   final double initialFixedDailyBudget;
+  final bool isNewMonth;
+  final String newMonthName;
   final Function(Map<String, dynamic>) onSave;
 
   const BudgetSetupSheet({
@@ -1485,6 +1515,8 @@ class BudgetSetupSheet extends StatefulWidget {
     required this.initialMonthlyBudget,
     required this.initialCurrentBalance,
     required this.initialFixedDailyBudget,
+    this.isNewMonth = false,
+    this.newMonthName = '',
     required this.onSave,
   }) : super(key: key);
 
@@ -1554,10 +1586,36 @@ class _BudgetSetupSheetState extends State<BudgetSetupSheet> {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              const Text('SET BUDGET MODE', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Color(0xFFC8F135))),
+              Text(
+                widget.isNewMonth ? 'NEW MONTH BUDGET' : 'SET BUDGET MODE',
+                style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Color(0xFFC8F135)),
+              ),
               IconButton(icon: const Icon(Icons.close, color: Color(0xFF6B6B6B)), onPressed: () => Navigator.pop(context)),
             ],
           ),
+          if (widget.isNewMonth) ...[
+            const SizedBox(height: 10),
+            Container(
+              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+              decoration: BoxDecoration(
+                color: const Color(0xFF1E280A),
+                borderRadius: BorderRadius.circular(8),
+                border: Border.all(color: const Color(0xFFC8F135).withOpacity(0.4)),
+              ),
+              child: Row(
+                children: [
+                  const Text('🗓️', style: TextStyle(fontSize: 18)),
+                  const SizedBox(width: 8),
+                  Expanded(
+                    child: Text(
+                      'Welcome to ${widget.newMonthName.isNotEmpty ? widget.newMonthName : "a new month"}! Set your budget to start tracking fresh.',
+                      style: const TextStyle(color: Color(0xFFC8F135), fontSize: 12, fontWeight: FontWeight.w600),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ],
           const SizedBox(height: 15),
 
           // Custom Mode Selector Tab

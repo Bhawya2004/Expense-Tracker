@@ -156,27 +156,32 @@ def _sync_sheet_inner(sheet_id, expenses, monthly_budget, profile=None):
     except Exception as e:
         logger.error(f"Failed to reset sheet formatting: {e}")
     
+    import pytz
+    from datetime import datetime
     import calendar
-    from collections import defaultdict    # Calculate daily totals across all expenses
+    from collections import defaultdict, OrderedDict
+    
+    ist = pytz.timezone('Asia/Kolkata')
+    today_date = datetime.now(ist).date()
+    current_month_str = today_date.strftime('%Y-%m')
+
+    # Calculate daily totals across all expenses
     daily_totals = defaultdict(float)
     for e in expenses:
         daily_totals[str(e.date)] += float(e.amount)
 
-    if profile and profile.budget_mode == 'balance':
+    is_balance_mode = (profile and profile.budget_mode == 'balance')
+    if is_balance_mode:
         remaining = float(profile.current_balance)
         daily_budget = round(float(profile.fixed_daily_budget), 2)
     else:
-        remaining = float(monthly_budget)
         daily_budget = round(float(monthly_budget) / 30.0, 2)
+        remaining = float(monthly_budget)
         
     rows = []
-    
-    # We will build rows and keep track of cell formatting requests
-    # Header is row 1. Next row to write is row 2.
     current_row_idx = 2
     
-    # Group expenses by date (in order, since expenses are pre-sorted by date ascending)
-    from collections import OrderedDict
+    # Group expenses by date
     expenses_by_date = OrderedDict()
     for e in expenses:
         d_str = str(e.date)
@@ -186,51 +191,87 @@ def _sync_sheet_inner(sheet_id, expenses, monthly_budget, profile=None):
         
     expense_row_formats = [] # List of tuples: (row_idx, category, is_exceeded_saving)
     day_ended_rows = []      # List of row_idx
+    month_ended_rows = []    # List of row_idx
     
-    for date_str, date_expenses in expenses_by_date.items():
-        daily_exp = round(daily_totals[date_str], 2)
-        daily_saving = round(daily_budget - daily_exp, 2)
-        is_exceeded = (daily_saving < 0)
-        
-        # Add all expenses for this date
-        for e in date_expenses:
-            remaining -= float(e.amount)
-            rows.append([
-                str(e.date),
-                e.description or '—',
-                e.category,
-                float(e.amount),
-                round(remaining, 2),
-                daily_budget,
-                daily_exp,
-                daily_saving
-            ])
-            expense_row_formats.append((current_row_idx, e.category, is_exceeded))
-            current_row_idx += 1
-            
-        # Insert the highlighted "day is ended" summary row after all expenses for this day
-        # ONLY if the date is in the past (the day has really ended).
-        import pytz
-        from datetime import datetime
-        ist = pytz.timezone('Asia/Kolkata')
-        today_date = datetime.now(ist).date()
+    # Group dates by month (e.g. '2026-08': [date1, date2])
+    months_dict = OrderedDict()
+    for d_str in expenses_by_date.keys():
+        m_key = d_str[:7]
+        if m_key not in months_dict:
+            months_dict[m_key] = []
+        months_dict[m_key].append(d_str)
+
+    for m_key, date_list in months_dict.items():
+        # In monthly mode, reset the running budget balance for each new month
+        if not is_balance_mode:
+            remaining = float(monthly_budget)
+
+        month_spent = 0.0
+        month_savings = 0.0
+
         try:
-            date_obj = datetime.strptime(date_str, '%Y-%m-%d').date()
+            m_dt = datetime.strptime(m_key, '%Y-%m')
+            month_name = m_dt.strftime('%B %Y')
         except Exception:
-            date_obj = today_date
-            
-        if date_obj < today_date:
+            month_name = m_key
+
+        for date_str in date_list:
+            date_expenses = expenses_by_date[date_str]
+            daily_exp = round(daily_totals[date_str], 2)
+            daily_saving = round(daily_budget - daily_exp, 2)
+            is_exceeded = (daily_saving < 0)
+            month_spent += daily_exp
+            month_savings += daily_saving
+
+            # Add all expenses for this date
+            for e in date_expenses:
+                remaining -= float(e.amount)
+                rows.append([
+                    str(e.date),
+                    e.description or '—',
+                    e.category,
+                    float(e.amount),
+                    round(remaining, 2),
+                    daily_budget,
+                    daily_exp,
+                    daily_saving
+                ])
+                expense_row_formats.append((current_row_idx, e.category, is_exceeded))
+                current_row_idx += 1
+
+            # Daily divider: insert if date is in the past
+            try:
+                date_obj = datetime.strptime(date_str, '%Y-%m-%d').date()
+            except Exception:
+                date_obj = today_date
+                
+            if date_obj < today_date:
+                rows.append([
+                    date_str,
+                    'day is ended',
+                    '',
+                    '',
+                    '',
+                    '',
+                    '',
+                    ''
+                ])
+                day_ended_rows.append(current_row_idx)
+                current_row_idx += 1
+
+        # Month divider: insert after the month's expenses if this month has completely ended
+        if m_key < current_month_str and not is_balance_mode:
             rows.append([
-                date_str,
-                'day is ended',
-                '',
-                '',
-                '',
-                '',
-                '',
-                ''
+                m_key,
+                f"📅 MONTH ENDED ({month_name})",
+                f"Spent: ₹{round(month_spent, 2)}",
+                f"Budget: ₹{float(monthly_budget)}",
+                f"Saved: ₹{round(month_savings, 2)}",
+                "",
+                "",
+                ""
             ])
-            day_ended_rows.append(current_row_idx)
+            month_ended_rows.append(current_row_idx)
             current_row_idx += 1
         
     if rows:
@@ -249,6 +290,7 @@ def _sync_sheet_inner(sheet_id, expenses, monthly_budget, profile=None):
         
         red_fmt = {'red': 1.0, 'green': 0.8, 'blue': 0.8}  # light red highlight
         day_ended_color = {'red': 0.92, 'green': 0.92, 'blue': 0.96} # soft lavender-gray
+        month_ended_bg = {'red': 0.12, 'green': 0.14, 'blue': 0.2} # dark indigo banner
 
         try:
             requests = []
@@ -271,6 +313,30 @@ def _sync_sheet_inner(sheet_id, expenses, monthly_budget, profile=None):
                                     "italic": True,
                                     "bold": True,
                                     "foregroundColor": {"red": 0.4, "green": 0.4, "blue": 0.5}
+                                }
+                            }
+                        },
+                        "fields": "userEnteredFormat(backgroundColor,textFormat)"
+                    }
+                })
+
+            # 2. Format the "MONTH ENDED" summary banner rows
+            for row_idx in month_ended_rows:
+                requests.append({
+                    "repeatCell": {
+                        "range": {
+                            "sheetId": int(worksheet.id),
+                            "startRowIndex": row_idx - 1,
+                            "endRowIndex": row_idx,
+                            "startColumnIndex": 0,
+                            "endColumnIndex": 8
+                        },
+                        "cell": {
+                            "userEnteredFormat": {
+                                "backgroundColor": month_ended_bg,
+                                "textFormat": {
+                                    "bold": True,
+                                    "foregroundColor": {"red": 0.78, "green": 0.95, "blue": 0.21}
                                 }
                             }
                         },
@@ -354,7 +420,31 @@ def highlight_category(sheet_id, category, profile=None):
         start_row = row_idx - 1
         end_row = row_idx
         
-        if len(row) > 1 and row[1] == 'day is ended':
+        if len(row) > 1 and 'MONTH END' in str(row[1]):
+            # Keep the "MONTH END" banner styling
+            month_ended_bg = {'red': 0.12, 'green': 0.14, 'blue': 0.2}
+            requests.append({
+                "repeatCell": {
+                    "range": {
+                        "sheetId": int(worksheet.id),
+                        "startRowIndex": start_row,
+                        "endRowIndex": end_row,
+                        "startColumnIndex": 0,
+                        "endColumnIndex": 8
+                    },
+                    "cell": {
+                        "userEnteredFormat": {
+                            "backgroundColor": month_ended_bg,
+                            "textFormat": {
+                                "bold": True,
+                                "foregroundColor": {"red": 0.78, "green": 0.95, "blue": 0.21}
+                            }
+                        }
+                    },
+                    "fields": "userEnteredFormat(backgroundColor,textFormat)"
+                }
+            })
+        elif len(row) > 1 and row[1] == 'day is ended':
             # Keep the "day is ended" styling
             requests.append({
                 "repeatCell": {

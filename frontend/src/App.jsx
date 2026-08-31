@@ -24,6 +24,8 @@ const App = () => {
   const [sheetUrl, setSheetUrl] = useState('');
   const [serviceAccountEmail, setServiceAccountEmail] = useState('');
   const [showBudgetModal, setShowBudgetModal] = useState(false);
+  const [isNewMonth, setIsNewMonth] = useState(false);
+  const [monthName, setMonthName] = useState('');
   const [showGoogleModal, setShowGoogleModal] = useState(false);
   const [toast, setToast] = useState({ show: false, msg: '', type: 'success' });
   const [startDate, setStartDate] = useState('');
@@ -52,11 +54,15 @@ const App = () => {
       setGoogleConnected(budgetData.google_connected);
       setSheetUrl(budgetData.sheet_url);
       setServiceAccountEmail(budgetData.service_account_email || '');
+      setMonthName(budgetData.month_name || '');
 
       const currentMonth = new Date().toISOString().slice(0, 7);
       if (!budgetData.budget_mode || budgetData.budget_mode === 'monthly') {
-        if (budgetData.budget_month !== currentMonth) {
+        if (budgetData.is_new_month || budgetData.budget_month !== currentMonth) {
+          setIsNewMonth(true);
           setShowBudgetModal(true);
+        } else {
+          setIsNewMonth(false);
         }
       }
 
@@ -233,13 +239,13 @@ const App = () => {
       top = Object.entries(cats).sort((a, b) => b[1] - a[1])[0][0];
     }
 
-    // Calculate total daily savings accumulated across all unique dates recorded strictly before today
     const dailyTotals = {};
     const tzOffset = new Date().getTimezoneOffset() * 60000;
     const todayStr = new Date(Date.now() - tzOffset).toISOString().slice(0, 10);
+    const currentMonth = todayStr.slice(0, 7);
 
     expenses.forEach(e => {
-      const isAfterSetup = budgetMode === 'monthly' || !balanceSetupDate || e.date >= balanceSetupDate;
+      const isAfterSetup = budgetMode === 'monthly' ? e.date?.startsWith(currentMonth) : (!balanceSetupDate || e.date >= balanceSetupDate);
       if (e.date < todayStr && isAfterSetup) {
         const dStr = e.date;
         dailyTotals[dStr] = (dailyTotals[dStr] || 0) + parseFloat(e.amount);
@@ -247,7 +253,10 @@ const App = () => {
     });
 
     let budgetLimit = monthlyBudget;
-    let remaining = monthlyBudget - total;
+    const currentMonthExpensesTotal = expenses
+      .filter(e => e.date?.startsWith(currentMonth))
+      .reduce((s, e) => s + parseFloat(e.amount), 0);
+    let remaining = monthlyBudget - currentMonthExpensesTotal;
     let dailyBudget = monthlyBudget / 30.0;
     
     if (budgetMode === 'balance') {
@@ -264,9 +273,10 @@ const App = () => {
 
     return {
       budget: budgetLimit,
-      total,
+      total: budgetMode === 'monthly' ? currentMonthExpensesTotal : total,
+      allTimeTotal: total,
       remaining,
-      percent: budgetLimit > 0 ? Math.min((total / budgetLimit) * 100, 100) : 0,
+      percent: budgetLimit > 0 ? Math.min(((budgetMode === 'monthly' ? currentMonthExpensesTotal : total) / budgetLimit) * 100, 100) : 0,
       count: expenses.length,
       top,
       totalSavings: Math.round(totalSavings * 100) / 100
@@ -287,12 +297,13 @@ const App = () => {
   const activeStats = calculateStats();
 
   return (
-    <div id="app-screen" style={{ display: 'block' }}>
+    <div className="app-container">
       <Topbar 
         username={username}
         onLogout={handleLogout}
         onDeleteAccount={handleDeleteAccount}
-        onSetBudget={() => setShowBudgetModal(true)}
+        onOpenBudget={() => setShowBudgetModal(true)}
+        onOpenGoogleConnect={() => setShowGoogleModal(true)}
         googleConnected={googleConnected}
         sheetUrl={sheetUrl}
         onConnectGoogle={handleConnectGoogle}
@@ -339,6 +350,8 @@ const App = () => {
         initialMonthlyBudget={monthlyBudget || ''}
         initialCurrentBalance={currentBalance || ''}
         initialFixedDailyBudget={fixedDailyBudget || ''}
+        isNewMonth={isNewMonth}
+        monthName={monthName}
       />
 
       <GoogleConnectModal 

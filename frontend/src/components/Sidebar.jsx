@@ -70,7 +70,7 @@ const Sidebar = ({ stats, onAddExpense, activeFilter, onFilterChange, onClearFil
         <div className="section-title">Summary</div>
         <div className="stats-strip">
           <div className="stat-row">
-            <span className="stat-label">{budgetMode === 'balance' ? 'starting balance' : 'monthly budget'}</span>
+            <span className="stat-label">{(stats.budgetMode || budgetMode) === 'balance' ? 'starting balance' : 'monthly budget'}</span>
             <span className="stat-val">₹{stats.budget.toLocaleString('en-IN', { minimumFractionDigits: 2 })}</span>
           </div>
           <div className="stat-row">

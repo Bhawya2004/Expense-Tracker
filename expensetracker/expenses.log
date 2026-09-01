@@ -3617,3 +3617,668 @@ WARNING 2026-08-31 17:45:31,238 log Unauthorized: /api/expenses/
 WARNING 2026-08-31 17:45:31,238 log "GET /api/expenses/ HTTP/1.1" 401 58
 INFO 2026-08-31 17:45:47,164 views Logged in existing Django user via Firebase Auth: bfreestorage002
 DEBUG 2026-08-31 17:45:54,401 views User 10 fetched expenses | filters: category=None start=None end=None
+DEBUG 2026-09-01 04:32:55,939 views User 10 fetched expenses | filters: category=None start=None end=None
+ERROR 2026-09-01 04:32:56,226 views ExpenseViewSet error: Authentication credentials were not provided.
+Traceback (most recent call last):
+  File "/Users/bhawyagulati/Documents/Projects/Expense-Tracker-Mobile/venv/lib/python3.13/site-packages/rest_framework/views.py", line 514, in dispatch
+    self.initial(request, *args, **kwargs)
+    ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/bhawyagulati/Documents/Projects/Expense-Tracker-Mobile/venv/lib/python3.13/site-packages/rest_framework/views.py", line 420, in initial
+    self.check_permissions(request)
+    ~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "/Users/bhawyagulati/Documents/Projects/Expense-Tracker-Mobile/venv/lib/python3.13/site-packages/rest_framework/views.py", line 338, in check_permissions
+    self.permission_denied(
+    ~~~~~~~~~~~~~~~~~~~~~~^
+        request,
+        ^^^^^^^^
+        message=getattr(permission, 'message', None),
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        code=getattr(permission, 'code', None)
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "/Users/bhawyagulati/Documents/Projects/Expense-Tracker-Mobile/venv/lib/python3.13/site-packages/rest_framework/views.py", line 179, in permission_denied
+    raise exceptions.NotAuthenticated()
+rest_framework.exceptions.NotAuthenticated: Authentication credentials were not provided.
+WARNING 2026-09-01 04:32:56,231 log Unauthorized: /api/expenses/
+WARNING 2026-09-01 04:32:56,232 log "GET /api/expenses/ HTTP/1.1" 401 58
+INFO 2026-09-01 04:33:08,777 views Logged in existing Django user via Firebase Auth: bfreestorage002
+DEBUG 2026-09-01 04:33:14,848 views User 10 fetched expenses | filters: category=None start=None end=None
+DEBUG 2026-09-01 04:33:28,434 views User 10 fetched expenses | filters: category=None start=None end=None
+DEBUG 2026-09-01 04:33:31,710 views User 10 fetched expenses | filters: category=None start=None end=None
+INFO 2026-09-01 04:35:12,752 views Expense created: id=140 amount=1.00 user=10
+DEBUG 2026-09-01 04:35:15,649 views User 10 fetched expenses | filters: category=None start=None end=None
+DEBUG 2026-09-01 04:35:37,944 views User 10 fetched expenses | filters: category=None start=None end=None
+DEBUG 2026-09-01 04:35:41,428 views User 10 fetched expenses | filters: category=None start=None end=None
+DEBUG 2026-09-01 04:37:04,268 views User 10 fetched expenses | filters: category=None start=None end=None
+DEBUG 2026-09-01 04:37:07,489 views User 10 fetched expenses | filters: category=None start=None end=None
+DEBUG 2026-09-01 04:40:44,289 views User 10 fetched expenses | filters: category=None start=None end=None
+DEBUG 2026-09-01 04:40:47,392 views User 10 fetched expenses | filters: category=None start=None end=None
+INFO 2026-09-01 04:41:13,606 views Logged in existing Django user via Firebase Auth: bfreestorage002
+DEBUG 2026-09-01 04:41:19,648 views User 10 fetched expenses | filters: category=None start=None end=None
+INFO 2026-09-01 04:42:11,401 views Logged in existing Django user via Firebase Auth: bhawya12
+ERROR 2026-09-01 04:42:16,946 sheets Failed to sync sheet 1oS-5DNEefVc7HS7JAA7C2WynxVnM1uK7LNZnlrxi7Ag: APIError: [403]: The caller does not have permission
+ERROR 2026-09-01 04:42:16,946 views Background initial sheet sync failed: APIError: [403]: The caller does not have permission
+DEBUG 2026-09-01 04:42:19,428 views User 7 fetched expenses | filters: category=None start=None end=None
+DEBUG 2026-09-01 04:42:19,617 views User 10 fetched expenses | filters: category=None start=None end=None
+ERROR 2026-09-01 04:51:35,099 views ExpenseViewSet error: server closed the connection unexpectedly
+	This probably means the server terminated abnormally
+	before or while processing the request.
+server closed the connection unexpectedly
+	This probably means the server terminated abnormally
+	before or while processing the request.
+Traceback (most recent call last):
+  File "/Users/bhawyagulati/Documents/Projects/Expense-Tracker-Mobile/venv/lib/python3.13/site-packages/django/db/backends/utils.py", line 105, in _execute
+    return self.cursor.execute(sql, params)
+           ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+psycopg2.OperationalError: server closed the connection unexpectedly
+	This probably means the server terminated abnormally
+	before or while processing the request.
+server closed the connection unexpectedly
+	This probably means the server terminated abnormally
+	before or while processing the request.
+
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/Users/bhawyagulati/Documents/Projects/Expense-Tracker-Mobile/venv/lib/python3.13/site-packages/rest_framework/views.py", line 523, in dispatch
+    response = handler(request, *args, **kwargs)
+  File "/Users/bhawyagulati/Documents/Projects/Expense-Tracker-Mobile/venv/lib/python3.13/site-packages/rest_framework/mixins.py", line 46, in list
+    return Response(serializer.data)
+                    ^^^^^^^^^^^^^^^
+  File "/Users/bhawyagulati/Documents/Projects/Expense-Tracker-Mobile/venv/lib/python3.13/site-packages/rest_framework/serializers.py", line 806, in data
+    ret = super().data
+          ^^^^^^^^^^^^
+  File "/Users/bhawyagulati/Documents/Projects/Expense-Tracker-Mobile/venv/lib/python3.13/site-packages/rest_framework/serializers.py", line 249, in data
+    self._data = self.to_representation(self.instance)
+                 ~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^
+  File "/Users/bhawyagulati/Documents/Projects/Expense-Tracker-Mobile/venv/lib/python3.13/site-packages/rest_framework/serializers.py", line 725, in to_representation
+    self.child.to_representation(item) for item in iterable
+                                                   ^^^^^^^^
+  File "/Users/bhawyagulati/Documents/Projects/Expense-Tracker-Mobile/venv/lib/python3.13/site-packages/django/db/models/query.py", line 434, in __iter__
+    self._fetch_all()
+    ~~~~~~~~~~~~~~~^^
+  File "/Users/bhawyagulati/Documents/Projects/Expense-Tracker-Mobile/venv/lib/python3.13/site-packages/django/db/models/query.py", line 2239, in _fetch_all
+    self._result_cache = list(self._iterable_class(self))
+                         ~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/bhawyagulati/Documents/Projects/Expense-Tracker-Mobile/venv/lib/python3.13/site-packages/django/db/models/query.py", line 98, in __iter__
+    results = compiler.execute_sql(
+        chunked_fetch=self.chunked_fetch, chunk_size=self.chunk_size
+    )
+  File "/Users/bhawyagulati/Documents/Projects/Expense-Tracker-Mobile/venv/lib/python3.13/site-packages/django/db/models/sql/compiler.py", line 1624, in execute_sql
+    cursor.execute(sql, params)
+    ~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "/Users/bhawyagulati/Documents/Projects/Expense-Tracker-Mobile/venv/lib/python3.13/site-packages/django/db/backends/utils.py", line 122, in execute
+    return super().execute(sql, params)
+           ~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "/Users/bhawyagulati/Documents/Projects/Expense-Tracker-Mobile/venv/lib/python3.13/site-packages/django/db/backends/utils.py", line 79, in execute
+    return self._execute_with_wrappers(
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        sql, params, many=False, executor=self._execute
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "/Users/bhawyagulati/Documents/Projects/Expense-Tracker-Mobile/venv/lib/python3.13/site-packages/django/db/backends/utils.py", line 92, in _execute_with_wrappers
+    return executor(sql, params, many, context)
+  File "/Users/bhawyagulati/Documents/Projects/Expense-Tracker-Mobile/venv/lib/python3.13/site-packages/django/db/backends/utils.py", line 100, in _execute
+    with self.db.wrap_database_errors:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/bhawyagulati/Documents/Projects/Expense-Tracker-Mobile/venv/lib/python3.13/site-packages/django/db/utils.py", line 94, in __exit__
+    raise dj_exc_value.with_traceback(traceback) from exc_value
+  File "/Users/bhawyagulati/Documents/Projects/Expense-Tracker-Mobile/venv/lib/python3.13/site-packages/django/db/backends/utils.py", line 105, in _execute
+    return self.cursor.execute(sql, params)
+           ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+django.db.utils.OperationalError: server closed the connection unexpectedly
+	This probably means the server terminated abnormally
+	before or while processing the request.
+server closed the connection unexpectedly
+	This probably means the server terminated abnormally
+	before or while processing the request.
+
+ERROR 2026-09-01 04:51:35,134 log Internal Server Error: /api/budget/
+Traceback (most recent call last):
+  File "/Users/bhawyagulati/Documents/Projects/Expense-Tracker-Mobile/venv/lib/python3.13/site-packages/django/db/backends/utils.py", line 105, in _execute
+    return self.cursor.execute(sql, params)
+           ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+psycopg2.OperationalError: server closed the connection unexpectedly
+	This probably means the server terminated abnormally
+	before or while processing the request.
+server closed the connection unexpectedly
+	This probably means the server terminated abnormally
+	before or while processing the request.
+
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/Users/bhawyagulati/Documents/Projects/Expense-Tracker-Mobile/venv/lib/python3.13/site-packages/django/core/handlers/exception.py", line 56, in inner
+    response = get_response(request)
+  File "/Users/bhawyagulati/Documents/Projects/Expense-Tracker-Mobile/venv/lib/python3.13/site-packages/django/core/handlers/base.py", line 199, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/Users/bhawyagulati/Documents/Projects/Expense-Tracker-Mobile/venv/lib/python3.13/site-packages/django/views/decorators/csrf.py", line 64, in _view_wrapper
+    return view_func(request, *args, **kwargs)
+  File "/Users/bhawyagulati/Documents/Projects/Expense-Tracker-Mobile/venv/lib/python3.13/site-packages/django/views/generic/base.py", line 105, in view
+    return self.dispatch(request, *args, **kwargs)
+           ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/bhawyagulati/Documents/Projects/Expense-Tracker-Mobile/venv/lib/python3.13/site-packages/rest_framework/views.py", line 526, in dispatch
+    response = self.handle_exception(exc)
+  File "/Users/bhawyagulati/Documents/Projects/Expense-Tracker-Mobile/venv/lib/python3.13/site-packages/rest_framework/views.py", line 474, in handle_exception
+    self.raise_uncaught_exception(exc)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^
+  File "/Users/bhawyagulati/Documents/Projects/Expense-Tracker-Mobile/venv/lib/python3.13/site-packages/rest_framework/views.py", line 485, in raise_uncaught_exception
+    raise exc
+  File "/Users/bhawyagulati/Documents/Projects/Expense-Tracker-Mobile/venv/lib/python3.13/site-packages/rest_framework/views.py", line 514, in dispatch
+    self.initial(request, *args, **kwargs)
+    ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/bhawyagulati/Documents/Projects/Expense-Tracker-Mobile/venv/lib/python3.13/site-packages/rest_framework/views.py", line 419, in initial
+    self.perform_authentication(request)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "/Users/bhawyagulati/Documents/Projects/Expense-Tracker-Mobile/venv/lib/python3.13/site-packages/rest_framework/views.py", line 329, in perform_authentication
+    request.user
+  File "/Users/bhawyagulati/Documents/Projects/Expense-Tracker-Mobile/venv/lib/python3.13/site-packages/rest_framework/request.py", line 232, in user
+    self._authenticate()
+    ~~~~~~~~~~~~~~~~~~^^
+  File "/Users/bhawyagulati/Documents/Projects/Expense-Tracker-Mobile/venv/lib/python3.13/site-packages/rest_framework/request.py", line 389, in _authenticate
+    user_auth_tuple = authenticator.authenticate(self)
+  File "/Users/bhawyagulati/Documents/Projects/Expense-Tracker-Mobile/venv/lib/python3.13/site-packages/rest_framework_simplejwt/authentication.py", line 51, in authenticate
+    return self.get_user(validated_token), validated_token
+           ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "/Users/bhawyagulati/Documents/Projects/Expense-Tracker-Mobile/venv/lib/python3.13/site-packages/rest_framework_simplejwt/authentication.py", line 132, in get_user
+    user = self.user_model.objects.get(**{api_settings.USER_ID_FIELD: user_id})
+  File "/Users/bhawyagulati/Documents/Projects/Expense-Tracker-Mobile/venv/lib/python3.13/site-packages/django/db/models/manager.py", line 87, in manager_method
+    return getattr(self.get_queryset(), name)(*args, **kwargs)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "/Users/bhawyagulati/Documents/Projects/Expense-Tracker-Mobile/venv/lib/python3.13/site-packages/django/db/models/query.py", line 679, in get
+    num = len(clone)
+  File "/Users/bhawyagulati/Documents/Projects/Expense-Tracker-Mobile/venv/lib/python3.13/site-packages/django/db/models/query.py", line 416, in __len__
+    self._fetch_all()
+    ~~~~~~~~~~~~~~~^^
+  File "/Users/bhawyagulati/Documents/Projects/Expense-Tracker-Mobile/venv/lib/python3.13/site-packages/django/db/models/query.py", line 2239, in _fetch_all
+    self._result_cache = list(self._iterable_class(self))
+                         ~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/bhawyagulati/Documents/Projects/Expense-Tracker-Mobile/venv/lib/python3.13/site-packages/django/db/models/query.py", line 98, in __iter__
+    results = compiler.execute_sql(
+        chunked_fetch=self.chunked_fetch, chunk_size=self.chunk_size
+    )
+  File "/Users/bhawyagulati/Documents/Projects/Expense-Tracker-Mobile/venv/lib/python3.13/site-packages/django/db/models/sql/compiler.py", line 1624, in execute_sql
+    cursor.execute(sql, params)
+    ~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "/Users/bhawyagulati/Documents/Projects/Expense-Tracker-Mobile/venv/lib/python3.13/site-packages/django/db/backends/utils.py", line 122, in execute
+    return super().execute(sql, params)
+           ~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "/Users/bhawyagulati/Documents/Projects/Expense-Tracker-Mobile/venv/lib/python3.13/site-packages/django/db/backends/utils.py", line 79, in execute
+    return self._execute_with_wrappers(
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        sql, params, many=False, executor=self._execute
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "/Users/bhawyagulati/Documents/Projects/Expense-Tracker-Mobile/venv/lib/python3.13/site-packages/django/db/backends/utils.py", line 92, in _execute_with_wrappers
+    return executor(sql, params, many, context)
+  File "/Users/bhawyagulati/Documents/Projects/Expense-Tracker-Mobile/venv/lib/python3.13/site-packages/django/db/backends/utils.py", line 100, in _execute
+    with self.db.wrap_database_errors:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/bhawyagulati/Documents/Projects/Expense-Tracker-Mobile/venv/lib/python3.13/site-packages/django/db/utils.py", line 94, in __exit__
+    raise dj_exc_value.with_traceback(traceback) from exc_value
+  File "/Users/bhawyagulati/Documents/Projects/Expense-Tracker-Mobile/venv/lib/python3.13/site-packages/django/db/backends/utils.py", line 105, in _execute
+    return self.cursor.execute(sql, params)
+           ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+django.db.utils.OperationalError: server closed the connection unexpectedly
+	This probably means the server terminated abnormally
+	before or while processing the request.
+server closed the connection unexpectedly
+	This probably means the server terminated abnormally
+	before or while processing the request.
+
+ERROR 2026-09-01 04:51:35,137 log Internal Server Error: /api/expenses/
+Traceback (most recent call last):
+  File "/Users/bhawyagulati/Documents/Projects/Expense-Tracker-Mobile/venv/lib/python3.13/site-packages/django/db/backends/utils.py", line 105, in _execute
+    return self.cursor.execute(sql, params)
+           ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+psycopg2.OperationalError: server closed the connection unexpectedly
+	This probably means the server terminated abnormally
+	before or while processing the request.
+server closed the connection unexpectedly
+	This probably means the server terminated abnormally
+	before or while processing the request.
+
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/Users/bhawyagulati/Documents/Projects/Expense-Tracker-Mobile/venv/lib/python3.13/site-packages/django/core/handlers/exception.py", line 56, in inner
+    response = get_response(request)
+  File "/Users/bhawyagulati/Documents/Projects/Expense-Tracker-Mobile/venv/lib/python3.13/site-packages/django/core/handlers/base.py", line 199, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/Users/bhawyagulati/Documents/Projects/Expense-Tracker-Mobile/venv/lib/python3.13/site-packages/django/views/decorators/csrf.py", line 64, in _view_wrapper
+    return view_func(request, *args, **kwargs)
+  File "/Users/bhawyagulati/Documents/Projects/Expense-Tracker-Mobile/venv/lib/python3.13/site-packages/rest_framework/viewsets.py", line 124, in view
+    return self.dispatch(request, *args, **kwargs)
+           ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/bhawyagulati/Documents/Projects/Expense-Tracker-Mobile/venv/lib/python3.13/site-packages/rest_framework/views.py", line 526, in dispatch
+    response = self.handle_exception(exc)
+  File "/Users/bhawyagulati/Documents/Projects/Expense-Tracker-Mobile/expensetracker/expenses/views.py", line 555, in handle_exception
+    return super().handle_exception(exc)
+           ~~~~~~~~~~~~~~~~~~~~~~~~^^^^^
+  File "/Users/bhawyagulati/Documents/Projects/Expense-Tracker-Mobile/venv/lib/python3.13/site-packages/rest_framework/views.py", line 474, in handle_exception
+    self.raise_uncaught_exception(exc)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^
+  File "/Users/bhawyagulati/Documents/Projects/Expense-Tracker-Mobile/venv/lib/python3.13/site-packages/rest_framework/views.py", line 485, in raise_uncaught_exception
+    raise exc
+  File "/Users/bhawyagulati/Documents/Projects/Expense-Tracker-Mobile/venv/lib/python3.13/site-packages/rest_framework/views.py", line 523, in dispatch
+    response = handler(request, *args, **kwargs)
+  File "/Users/bhawyagulati/Documents/Projects/Expense-Tracker-Mobile/venv/lib/python3.13/site-packages/rest_framework/mixins.py", line 46, in list
+    return Response(serializer.data)
+                    ^^^^^^^^^^^^^^^
+  File "/Users/bhawyagulati/Documents/Projects/Expense-Tracker-Mobile/venv/lib/python3.13/site-packages/rest_framework/serializers.py", line 806, in data
+    ret = super().data
+          ^^^^^^^^^^^^
+  File "/Users/bhawyagulati/Documents/Projects/Expense-Tracker-Mobile/venv/lib/python3.13/site-packages/rest_framework/serializers.py", line 249, in data
+    self._data = self.to_representation(self.instance)
+                 ~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^
+  File "/Users/bhawyagulati/Documents/Projects/Expense-Tracker-Mobile/venv/lib/python3.13/site-packages/rest_framework/serializers.py", line 725, in to_representation
+    self.child.to_representation(item) for item in iterable
+                                                   ^^^^^^^^
+  File "/Users/bhawyagulati/Documents/Projects/Expense-Tracker-Mobile/venv/lib/python3.13/site-packages/django/db/models/query.py", line 434, in __iter__
+    self._fetch_all()
+    ~~~~~~~~~~~~~~~^^
+  File "/Users/bhawyagulati/Documents/Projects/Expense-Tracker-Mobile/venv/lib/python3.13/site-packages/django/db/models/query.py", line 2239, in _fetch_all
+    self._result_cache = list(self._iterable_class(self))
+                         ~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/bhawyagulati/Documents/Projects/Expense-Tracker-Mobile/venv/lib/python3.13/site-packages/django/db/models/query.py", line 98, in __iter__
+    results = compiler.execute_sql(
+        chunked_fetch=self.chunked_fetch, chunk_size=self.chunk_size
+    )
+  File "/Users/bhawyagulati/Documents/Projects/Expense-Tracker-Mobile/venv/lib/python3.13/site-packages/django/db/models/sql/compiler.py", line 1624, in execute_sql
+    cursor.execute(sql, params)
+    ~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "/Users/bhawyagulati/Documents/Projects/Expense-Tracker-Mobile/venv/lib/python3.13/site-packages/django/db/backends/utils.py", line 122, in execute
+    return super().execute(sql, params)
+           ~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "/Users/bhawyagulati/Documents/Projects/Expense-Tracker-Mobile/venv/lib/python3.13/site-packages/django/db/backends/utils.py", line 79, in execute
+    return self._execute_with_wrappers(
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        sql, params, many=False, executor=self._execute
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "/Users/bhawyagulati/Documents/Projects/Expense-Tracker-Mobile/venv/lib/python3.13/site-packages/django/db/backends/utils.py", line 92, in _execute_with_wrappers
+    return executor(sql, params, many, context)
+  File "/Users/bhawyagulati/Documents/Projects/Expense-Tracker-Mobile/venv/lib/python3.13/site-packages/django/db/backends/utils.py", line 100, in _execute
+    with self.db.wrap_database_errors:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/bhawyagulati/Documents/Projects/Expense-Tracker-Mobile/venv/lib/python3.13/site-packages/django/db/utils.py", line 94, in __exit__
+    raise dj_exc_value.with_traceback(traceback) from exc_value
+  File "/Users/bhawyagulati/Documents/Projects/Expense-Tracker-Mobile/venv/lib/python3.13/site-packages/django/db/backends/utils.py", line 105, in _execute
+    return self.cursor.execute(sql, params)
+           ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+django.db.utils.OperationalError: server closed the connection unexpectedly
+	This probably means the server terminated abnormally
+	before or while processing the request.
+server closed the connection unexpectedly
+	This probably means the server terminated abnormally
+	before or while processing the request.
+
+ERROR 2026-09-01 04:51:35,140 log "GET /api/budget/ HTTP/1.1" 500 26122
+ERROR 2026-09-01 04:51:35,143 log "GET /api/expenses/ HTTP/1.1" 500 25350
+DEBUG 2026-09-01 04:51:38,074 views User 7 fetched expenses | filters: category=None start=None end=None
+ERROR 2026-09-01 05:07:55,567 sheets Failed to sync sheet 1oS-5DNEefVc7HS7JAA7C2WynxVnM1uK7LNZnlrxi7Ag: APIError: [403]: The caller does not have permission
+ERROR 2026-09-01 05:07:55,569 views Async sheet sync from update_budget failed: APIError: [403]: The caller does not have permission
+DEBUG 2026-09-01 05:07:56,319 views User 7 fetched expenses | filters: category=None start=None end=None
+INFO 2026-09-01 05:08:18,938 views Logged in existing Django user via Firebase Auth: bhawya12
+ERROR 2026-09-01 05:08:39,298 sheets Failed to sync sheet 1oS-5DNEefVc7HS7JAA7C2WynxVnM1uK7LNZnlrxi7Ag: APIError: [403]: The caller does not have permission
+ERROR 2026-09-01 05:08:39,299 views Background initial sheet sync failed: APIError: [403]: The caller does not have permission
+INFO 2026-09-01 05:08:43,140 views Logged in existing Django user via Firebase Auth: bfreestorage002
+DEBUG 2026-09-01 05:08:48,942 views User 10 fetched expenses | filters: category=None start=None end=None
+INFO 2026-09-01 05:09:55,338 views Logged in existing Django user via Firebase Auth: bfreestorage002
+DEBUG 2026-09-01 05:10:01,237 views User 10 fetched expenses | filters: category=None start=None end=None
+INFO 2026-09-01 07:33:49,247 views Logged in existing Django user via Firebase Auth: bfreestorage002
+DEBUG 2026-09-01 07:33:57,507 views User 10 fetched expenses | filters: category=None start=None end=None
+DEBUG 2026-09-01 07:35:16,801 views User 10 fetched expenses | filters: category=None start=None end=None
+DEBUG 2026-09-01 07:35:20,158 views User 10 fetched expenses | filters: category=None start=None end=None
+DEBUG 2026-09-01 07:36:40,134 views User 10 fetched expenses | filters: category=None start=None end=None
+DEBUG 2026-09-01 07:36:43,396 views User 10 fetched expenses | filters: category=None start=None end=None
+DEBUG 2026-09-01 07:36:54,045 views User 10 fetched expenses | filters: category=None start=None end=None
+INFO 2026-09-01 07:37:19,672 views Expense created: id=141 amount=1.00 user=10
+DEBUG 2026-09-01 07:37:22,223 views User 10 fetched expenses | filters: category=None start=None end=None
+DEBUG 2026-09-01 07:37:52,000 views User 10 fetched expenses | filters: category=None start=None end=None
+DEBUG 2026-09-01 07:37:54,962 views User 10 fetched expenses | filters: category=None start=None end=None
+DEBUG 2026-09-01 07:40:51,371 views User 10 fetched expenses | filters: category=None start=None end=None
+DEBUG 2026-09-01 07:40:54,324 views User 10 fetched expenses | filters: category=None start=None end=None
+INFO 2026-09-01 07:41:43,350 views Logged in existing Django user via Firebase Auth: bfreestorage002
+DEBUG 2026-09-01 07:41:52,889 views User 10 fetched expenses | filters: category=None start=None end=None
+DEBUG 2026-09-01 07:45:24,668 views User 10 fetched expenses | filters: category=None start=None end=None
+DEBUG 2026-09-01 07:45:27,664 views User 10 fetched expenses | filters: category=None start=None end=None
+DEBUG 2026-09-01 07:48:31,504 views User 10 fetched expenses | filters: category=None start=None end=None
+DEBUG 2026-09-01 07:49:37,436 views User 10 fetched expenses | filters: category=None start=None end=None
+DEBUG 2026-09-01 07:49:40,187 views User 10 fetched expenses | filters: category=None start=None end=None
+DEBUG 2026-09-01 07:56:52,269 views User 10 fetched expenses | filters: category=None start=None end=None
+DEBUG 2026-09-01 07:56:55,375 views User 10 fetched expenses | filters: category=None start=None end=None
+DEBUG 2026-09-01 08:01:36,838 views User 10 fetched expenses | filters: category=None start=None end=None
+ERROR 2026-09-01 08:04:57,949 log Internal Server Error: /api/budget/
+Traceback (most recent call last):
+  File "/Users/bhawyagulati/Documents/Projects/Expense-Tracker-Mobile/venv/lib/python3.13/site-packages/django/db/backends/base/base.py", line 279, in ensure_connection
+    self.connect()
+    ~~~~~~~~~~~~^^
+  File "/Users/bhawyagulati/Documents/Projects/Expense-Tracker-Mobile/venv/lib/python3.13/site-packages/django/utils/asyncio.py", line 26, in inner
+    return func(*args, **kwargs)
+  File "/Users/bhawyagulati/Documents/Projects/Expense-Tracker-Mobile/venv/lib/python3.13/site-packages/django/db/backends/base/base.py", line 256, in connect
+    self.connection = self.get_new_connection(conn_params)
+                      ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "/Users/bhawyagulati/Documents/Projects/Expense-Tracker-Mobile/venv/lib/python3.13/site-packages/django/utils/asyncio.py", line 26, in inner
+    return func(*args, **kwargs)
+  File "/Users/bhawyagulati/Documents/Projects/Expense-Tracker-Mobile/venv/lib/python3.13/site-packages/django/db/backends/postgresql/base.py", line 345, in get_new_connection
+    connection = self.Database.connect(**conn_params)
+  File "/Users/bhawyagulati/Documents/Projects/Expense-Tracker-Mobile/venv/lib/python3.13/site-packages/psycopg2/__init__.py", line 122, in connect
+    conn = _connect(dsn, connection_factory=connection_factory, **kwasync)
+psycopg2.OperationalError: could not translate host name "ep-muddy-math-aqxvi8be.c-8.us-east-1.aws.neon.tech" to address: nodename nor servname provided, or not known
+
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/Users/bhawyagulati/Documents/Projects/Expense-Tracker-Mobile/venv/lib/python3.13/site-packages/django/core/handlers/exception.py", line 56, in inner
+    response = get_response(request)
+  File "/Users/bhawyagulati/Documents/Projects/Expense-Tracker-Mobile/venv/lib/python3.13/site-packages/django/core/handlers/base.py", line 199, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/Users/bhawyagulati/Documents/Projects/Expense-Tracker-Mobile/venv/lib/python3.13/site-packages/django/views/decorators/csrf.py", line 64, in _view_wrapper
+    return view_func(request, *args, **kwargs)
+  File "/Users/bhawyagulati/Documents/Projects/Expense-Tracker-Mobile/venv/lib/python3.13/site-packages/django/views/generic/base.py", line 105, in view
+    return self.dispatch(request, *args, **kwargs)
+           ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/bhawyagulati/Documents/Projects/Expense-Tracker-Mobile/venv/lib/python3.13/site-packages/rest_framework/views.py", line 526, in dispatch
+    response = self.handle_exception(exc)
+  File "/Users/bhawyagulati/Documents/Projects/Expense-Tracker-Mobile/venv/lib/python3.13/site-packages/rest_framework/views.py", line 474, in handle_exception
+    self.raise_uncaught_exception(exc)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^
+  File "/Users/bhawyagulati/Documents/Projects/Expense-Tracker-Mobile/venv/lib/python3.13/site-packages/rest_framework/views.py", line 485, in raise_uncaught_exception
+    raise exc
+  File "/Users/bhawyagulati/Documents/Projects/Expense-Tracker-Mobile/venv/lib/python3.13/site-packages/rest_framework/views.py", line 514, in dispatch
+    self.initial(request, *args, **kwargs)
+    ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/bhawyagulati/Documents/Projects/Expense-Tracker-Mobile/venv/lib/python3.13/site-packages/rest_framework/views.py", line 419, in initial
+    self.perform_authentication(request)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "/Users/bhawyagulati/Documents/Projects/Expense-Tracker-Mobile/venv/lib/python3.13/site-packages/rest_framework/views.py", line 329, in perform_authentication
+    request.user
+  File "/Users/bhawyagulati/Documents/Projects/Expense-Tracker-Mobile/venv/lib/python3.13/site-packages/rest_framework/request.py", line 232, in user
+    self._authenticate()
+    ~~~~~~~~~~~~~~~~~~^^
+  File "/Users/bhawyagulati/Documents/Projects/Expense-Tracker-Mobile/venv/lib/python3.13/site-packages/rest_framework/request.py", line 389, in _authenticate
+    user_auth_tuple = authenticator.authenticate(self)
+  File "/Users/bhawyagulati/Documents/Projects/Expense-Tracker-Mobile/venv/lib/python3.13/site-packages/rest_framework_simplejwt/authentication.py", line 51, in authenticate
+    return self.get_user(validated_token), validated_token
+           ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "/Users/bhawyagulati/Documents/Projects/Expense-Tracker-Mobile/venv/lib/python3.13/site-packages/rest_framework_simplejwt/authentication.py", line 132, in get_user
+    user = self.user_model.objects.get(**{api_settings.USER_ID_FIELD: user_id})
+  File "/Users/bhawyagulati/Documents/Projects/Expense-Tracker-Mobile/venv/lib/python3.13/site-packages/django/db/models/manager.py", line 87, in manager_method
+    return getattr(self.get_queryset(), name)(*args, **kwargs)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "/Users/bhawyagulati/Documents/Projects/Expense-Tracker-Mobile/venv/lib/python3.13/site-packages/django/db/models/query.py", line 679, in get
+    num = len(clone)
+  File "/Users/bhawyagulati/Documents/Projects/Expense-Tracker-Mobile/venv/lib/python3.13/site-packages/django/db/models/query.py", line 416, in __len__
+    self._fetch_all()
+    ~~~~~~~~~~~~~~~^^
+  File "/Users/bhawyagulati/Documents/Projects/Expense-Tracker-Mobile/venv/lib/python3.13/site-packages/django/db/models/query.py", line 2239, in _fetch_all
+    self._result_cache = list(self._iterable_class(self))
+                         ~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/bhawyagulati/Documents/Projects/Expense-Tracker-Mobile/venv/lib/python3.13/site-packages/django/db/models/query.py", line 98, in __iter__
+    results = compiler.execute_sql(
+        chunked_fetch=self.chunked_fetch, chunk_size=self.chunk_size
+    )
+  File "/Users/bhawyagulati/Documents/Projects/Expense-Tracker-Mobile/venv/lib/python3.13/site-packages/django/db/models/sql/compiler.py", line 1622, in execute_sql
+    cursor = self.connection.cursor()
+  File "/Users/bhawyagulati/Documents/Projects/Expense-Tracker-Mobile/venv/lib/python3.13/site-packages/django/utils/asyncio.py", line 26, in inner
+    return func(*args, **kwargs)
+  File "/Users/bhawyagulati/Documents/Projects/Expense-Tracker-Mobile/venv/lib/python3.13/site-packages/django/db/backends/base/base.py", line 320, in cursor
+    return self._cursor()
+           ~~~~~~~~~~~~^^
+  File "/Users/bhawyagulati/Documents/Projects/Expense-Tracker-Mobile/venv/lib/python3.13/site-packages/django/db/backends/base/base.py", line 296, in _cursor
+    self.ensure_connection()
+    ~~~~~~~~~~~~~~~~~~~~~~^^
+  File "/Users/bhawyagulati/Documents/Projects/Expense-Tracker-Mobile/venv/lib/python3.13/site-packages/django/utils/asyncio.py", line 26, in inner
+    return func(*args, **kwargs)
+  File "/Users/bhawyagulati/Documents/Projects/Expense-Tracker-Mobile/venv/lib/python3.13/site-packages/django/db/backends/base/base.py", line 278, in ensure_connection
+    with self.wrap_database_errors:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/bhawyagulati/Documents/Projects/Expense-Tracker-Mobile/venv/lib/python3.13/site-packages/django/db/utils.py", line 94, in __exit__
+    raise dj_exc_value.with_traceback(traceback) from exc_value
+  File "/Users/bhawyagulati/Documents/Projects/Expense-Tracker-Mobile/venv/lib/python3.13/site-packages/django/db/backends/base/base.py", line 279, in ensure_connection
+    self.connect()
+    ~~~~~~~~~~~~^^
+  File "/Users/bhawyagulati/Documents/Projects/Expense-Tracker-Mobile/venv/lib/python3.13/site-packages/django/utils/asyncio.py", line 26, in inner
+    return func(*args, **kwargs)
+  File "/Users/bhawyagulati/Documents/Projects/Expense-Tracker-Mobile/venv/lib/python3.13/site-packages/django/db/backends/base/base.py", line 256, in connect
+    self.connection = self.get_new_connection(conn_params)
+                      ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "/Users/bhawyagulati/Documents/Projects/Expense-Tracker-Mobile/venv/lib/python3.13/site-packages/django/utils/asyncio.py", line 26, in inner
+    return func(*args, **kwargs)
+  File "/Users/bhawyagulati/Documents/Projects/Expense-Tracker-Mobile/venv/lib/python3.13/site-packages/django/db/backends/postgresql/base.py", line 345, in get_new_connection
+    connection = self.Database.connect(**conn_params)
+  File "/Users/bhawyagulati/Documents/Projects/Expense-Tracker-Mobile/venv/lib/python3.13/site-packages/psycopg2/__init__.py", line 122, in connect
+    conn = _connect(dsn, connection_factory=connection_factory, **kwasync)
+django.db.utils.OperationalError: could not translate host name "ep-muddy-math-aqxvi8be.c-8.us-east-1.aws.neon.tech" to address: nodename nor servname provided, or not known
+
+ERROR 2026-09-01 08:04:57,962 log "GET /api/budget/ HTTP/1.1" 500 28388
+ERROR 2026-09-01 08:04:57,990 log Internal Server Error: /api/budget/
+Traceback (most recent call last):
+  File "/Users/bhawyagulati/Documents/Projects/Expense-Tracker-Mobile/venv/lib/python3.13/site-packages/django/db/backends/base/base.py", line 279, in ensure_connection
+    self.connect()
+    ~~~~~~~~~~~~^^
+  File "/Users/bhawyagulati/Documents/Projects/Expense-Tracker-Mobile/venv/lib/python3.13/site-packages/django/utils/asyncio.py", line 26, in inner
+    return func(*args, **kwargs)
+  File "/Users/bhawyagulati/Documents/Projects/Expense-Tracker-Mobile/venv/lib/python3.13/site-packages/django/db/backends/base/base.py", line 256, in connect
+    self.connection = self.get_new_connection(conn_params)
+                      ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "/Users/bhawyagulati/Documents/Projects/Expense-Tracker-Mobile/venv/lib/python3.13/site-packages/django/utils/asyncio.py", line 26, in inner
+    return func(*args, **kwargs)
+  File "/Users/bhawyagulati/Documents/Projects/Expense-Tracker-Mobile/venv/lib/python3.13/site-packages/django/db/backends/postgresql/base.py", line 345, in get_new_connection
+    connection = self.Database.connect(**conn_params)
+  File "/Users/bhawyagulati/Documents/Projects/Expense-Tracker-Mobile/venv/lib/python3.13/site-packages/psycopg2/__init__.py", line 122, in connect
+    conn = _connect(dsn, connection_factory=connection_factory, **kwasync)
+psycopg2.OperationalError: could not translate host name "ep-muddy-math-aqxvi8be.c-8.us-east-1.aws.neon.tech" to address: nodename nor servname provided, or not known
+
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/Users/bhawyagulati/Documents/Projects/Expense-Tracker-Mobile/venv/lib/python3.13/site-packages/django/core/handlers/exception.py", line 56, in inner
+    response = get_response(request)
+  File "/Users/bhawyagulati/Documents/Projects/Expense-Tracker-Mobile/venv/lib/python3.13/site-packages/django/core/handlers/base.py", line 199, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/Users/bhawyagulati/Documents/Projects/Expense-Tracker-Mobile/venv/lib/python3.13/site-packages/django/views/decorators/csrf.py", line 64, in _view_wrapper
+    return view_func(request, *args, **kwargs)
+  File "/Users/bhawyagulati/Documents/Projects/Expense-Tracker-Mobile/venv/lib/python3.13/site-packages/django/views/generic/base.py", line 105, in view
+    return self.dispatch(request, *args, **kwargs)
+           ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/bhawyagulati/Documents/Projects/Expense-Tracker-Mobile/venv/lib/python3.13/site-packages/rest_framework/views.py", line 526, in dispatch
+    response = self.handle_exception(exc)
+  File "/Users/bhawyagulati/Documents/Projects/Expense-Tracker-Mobile/venv/lib/python3.13/site-packages/rest_framework/views.py", line 474, in handle_exception
+    self.raise_uncaught_exception(exc)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^
+  File "/Users/bhawyagulati/Documents/Projects/Expense-Tracker-Mobile/venv/lib/python3.13/site-packages/rest_framework/views.py", line 485, in raise_uncaught_exception
+    raise exc
+  File "/Users/bhawyagulati/Documents/Projects/Expense-Tracker-Mobile/venv/lib/python3.13/site-packages/rest_framework/views.py", line 514, in dispatch
+    self.initial(request, *args, **kwargs)
+    ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/bhawyagulati/Documents/Projects/Expense-Tracker-Mobile/venv/lib/python3.13/site-packages/rest_framework/views.py", line 419, in initial
+    self.perform_authentication(request)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "/Users/bhawyagulati/Documents/Projects/Expense-Tracker-Mobile/venv/lib/python3.13/site-packages/rest_framework/views.py", line 329, in perform_authentication
+    request.user
+  File "/Users/bhawyagulati/Documents/Projects/Expense-Tracker-Mobile/venv/lib/python3.13/site-packages/rest_framework/request.py", line 232, in user
+    self._authenticate()
+    ~~~~~~~~~~~~~~~~~~^^
+  File "/Users/bhawyagulati/Documents/Projects/Expense-Tracker-Mobile/venv/lib/python3.13/site-packages/rest_framework/request.py", line 389, in _authenticate
+    user_auth_tuple = authenticator.authenticate(self)
+  File "/Users/bhawyagulati/Documents/Projects/Expense-Tracker-Mobile/venv/lib/python3.13/site-packages/rest_framework_simplejwt/authentication.py", line 51, in authenticate
+    return self.get_user(validated_token), validated_token
+           ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "/Users/bhawyagulati/Documents/Projects/Expense-Tracker-Mobile/venv/lib/python3.13/site-packages/rest_framework_simplejwt/authentication.py", line 132, in get_user
+    user = self.user_model.objects.get(**{api_settings.USER_ID_FIELD: user_id})
+  File "/Users/bhawyagulati/Documents/Projects/Expense-Tracker-Mobile/venv/lib/python3.13/site-packages/django/db/models/manager.py", line 87, in manager_method
+    return getattr(self.get_queryset(), name)(*args, **kwargs)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "/Users/bhawyagulati/Documents/Projects/Expense-Tracker-Mobile/venv/lib/python3.13/site-packages/django/db/models/query.py", line 679, in get
+    num = len(clone)
+  File "/Users/bhawyagulati/Documents/Projects/Expense-Tracker-Mobile/venv/lib/python3.13/site-packages/django/db/models/query.py", line 416, in __len__
+    self._fetch_all()
+    ~~~~~~~~~~~~~~~^^
+  File "/Users/bhawyagulati/Documents/Projects/Expense-Tracker-Mobile/venv/lib/python3.13/site-packages/django/db/models/query.py", line 2239, in _fetch_all
+    self._result_cache = list(self._iterable_class(self))
+                         ~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/bhawyagulati/Documents/Projects/Expense-Tracker-Mobile/venv/lib/python3.13/site-packages/django/db/models/query.py", line 98, in __iter__
+    results = compiler.execute_sql(
+        chunked_fetch=self.chunked_fetch, chunk_size=self.chunk_size
+    )
+  File "/Users/bhawyagulati/Documents/Projects/Expense-Tracker-Mobile/venv/lib/python3.13/site-packages/django/db/models/sql/compiler.py", line 1622, in execute_sql
+    cursor = self.connection.cursor()
+  File "/Users/bhawyagulati/Documents/Projects/Expense-Tracker-Mobile/venv/lib/python3.13/site-packages/django/utils/asyncio.py", line 26, in inner
+    return func(*args, **kwargs)
+  File "/Users/bhawyagulati/Documents/Projects/Expense-Tracker-Mobile/venv/lib/python3.13/site-packages/django/db/backends/base/base.py", line 320, in cursor
+    return self._cursor()
+           ~~~~~~~~~~~~^^
+  File "/Users/bhawyagulati/Documents/Projects/Expense-Tracker-Mobile/venv/lib/python3.13/site-packages/django/db/backends/base/base.py", line 296, in _cursor
+    self.ensure_connection()
+    ~~~~~~~~~~~~~~~~~~~~~~^^
+  File "/Users/bhawyagulati/Documents/Projects/Expense-Tracker-Mobile/venv/lib/python3.13/site-packages/django/utils/asyncio.py", line 26, in inner
+    return func(*args, **kwargs)
+  File "/Users/bhawyagulati/Documents/Projects/Expense-Tracker-Mobile/venv/lib/python3.13/site-packages/django/db/backends/base/base.py", line 278, in ensure_connection
+    with self.wrap_database_errors:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/bhawyagulati/Documents/Projects/Expense-Tracker-Mobile/venv/lib/python3.13/site-packages/django/db/utils.py", line 94, in __exit__
+    raise dj_exc_value.with_traceback(traceback) from exc_value
+  File "/Users/bhawyagulati/Documents/Projects/Expense-Tracker-Mobile/venv/lib/python3.13/site-packages/django/db/backends/base/base.py", line 279, in ensure_connection
+    self.connect()
+    ~~~~~~~~~~~~^^
+  File "/Users/bhawyagulati/Documents/Projects/Expense-Tracker-Mobile/venv/lib/python3.13/site-packages/django/utils/asyncio.py", line 26, in inner
+    return func(*args, **kwargs)
+  File "/Users/bhawyagulati/Documents/Projects/Expense-Tracker-Mobile/venv/lib/python3.13/site-packages/django/db/backends/base/base.py", line 256, in connect
+    self.connection = self.get_new_connection(conn_params)
+                      ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "/Users/bhawyagulati/Documents/Projects/Expense-Tracker-Mobile/venv/lib/python3.13/site-packages/django/utils/asyncio.py", line 26, in inner
+    return func(*args, **kwargs)
+  File "/Users/bhawyagulati/Documents/Projects/Expense-Tracker-Mobile/venv/lib/python3.13/site-packages/django/db/backends/postgresql/base.py", line 345, in get_new_connection
+    connection = self.Database.connect(**conn_params)
+  File "/Users/bhawyagulati/Documents/Projects/Expense-Tracker-Mobile/venv/lib/python3.13/site-packages/psycopg2/__init__.py", line 122, in connect
+    conn = _connect(dsn, connection_factory=connection_factory, **kwasync)
+django.db.utils.OperationalError: could not translate host name "ep-muddy-math-aqxvi8be.c-8.us-east-1.aws.neon.tech" to address: nodename nor servname provided, or not known
+
+ERROR 2026-09-01 08:04:57,994 log "GET /api/budget/ HTTP/1.1" 500 28388
+DEBUG 2026-09-01 11:13:34,294 views User 10 fetched expenses | filters: category=None start=None end=None
+DEBUG 2026-09-01 11:13:37,532 views User 10 fetched expenses | filters: category=None start=None end=None
+WARNING 2026-09-01 11:15:05,080 views Could not share sheet with anyone: APIError: [404]: File not found: 1F15rvMqo7qLKE-oRpoGytKSoTkIERsNopvmirTjgnOk.
+DEBUG 2026-09-01 11:15:11,105 views User 10 fetched expenses | filters: category=None start=None end=None
+DEBUG 2026-09-01 11:18:38,086 views User 10 fetched expenses | filters: category=None start=None end=None
+DEBUG 2026-09-01 11:18:41,235 views User 10 fetched expenses | filters: category=None start=None end=None
+DEBUG 2026-09-01 11:21:08,742 views User 10 fetched expenses | filters: category=None start=None end=None
+DEBUG 2026-09-01 11:21:11,834 views User 10 fetched expenses | filters: category=None start=None end=None
+DEBUG 2026-09-01 11:27:54,056 views User 10 fetched expenses | filters: category=None start=None end=None
+DEBUG 2026-09-01 11:27:56,652 views User 10 fetched expenses | filters: category=None start=None end=None
+ERROR 2026-09-01 11:29:22,639 log Internal Server Error: /api/budget/
+Traceback (most recent call last):
+  File "/Users/bhawyagulati/Documents/Projects/Expense-Tracker-Mobile/venv/lib/python3.13/site-packages/django/db/backends/base/base.py", line 279, in ensure_connection
+    self.connect()
+    ~~~~~~~~~~~~^^
+  File "/Users/bhawyagulati/Documents/Projects/Expense-Tracker-Mobile/venv/lib/python3.13/site-packages/django/utils/asyncio.py", line 26, in inner
+    return func(*args, **kwargs)
+  File "/Users/bhawyagulati/Documents/Projects/Expense-Tracker-Mobile/venv/lib/python3.13/site-packages/django/db/backends/base/base.py", line 256, in connect
+    self.connection = self.get_new_connection(conn_params)
+                      ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "/Users/bhawyagulati/Documents/Projects/Expense-Tracker-Mobile/venv/lib/python3.13/site-packages/django/utils/asyncio.py", line 26, in inner
+    return func(*args, **kwargs)
+  File "/Users/bhawyagulati/Documents/Projects/Expense-Tracker-Mobile/venv/lib/python3.13/site-packages/django/db/backends/postgresql/base.py", line 345, in get_new_connection
+    connection = self.Database.connect(**conn_params)
+  File "/Users/bhawyagulati/Documents/Projects/Expense-Tracker-Mobile/venv/lib/python3.13/site-packages/psycopg2/__init__.py", line 122, in connect
+    conn = _connect(dsn, connection_factory=connection_factory, **kwasync)
+psycopg2.OperationalError: could not translate host name "ep-muddy-math-aqxvi8be.c-8.us-east-1.aws.neon.tech" to address: nodename nor servname provided, or not known
+
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/Users/bhawyagulati/Documents/Projects/Expense-Tracker-Mobile/venv/lib/python3.13/site-packages/django/core/handlers/exception.py", line 56, in inner
+    response = get_response(request)
+  File "/Users/bhawyagulati/Documents/Projects/Expense-Tracker-Mobile/venv/lib/python3.13/site-packages/django/core/handlers/base.py", line 199, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/Users/bhawyagulati/Documents/Projects/Expense-Tracker-Mobile/venv/lib/python3.13/site-packages/django/views/decorators/csrf.py", line 64, in _view_wrapper
+    return view_func(request, *args, **kwargs)
+  File "/Users/bhawyagulati/Documents/Projects/Expense-Tracker-Mobile/venv/lib/python3.13/site-packages/django/views/generic/base.py", line 105, in view
+    return self.dispatch(request, *args, **kwargs)
+           ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/bhawyagulati/Documents/Projects/Expense-Tracker-Mobile/venv/lib/python3.13/site-packages/rest_framework/views.py", line 526, in dispatch
+    response = self.handle_exception(exc)
+  File "/Users/bhawyagulati/Documents/Projects/Expense-Tracker-Mobile/venv/lib/python3.13/site-packages/rest_framework/views.py", line 474, in handle_exception
+    self.raise_uncaught_exception(exc)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^
+  File "/Users/bhawyagulati/Documents/Projects/Expense-Tracker-Mobile/venv/lib/python3.13/site-packages/rest_framework/views.py", line 485, in raise_uncaught_exception
+    raise exc
+  File "/Users/bhawyagulati/Documents/Projects/Expense-Tracker-Mobile/venv/lib/python3.13/site-packages/rest_framework/views.py", line 514, in dispatch
+    self.initial(request, *args, **kwargs)
+    ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/bhawyagulati/Documents/Projects/Expense-Tracker-Mobile/venv/lib/python3.13/site-packages/rest_framework/views.py", line 419, in initial
+    self.perform_authentication(request)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "/Users/bhawyagulati/Documents/Projects/Expense-Tracker-Mobile/venv/lib/python3.13/site-packages/rest_framework/views.py", line 329, in perform_authentication
+    request.user
+  File "/Users/bhawyagulati/Documents/Projects/Expense-Tracker-Mobile/venv/lib/python3.13/site-packages/rest_framework/request.py", line 232, in user
+    self._authenticate()
+    ~~~~~~~~~~~~~~~~~~^^
+  File "/Users/bhawyagulati/Documents/Projects/Expense-Tracker-Mobile/venv/lib/python3.13/site-packages/rest_framework/request.py", line 389, in _authenticate
+    user_auth_tuple = authenticator.authenticate(self)
+  File "/Users/bhawyagulati/Documents/Projects/Expense-Tracker-Mobile/venv/lib/python3.13/site-packages/rest_framework_simplejwt/authentication.py", line 51, in authenticate
+    return self.get_user(validated_token), validated_token
+           ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "/Users/bhawyagulati/Documents/Projects/Expense-Tracker-Mobile/venv/lib/python3.13/site-packages/rest_framework_simplejwt/authentication.py", line 132, in get_user
+    user = self.user_model.objects.get(**{api_settings.USER_ID_FIELD: user_id})
+  File "/Users/bhawyagulati/Documents/Projects/Expense-Tracker-Mobile/venv/lib/python3.13/site-packages/django/db/models/manager.py", line 87, in manager_method
+    return getattr(self.get_queryset(), name)(*args, **kwargs)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "/Users/bhawyagulati/Documents/Projects/Expense-Tracker-Mobile/venv/lib/python3.13/site-packages/django/db/models/query.py", line 679, in get
+    num = len(clone)
+  File "/Users/bhawyagulati/Documents/Projects/Expense-Tracker-Mobile/venv/lib/python3.13/site-packages/django/db/models/query.py", line 416, in __len__
+    self._fetch_all()
+    ~~~~~~~~~~~~~~~^^
+  File "/Users/bhawyagulati/Documents/Projects/Expense-Tracker-Mobile/venv/lib/python3.13/site-packages/django/db/models/query.py", line 2239, in _fetch_all
+    self._result_cache = list(self._iterable_class(self))
+                         ~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/bhawyagulati/Documents/Projects/Expense-Tracker-Mobile/venv/lib/python3.13/site-packages/django/db/models/query.py", line 98, in __iter__
+    results = compiler.execute_sql(
+        chunked_fetch=self.chunked_fetch, chunk_size=self.chunk_size
+    )
+  File "/Users/bhawyagulati/Documents/Projects/Expense-Tracker-Mobile/venv/lib/python3.13/site-packages/django/db/models/sql/compiler.py", line 1622, in execute_sql
+    cursor = self.connection.cursor()
+  File "/Users/bhawyagulati/Documents/Projects/Expense-Tracker-Mobile/venv/lib/python3.13/site-packages/django/utils/asyncio.py", line 26, in inner
+    return func(*args, **kwargs)
+  File "/Users/bhawyagulati/Documents/Projects/Expense-Tracker-Mobile/venv/lib/python3.13/site-packages/django/db/backends/base/base.py", line 320, in cursor
+    return self._cursor()
+           ~~~~~~~~~~~~^^
+  File "/Users/bhawyagulati/Documents/Projects/Expense-Tracker-Mobile/venv/lib/python3.13/site-packages/django/db/backends/base/base.py", line 296, in _cursor
+    self.ensure_connection()
+    ~~~~~~~~~~~~~~~~~~~~~~^^
+  File "/Users/bhawyagulati/Documents/Projects/Expense-Tracker-Mobile/venv/lib/python3.13/site-packages/django/utils/asyncio.py", line 26, in inner
+    return func(*args, **kwargs)
+  File "/Users/bhawyagulati/Documents/Projects/Expense-Tracker-Mobile/venv/lib/python3.13/site-packages/django/db/backends/base/base.py", line 278, in ensure_connection
+    with self.wrap_database_errors:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/bhawyagulati/Documents/Projects/Expense-Tracker-Mobile/venv/lib/python3.13/site-packages/django/db/utils.py", line 94, in __exit__
+    raise dj_exc_value.with_traceback(traceback) from exc_value
+  File "/Users/bhawyagulati/Documents/Projects/Expense-Tracker-Mobile/venv/lib/python3.13/site-packages/django/db/backends/base/base.py", line 279, in ensure_connection
+    self.connect()
+    ~~~~~~~~~~~~^^
+  File "/Users/bhawyagulati/Documents/Projects/Expense-Tracker-Mobile/venv/lib/python3.13/site-packages/django/utils/asyncio.py", line 26, in inner
+    return func(*args, **kwargs)
+  File "/Users/bhawyagulati/Documents/Projects/Expense-Tracker-Mobile/venv/lib/python3.13/site-packages/django/db/backends/base/base.py", line 256, in connect
+    self.connection = self.get_new_connection(conn_params)
+                      ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "/Users/bhawyagulati/Documents/Projects/Expense-Tracker-Mobile/venv/lib/python3.13/site-packages/django/utils/asyncio.py", line 26, in inner
+    return func(*args, **kwargs)
+  File "/Users/bhawyagulati/Documents/Projects/Expense-Tracker-Mobile/venv/lib/python3.13/site-packages/django/db/backends/postgresql/base.py", line 345, in get_new_connection
+    connection = self.Database.connect(**conn_params)
+  File "/Users/bhawyagulati/Documents/Projects/Expense-Tracker-Mobile/venv/lib/python3.13/site-packages/psycopg2/__init__.py", line 122, in connect
+    conn = _connect(dsn, connection_factory=connection_factory, **kwasync)
+django.db.utils.OperationalError: could not translate host name "ep-muddy-math-aqxvi8be.c-8.us-east-1.aws.neon.tech" to address: nodename nor servname provided, or not known
+
+ERROR 2026-09-01 11:29:22,652 log "GET /api/budget/ HTTP/1.1" 500 28388
+DEBUG 2026-09-01 11:29:43,670 views User 10 fetched expenses | filters: category=None start=None end=None

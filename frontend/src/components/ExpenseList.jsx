@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 
-const ExpenseList = ({ expenses, onDelete, onUpdate }) => {
+const ExpenseList = ({ expenses, selectedMonth, onDelete, onUpdate }) => {
   const [editingId, setEditingId] = useState(null);
   const [editData, setEditData] = useState({});
 
@@ -41,10 +41,23 @@ const ExpenseList = ({ expenses, onDelete, onUpdate }) => {
     { id: 'other', label: 'Other' },
   ];
 
+  const getHeaderTitle = () => {
+    if (selectedMonth) {
+      try {
+        const [y, m] = selectedMonth.split('-');
+        const d = new Date(parseInt(y), parseInt(m) - 1, 1);
+        return `${d.toLocaleString('en-US', { month: 'long', year: 'numeric' })} Expenses`;
+      } catch (e) {
+        return `${selectedMonth} Expenses`;
+      }
+    }
+    return 'Active Month Expenses';
+  };
+
   return (
     <div className="expenses-container">
       <div className="expenses-header" style={{ marginBottom: '1.5rem', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-        <h2 style={{ fontFamily: "'Syne', sans-serif", fontSize: '1.25rem', fontWeight: 800 }}>All Expenses</h2>
+        <h2 style={{ fontFamily: "'Syne', sans-serif", fontSize: '1.25rem', fontWeight: 800 }}>{getHeaderTitle()}</h2>
         <span className="count-badge" style={{ opacity: 0.6 }}>{expenses.length} items</span>
       </div>
 

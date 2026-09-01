@@ -30,6 +30,7 @@ const App = () => {
   const [toast, setToast] = useState({ show: false, msg: '', type: 'success' });
   const [startDate, setStartDate] = useState('');
   const [endDate, setEndDate] = useState('');
+  const [monthlyHistories, setMonthlyHistories] = useState({});
 
   useEffect(() => {
     if (isLoggedIn) {
@@ -55,10 +56,11 @@ const App = () => {
       setSheetUrl(budgetData.sheet_url);
       setServiceAccountEmail(budgetData.service_account_email || '');
       setMonthName(budgetData.month_name || '');
+      setMonthlyHistories(budgetData.monthly_histories || {});
 
       const currentMonth = new Date().toISOString().slice(0, 7);
       if (!budgetData.budget_mode || budgetData.budget_mode === 'monthly') {
-        if (budgetData.is_new_month || budgetData.budget_month !== currentMonth) {
+        if (budgetData.is_new_month || !budgetData.budget_month || budgetData.budget_month !== currentMonth) {
           setIsNewMonth(true);
           setShowBudgetModal(true);
         } else {
@@ -69,6 +71,7 @@ const App = () => {
       loadExpenses(activeFilter, startDate, endDate);
     } catch (err) {
       if (err.response?.status === 404) {
+        setIsNewMonth(true);
         setShowBudgetModal(true);
       }
     }
@@ -92,9 +95,6 @@ const App = () => {
   const handleLoginSuccess = (user, isNew = false) => {
     setUsername(user);
     setIsLoggedIn(true);
-    if (isNew) {
-      setShowBudgetModal(true);
-    }
   };
 
   const handleLogout = () => {
@@ -107,6 +107,7 @@ const App = () => {
     setMonthlyBudget(0);
     setGoogleConnected(false);
     setSheetUrl('');
+    setIsNewMonth(false);
   };
 
   const handleDeleteAccount = async () => {
@@ -121,6 +122,11 @@ const App = () => {
   };
 
   const handleAddExpense = async (data) => {
+    if (isNewMonth) {
+      showToast('⚠️ Please set your new monthly budget first!', 'error');
+      setShowBudgetModal(true);
+      return false;
+    }
     try {
       await api.post('/expenses/', data);
       showToast('Expense added & sheet updated! 📊', 'success');
@@ -220,6 +226,7 @@ const App = () => {
     setFixedDailyBudget(parseFloat(data.fixed_daily_budget) || 0);
     setBalanceSetupDate(data.balance_setup_date);
     setGoogleConnected(data.google_connected);
+    if (data.monthly_histories) setMonthlyHistories(data.monthly_histories);
     
     showToast(`Budget configuration updated successfully!`, 'success');
     if (!data.google_connected) {
@@ -229,39 +236,115 @@ const App = () => {
     }
   };
 
-  const calculateStats = () => {
-    const total = expenses.reduce((s, e) => s + parseFloat(e.amount), 0);
-    
+  const [selectedMonth, setSelectedMonth] = useState(''); // '' means current active month
+
+  const availableMonths = React.useMemo(() => {
+    const set = new Set();
+    expenses.forEach(e => {
+      if (e.date && e.date.length >= 7) {
+        set.add(e.date.slice(0, 7));
+      }
+    });
+    return Array.from(set).sort().reverse();
+  }, [expenses]);
+
+  const calculateStats = (targetMonth = selectedMonth) => {
+    const tzOffset = new Date().getTimezoneOffset() * 60000;
+    const todayStr = new Date(Date.now() - tzOffset).toISOString().slice(0, 10);
+    const currentCalMonth = todayStr.slice(0, 7);
+
+    // If viewing a specific past month
+    if (targetMonth && targetMonth !== currentCalMonth) {
+      const monthExpenses = expenses.filter(e => e.date?.startsWith(targetMonth));
+      const monthTotal = monthExpenses.reduce((s, e) => s + parseFloat(e.amount), 0);
+      
+      let top = '—';
+      if (monthExpenses.length) {
+        const cats = {};
+        monthExpenses.forEach(e => cats[e.category] = (cats[e.category] || 0) + parseFloat(e.amount));
+        top = Object.entries(cats).sort((a, b) => b[1] - a[1])[0][0];
+      }
+
+      // Retrieve exact recorded history for this month if available
+      const history = monthlyHistories[targetMonth];
+      let monthMode = history ? history.budget_mode : budgetMode;
+      let monthBudgetLimit = 0;
+      let monthDailyBudget = 0;
+
+      if (history) {
+        if (history.budget_mode === 'balance') {
+          monthBudgetLimit = history.starting_balance;
+          monthDailyBudget = history.fixed_daily_budget;
+        } else {
+          monthBudgetLimit = history.monthly_budget;
+          monthDailyBudget = history.monthly_budget / 30.0;
+        }
+      } else {
+        if (budgetMode === 'balance') {
+          monthBudgetLimit = currentBalance;
+          monthDailyBudget = fixedDailyBudget;
+        } else {
+          monthBudgetLimit = monthlyBudget;
+          monthDailyBudget = monthlyBudget / 30.0;
+        }
+      }
+
+      // Past month daily savings
+      const dailyTotals = {};
+      monthExpenses.forEach(e => {
+        const dStr = e.date;
+        dailyTotals[dStr] = (dailyTotals[dStr] || 0) + parseFloat(e.amount);
+      });
+      let monthSavings = 0;
+      Object.keys(dailyTotals).forEach(dStr => {
+        monthSavings += (monthDailyBudget - dailyTotals[dStr]);
+      });
+
+      return {
+        isPastMonth: true,
+        monthKey: targetMonth,
+        budgetMode: monthMode,
+        budget: monthBudgetLimit,
+        total: monthTotal,
+        allTimeTotal: expenses.reduce((s, e) => s + parseFloat(e.amount), 0),
+        remaining: monthBudgetLimit - monthTotal,
+        percent: monthBudgetLimit > 0 ? Math.min((monthTotal / monthBudgetLimit) * 100, 100) : 0,
+        count: monthExpenses.length,
+        top,
+        totalSavings: Math.round(monthSavings * 100) / 100
+      };
+    }
+
+    // Active (current) month / cycle calculation
+    const activeCycleExpenses = budgetMode === 'monthly'
+      ? expenses.filter(e => e.date?.startsWith(currentCalMonth))
+      : expenses.filter(e => (balanceSetupDate ? e.date >= balanceSetupDate : e.date?.startsWith(currentCalMonth)));
+
+    const activeSpent = activeCycleExpenses.reduce((s, e) => s + parseFloat(e.amount), 0);
+    const allTimeTotal = expenses.reduce((s, e) => s + parseFloat(e.amount), 0);
+
     let top = '—';
-    if (expenses.length) {
+    if (activeCycleExpenses.length) {
       const cats = {};
-      expenses.forEach(e => cats[e.category] = (cats[e.category] || 0) + parseFloat(e.amount));
+      activeCycleExpenses.forEach(e => cats[e.category] = (cats[e.category] || 0) + parseFloat(e.amount));
       top = Object.entries(cats).sort((a, b) => b[1] - a[1])[0][0];
     }
 
     const dailyTotals = {};
-    const tzOffset = new Date().getTimezoneOffset() * 60000;
-    const todayStr = new Date(Date.now() - tzOffset).toISOString().slice(0, 10);
-    const currentMonth = todayStr.slice(0, 7);
-
-    expenses.forEach(e => {
-      const isAfterSetup = budgetMode === 'monthly' ? e.date?.startsWith(currentMonth) : (!balanceSetupDate || e.date >= balanceSetupDate);
-      if (e.date < todayStr && isAfterSetup) {
+    activeCycleExpenses.forEach(e => {
+      if (e.date < todayStr) {
         const dStr = e.date;
         dailyTotals[dStr] = (dailyTotals[dStr] || 0) + parseFloat(e.amount);
       }
     });
 
     let budgetLimit = monthlyBudget;
-    const currentMonthExpensesTotal = expenses
-      .filter(e => e.date?.startsWith(currentMonth))
-      .reduce((s, e) => s + parseFloat(e.amount), 0);
-    let remaining = monthlyBudget - currentMonthExpensesTotal;
+    let remaining = monthlyBudget - activeSpent;
     let dailyBudget = monthlyBudget / 30.0;
-    
+
     if (budgetMode === 'balance') {
       budgetLimit = currentBalance;
-      remaining = currentBalance - total;
+      remaining = currentBalance - activeSpent;
       dailyBudget = fixedDailyBudget;
     }
 
@@ -272,12 +355,14 @@ const App = () => {
     });
 
     return {
+      isPastMonth: false,
+      monthKey: currentCalMonth,
       budget: budgetLimit,
-      total: budgetMode === 'monthly' ? currentMonthExpensesTotal : total,
-      allTimeTotal: total,
+      total: activeSpent,
+      allTimeTotal,
       remaining,
-      percent: budgetLimit > 0 ? Math.min(((budgetMode === 'monthly' ? currentMonthExpensesTotal : total) / budgetLimit) * 100, 100) : 0,
-      count: expenses.length,
+      percent: budgetLimit > 0 ? Math.min((activeSpent / budgetLimit) * 100, 100) : 0,
+      count: activeCycleExpenses.length,
       top,
       totalSavings: Math.round(totalSavings * 100) / 100
     };
@@ -295,6 +380,15 @@ const App = () => {
   }
 
   const activeStats = calculateStats();
+  
+  const currentCalMonthKey = new Date(Date.now() - (new Date().getTimezoneOffset() * 60000)).toISOString().slice(0, 7);
+  const activeCycleExpenses = budgetMode === 'monthly'
+    ? expenses.filter(e => e.date?.startsWith(currentCalMonthKey))
+    : expenses.filter(e => (balanceSetupDate ? e.date >= balanceSetupDate : e.date?.startsWith(currentCalMonthKey)));
+
+  const displayedExpenses = selectedMonth 
+    ? expenses.filter(e => e.date?.startsWith(selectedMonth))
+    : activeCycleExpenses;
 
   return (
     <div className="app-container">
@@ -302,6 +396,7 @@ const App = () => {
         username={username}
         onLogout={handleLogout}
         onDeleteAccount={handleDeleteAccount}
+        onSetBudget={() => setShowBudgetModal(true)}
         onOpenBudget={() => setShowBudgetModal(true)}
         onOpenGoogleConnect={() => setShowGoogleModal(true)}
         googleConnected={googleConnected}
@@ -310,7 +405,49 @@ const App = () => {
         startDate={startDate}
         endDate={endDate}
         onDateChange={handleDateChange}
+        availableMonths={availableMonths}
+        selectedMonth={selectedMonth}
+        onSelectMonth={setSelectedMonth}
+        currentMonthName={monthName}
       />
+
+      {/* Historical Month Notice Banner - Clean & Matching System Theme */}
+      {selectedMonth && selectedMonth !== currentCalMonthKey && (
+        <div style={{
+          background: '#121609',
+          borderBottom: '1px solid rgba(200, 241, 53, 0.35)',
+          color: '#C8F135',
+          padding: '0.65rem 1.8rem',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'space-between',
+          fontSize: '0.82rem',
+          fontFamily: "'Syne', sans-serif"
+        }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem' }}>
+            <span style={{ fontSize: '1.1rem' }}>📜</span>
+            <span style={{ color: '#E0E0E0' }}>
+              Viewing Historical Insights for <strong style={{ color: '#C8F135' }}>{selectedMonth}</strong> ({activeStats.count} transactions • ₹{activeStats.total.toFixed(2)} spent)
+            </span>
+          </div>
+          <button 
+            onClick={() => setSelectedMonth('')}
+            style={{
+              background: '#C8F135',
+              color: '#000000',
+              border: 'none',
+              borderRadius: '6px',
+              padding: '0.35rem 0.9rem',
+              fontWeight: 800,
+              cursor: 'pointer',
+              fontSize: '0.75rem',
+              fontFamily: "'Syne', sans-serif"
+            }}
+          >
+            ← Back to Active Month
+          </button>
+        </div>
+      )}
 
       <div className="app-body">
         <Sidebar 
@@ -330,12 +467,13 @@ const App = () => {
           />
 
           <AnalyticsDashboard 
-            expenses={expenses}
+            expenses={displayedExpenses}
             monthlyBudget={activeStats.budget}
           />
           
           <ExpenseList 
-            expenses={expenses}
+            expenses={displayedExpenses}
+            selectedMonth={selectedMonth}
             onDelete={handleDeleteExpense}
             onUpdate={handleUpdateExpense}
           />
@@ -352,6 +490,7 @@ const App = () => {
         initialFixedDailyBudget={fixedDailyBudget || ''}
         isNewMonth={isNewMonth}
         monthName={monthName}
+        targetMonth={selectedMonth || ''}
       />
 
       <GoogleConnectModal 

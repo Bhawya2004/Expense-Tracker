@@ -10,7 +10,8 @@ const BudgetModal = ({
   initialCurrentBalance = '',
   initialFixedDailyBudget = '',
   isNewMonth = false,
-  monthName = ''
+  monthName = '',
+  targetMonth = ''
 }) => {
   const [budgetMode, setBudgetMode] = useState(initialMode);
   const [monthlyBudgetInput, setMonthlyBudgetInput] = useState(initialMonthlyBudget);
@@ -23,7 +24,7 @@ const BudgetModal = ({
   useEffect(() => {
     if (show) {
       setBudgetMode(initialMode || 'monthly');
-      setMonthlyBudgetInput(initialMonthlyBudget || '');
+      setMonthlyBudgetInput(isNewMonth ? '' : (initialMonthlyBudget || ''));
       setCurrentBalanceInput(initialCurrentBalance || '');
       setFixedDailyBudgetInput(initialFixedDailyBudget || '');
       setError('');
@@ -31,13 +32,16 @@ const BudgetModal = ({
         inputRef.current.focus();
       }
     }
-  }, [show, initialMode, initialMonthlyBudget, initialCurrentBalance, initialFixedDailyBudget]);
+  }, [show, initialMode, initialMonthlyBudget, initialCurrentBalance, initialFixedDailyBudget, isNewMonth]);
 
   const handleSubmit = async (e) => {
     if (e) e.preventDefault();
     setError('');
     
     const payload = { budget_mode: budgetMode };
+    if (targetMonth) {
+      payload.target_month = targetMonth;
+    }
     if (budgetMode === 'monthly') {
       const budgetVal = parseFloat(monthlyBudgetInput);
       if (!monthlyBudgetInput || isNaN(budgetVal) || budgetVal <= 0) {

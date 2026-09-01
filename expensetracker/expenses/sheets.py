@@ -201,10 +201,33 @@ def _sync_sheet_inner(sheet_id, expenses, monthly_budget, profile=None):
             months_dict[m_key] = []
         months_dict[m_key].append(d_str)
 
+    from expenses.models import MonthlyBudgetHistory
+    histories_by_month = {}
+    if profile:
+        for h in MonthlyBudgetHistory.objects.filter(user=profile.user):
+            histories_by_month[h.month] = h
+
     for m_key, date_list in months_dict.items():
-        # In monthly mode, reset the running budget balance for each new month
-        if not is_balance_mode:
-            remaining = float(monthly_budget)
+        # Retrieve the exact budget & daily limit for this month
+        h = histories_by_month.get(m_key)
+        if h:
+            if h.budget_mode == 'balance':
+                m_daily_budget = float(h.fixed_daily_budget)
+                remaining = float(h.starting_balance)
+                m_budget_display = float(h.starting_balance)
+            else:
+                m_daily_budget = round(float(h.monthly_budget) / 30.0, 2)
+                remaining = float(h.monthly_budget)
+                m_budget_display = float(h.monthly_budget)
+        else:
+            if is_balance_mode:
+                m_daily_budget = round(float(profile.fixed_daily_budget), 2)
+                remaining = float(profile.current_balance)
+                m_budget_display = float(profile.current_balance)
+            else:
+                m_daily_budget = round(float(monthly_budget) / 30.0, 2)
+                remaining = float(monthly_budget)
+                m_budget_display = float(monthly_budget)
 
         month_spent = 0.0
         month_savings = 0.0
@@ -218,7 +241,7 @@ def _sync_sheet_inner(sheet_id, expenses, monthly_budget, profile=None):
         for date_str in date_list:
             date_expenses = expenses_by_date[date_str]
             daily_exp = round(daily_totals[date_str], 2)
-            daily_saving = round(daily_budget - daily_exp, 2)
+            daily_saving = round(m_daily_budget - daily_exp, 2)
             is_exceeded = (daily_saving < 0)
             month_spent += daily_exp
             month_savings += daily_saving
@@ -232,7 +255,7 @@ def _sync_sheet_inner(sheet_id, expenses, monthly_budget, profile=None):
                     e.category,
                     float(e.amount),
                     round(remaining, 2),
-                    daily_budget,
+                    m_daily_budget,
                     daily_exp,
                     daily_saving
                 ])
@@ -260,18 +283,26 @@ def _sync_sheet_inner(sheet_id, expenses, monthly_budget, profile=None):
                 current_row_idx += 1
 
         # Month divider: insert after the month's expenses if this month has completely ended
-        if m_key < current_month_str and not is_balance_mode:
+        if m_key < current_month_str:
+            # Leave an empty row for space to clearly denote month separation
+            rows.append(['', '', '', '', '', '', '', ''])
+            current_row_idx += 1
+
             rows.append([
                 m_key,
                 f"📅 MONTH ENDED ({month_name})",
                 f"Spent: ₹{round(month_spent, 2)}",
-                f"Budget: ₹{float(monthly_budget)}",
+                f"Budget: ₹{m_budget_display}",
                 f"Saved: ₹{round(month_savings, 2)}",
                 "",
                 "",
                 ""
             ])
             month_ended_rows.append(current_row_idx)
+            current_row_idx += 1
+
+            # Leave another empty spacer row after the month banner
+            rows.append(['', '', '', '', '', '', '', ''])
             current_row_idx += 1
         
     if rows:

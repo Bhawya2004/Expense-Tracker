@@ -4,11 +4,11 @@ import {
   Text,
   StyleSheet,
   ScrollView,
-  SafeAreaView,
   RefreshControl,
   StatusBar,
   TouchableOpacity
 } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import { useFocusEffect } from '@react-navigation/native';
 import api from '../config/api';
 import { useAuth } from '../context/AuthContext';
@@ -115,8 +115,11 @@ const AnalyticsScreen = () => {
   const monthConfig = useMemo(() => {
     const hist = monthlyHistories[activeMonthKey];
     if (hist && !isCurrentMonth) {
+      const eff = hist.budget_mode === 'monthly'
+        ? (hist.monthly_budget || 0)
+        : (hist.starting_balance || hist.monthly_budget || 0);
       return {
-        effectiveBudget: hist.starting_balance || hist.monthly_budget || 0,
+        effectiveBudget: eff,
         fixedDaily: hist.fixed_daily_budget || 200,
         mode: hist.budget_mode || budgetMode,
       };
@@ -163,7 +166,7 @@ const AnalyticsScreen = () => {
   const monthName = formatMonthName(activeDate);
 
   return (
-    <SafeAreaView style={styles.safeArea}>
+    <SafeAreaView edges={['top']} style={styles.safeArea}>
       <StatusBar barStyle={isDark ? 'light-content' : 'dark-content'} backgroundColor={colors.bg} />
       <ScrollView
         contentContainerStyle={styles.scrollContent}

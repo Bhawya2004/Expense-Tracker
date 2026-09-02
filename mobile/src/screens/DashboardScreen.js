@@ -6,9 +6,9 @@ import {
   ScrollView,
   RefreshControl,
   TouchableOpacity,
-  SafeAreaView,
   StatusBar
 } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import api from '../config/api';
 import { useAuth } from '../context/AuthContext';
 import { useTheme } from '../context/ThemeContext';
@@ -132,7 +132,9 @@ const DashboardScreen = ({ navigation }) => {
   const startingBudget = useMemo(() => {
     const hist = monthlyHistories[activeMonthKey];
     if (hist && !isCurrentMonth) {
-      return hist.starting_balance || hist.monthly_budget || 0;
+      return hist.budget_mode === 'monthly'
+        ? (hist.monthly_budget || 0)
+        : (hist.starting_balance || hist.monthly_budget || 0);
     }
     const isBhawya = user?.username?.toLowerCase() === 'bhawya' || user?.email?.includes('bfreestorage');
     if (activeMonthKey === '2026-08' && isBhawya) {
@@ -180,7 +182,7 @@ const DashboardScreen = ({ navigation }) => {
   const monthLabel = formatMonthYear(activeDate);
 
   return (
-    <SafeAreaView style={styles.safeArea}>
+    <SafeAreaView edges={['top']} style={styles.safeArea}>
       <StatusBar barStyle={isDark ? 'light-content' : 'dark-content'} backgroundColor={colors.bg} />
       <Toast visible={toast.visible} message={toast.message} type={toast.type} />
 
@@ -394,13 +396,30 @@ const DashboardScreen = ({ navigation }) => {
           loadData();
         }}
         onSave={async (bData) => {
-          await api.post('/budget/update/', bData);
+          await api.post('/budget/update/', { ...bData, target_month: activeMonthKey });
           loadData();
         }}
-        initialBudgetMode={budgetMode}
-        initialMonthlyBudget={monthlyBudget}
-        initialCurrentBalance={currentBalance}
-        initialFixedDailyBudget={fixedDailyBudget}
+        monthLabel={monthLabel}
+        initialBudgetMode={
+          (!isCurrentMonth && monthlyHistories[activeMonthKey])
+            ? (monthlyHistories[activeMonthKey].budget_mode || budgetMode)
+            : budgetMode
+        }
+        initialMonthlyBudget={
+          (!isCurrentMonth && monthlyHistories[activeMonthKey])
+            ? monthlyHistories[activeMonthKey].monthly_budget
+            : monthlyBudget
+        }
+        initialCurrentBalance={
+          (!isCurrentMonth && monthlyHistories[activeMonthKey])
+            ? monthlyHistories[activeMonthKey].starting_balance
+            : currentBalance
+        }
+        initialFixedDailyBudget={
+          (!isCurrentMonth && monthlyHistories[activeMonthKey])
+            ? monthlyHistories[activeMonthKey].fixed_daily_budget
+            : fixedDailyBudget
+        }
       />
 
       {/* Google Connect Modal */}
@@ -548,7 +567,9 @@ const getStyles = (COLORS) =>
     flex: 1.2,
     backgroundColor: COLORS.brand,
     borderRadius: 12,
+    minHeight: 44,
     paddingVertical: 10,
+    paddingHorizontal: 8,
     alignItems: 'center',
     justifyContent: 'center',
   },
@@ -556,12 +577,15 @@ const getStyles = (COLORS) =>
     fontSize: 13,
     fontWeight: '700',
     color: '#12141A',
+    textAlign: 'center',
   },
   quickActionBtnSecondary: {
     flex: 1,
     backgroundColor: COLORS.surfaceSunken,
     borderRadius: 12,
+    minHeight: 44,
     paddingVertical: 10,
+    paddingHorizontal: 6,
     alignItems: 'center',
     justifyContent: 'center',
     borderWidth: 1,
@@ -571,6 +595,7 @@ const getStyles = (COLORS) =>
     fontSize: 12,
     fontWeight: '600',
     color: COLORS.textSecondary,
+    textAlign: 'center',
   },
   allowanceCard: {
     backgroundColor: COLORS.surface,

@@ -18,6 +18,7 @@ const BudgetModal = ({
   visible,
   onClose,
   onSave,
+  monthLabel,
   initialBudgetMode = 'monthly',
   initialMonthlyBudget = 0,
   initialCurrentBalance = 0,
@@ -77,13 +78,15 @@ const BudgetModal = ({
   return (
     <Modal visible={visible} animationType="slide" transparent onRequestClose={onClose}>
       <KeyboardAvoidingView
-        behavior={Platform.OS === 'ios' ? 'padding' : undefined}
+        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
         style={styles.modalOverlay}
       >
         <View style={styles.modalContent}>
           {/* Header */}
           <View style={styles.headerRow}>
-            <Text style={styles.title}>Budget Configuration ⚙️</Text>
+            <Text style={styles.title}>
+              {monthLabel ? `Budget (${monthLabel})` : 'Budget Configuration ⚙️'}
+            </Text>
             <TouchableOpacity onPress={onClose} style={styles.closeBtn}>
               <Text style={styles.closeText}>✕</Text>
             </TouchableOpacity>
@@ -243,9 +246,11 @@ const getStyles = (COLORS) =>
     fontSize: 12,
     fontWeight: '700',
     color: COLORS.muted,
+    textAlign: 'center',
   },
   activeTabText: {
     color: COLORS.text,
+    textAlign: 'center',
   },
   formSection: {
     marginBottom: 16,
@@ -262,7 +267,7 @@ const getStyles = (COLORS) =>
     color: COLORS.muted,
     textTransform: 'uppercase',
     letterSpacing: 0.6,
-    marginBottom: 8,
+    marginBottom: 6,
   },
   inputBox: {
     flexDirection: 'row',
@@ -287,6 +292,26 @@ const getStyles = (COLORS) =>
     color: COLORS.text,
     flex: 1,
   },
+  input: {
+    backgroundColor: COLORS.surface2,
+    borderRadius: 14,
+    borderWidth: 1,
+    borderColor: COLORS.border,
+    paddingHorizontal: 16,
+    paddingVertical: 12,
+    color: COLORS.text,
+    fontSize: 15,
+    marginBottom: 14,
+  },
+  inputDisabled: {
+    backgroundColor: COLORS.surfaceSunken,
+    color: COLORS.muted,
+  },
+  inlineRow: {
+    flexDirection: 'row',
+    gap: 10,
+    marginBottom: 14,
+  },
   estimateCard: {
     backgroundColor: COLORS.limeAlpha,
     padding: 12,
@@ -310,7 +335,9 @@ const getStyles = (COLORS) =>
   saveBtn: {
     backgroundColor: COLORS.lime,
     borderRadius: 14,
-    paddingVertical: 14,
+    minHeight: 48,
+    paddingVertical: 13,
+    paddingHorizontal: 16,
     alignItems: 'center',
     justifyContent: 'center',
     marginTop: 10,
@@ -320,6 +347,7 @@ const getStyles = (COLORS) =>
     fontSize: 15,
     fontWeight: '800',
     color: COLORS.bgDark,
+    textAlign: 'center',
   },
 });
 

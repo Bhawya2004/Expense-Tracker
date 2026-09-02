@@ -43,6 +43,7 @@ const ExpenseModal = ({ visible, onClose, onSave, onDelete, expenseToEdit }) => 
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
   const [deleting, setDeleting] = useState(false);
   const noteInputRef = useRef(null);
+  const scrollRef = useRef(null);
 
   useEffect(() => {
     if (expenseToEdit) {
@@ -88,15 +89,17 @@ const ExpenseModal = ({ visible, onClose, onSave, onDelete, expenseToEdit }) => 
     // Numbers
     if (amountStr === '0') {
       setAmountStr(String(key));
-    } else {
-      // Limit to 2 decimal places if decimal exists
-      if (amountStr.includes('.')) {
-        const [, decimal] = amountStr.split('.');
-        if (decimal && decimal.length >= 2) return;
-      }
-      if (amountStr.length < 9) {
-        setAmountStr(amountStr + String(key));
-      }
+      return;
+    }
+
+    // Prevent more than 2 decimal digits
+    if (amountStr.includes('.')) {
+      const parts = amountStr.split('.');
+      const decimal = parts[1];
+      if (decimal && decimal.length >= 2) return;
+    }
+    if (amountStr.length < 9) {
+      setAmountStr(amountStr + String(key));
     }
   };
 
@@ -104,7 +107,8 @@ const ExpenseModal = ({ visible, onClose, onSave, onDelete, expenseToEdit }) => 
     setIsEditingNote(true);
     setTimeout(() => {
       noteInputRef.current?.focus();
-    }, 100);
+      scrollRef.current?.scrollToEnd({ animated: true });
+    }, 120);
   };
 
   const handleDoneNote = () => {
@@ -173,7 +177,7 @@ const ExpenseModal = ({ visible, onClose, onSave, onDelete, expenseToEdit }) => 
       onRequestClose={onClose}
     >
       <KeyboardAvoidingView
-        behavior={Platform.OS === 'ios' ? 'padding' : undefined}
+        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
         style={styles.modalOverlay}
       >
         <View style={styles.sheetContainer}>
@@ -192,6 +196,7 @@ const ExpenseModal = ({ visible, onClose, onSave, onDelete, expenseToEdit }) => 
           </View>
 
           <ScrollView
+            ref={scrollRef}
             showsVerticalScrollIndicator={false}
             contentContainerStyle={styles.scrollContent}
             keyboardShouldPersistTaps="handled"
@@ -584,8 +589,10 @@ const getStyles = (COLORS) =>
   },
   bottomActionBtn: {
     backgroundColor: COLORS.brand,
-    height: 50,
-    borderRadius: 14,
+    borderRadius: 16,
+    minHeight: 50,
+    paddingVertical: 14,
+    paddingHorizontal: 16,
     alignItems: 'center',
     justifyContent: 'center',
     marginTop: 4,
@@ -599,12 +606,15 @@ const getStyles = (COLORS) =>
     fontSize: 15,
     fontWeight: '700',
     color: '#12141A',
+    textAlign: 'center',
   },
   bottomActionBtnTextDisabled: {
     color: COLORS.muted,
+    textAlign: 'center',
   },
   deleteLinkBtn: {
     alignItems: 'center',
+    justifyContent: 'center',
     paddingVertical: 10,
     marginTop: 6,
   },
@@ -612,6 +622,7 @@ const getStyles = (COLORS) =>
     color: COLORS.expense,
     fontSize: 13,
     fontWeight: '600',
+    textAlign: 'center',
   },
   confirmOverlay: {
     position: 'absolute',
@@ -653,10 +664,13 @@ const getStyles = (COLORS) =>
   },
   confirmCancelBtn: {
     flex: 1,
+    minHeight: 46,
     paddingVertical: 12,
+    paddingHorizontal: 12,
     borderRadius: 12,
     backgroundColor: COLORS.surfaceSunken,
     alignItems: 'center',
+    justifyContent: 'center',
     borderWidth: 1,
     borderColor: COLORS.border,
   },
@@ -664,18 +678,23 @@ const getStyles = (COLORS) =>
     fontSize: 14,
     fontWeight: '600',
     color: COLORS.textSecondary,
+    textAlign: 'center',
   },
   confirmDeleteBtn: {
     flex: 1,
+    minHeight: 46,
     paddingVertical: 12,
+    paddingHorizontal: 12,
     borderRadius: 12,
     backgroundColor: COLORS.expense,
     alignItems: 'center',
+    justifyContent: 'center',
   },
   confirmDeleteText: {
     fontSize: 14,
     fontWeight: '700',
     color: '#ffffff',
+    textAlign: 'center',
   },
 });
 

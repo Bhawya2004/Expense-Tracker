@@ -5,7 +5,6 @@ import {
   StyleSheet,
   TouchableOpacity,
   ScrollView,
-  SafeAreaView,
   Linking,
   StatusBar,
   Modal,
@@ -13,6 +12,7 @@ import {
   Switch,
   ActivityIndicator
 } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import api from '../config/api';
 import { useAuth } from '../context/AuthContext';
 import { useTheme } from '../context/ThemeContext';
@@ -120,7 +120,7 @@ const ProfileScreen = () => {
       visible: true,
       title: 'Delete Account',
       message: 'Are you sure you want to delete your account? All your transactions and budget history will be permanently erased.',
-      confirmText: 'Delete Permanently',
+      confirmText: 'Delete',
       actionType: 'delete',
       loading: false,
     });
@@ -144,7 +144,7 @@ const ProfileScreen = () => {
   const isGoogleConnected = Boolean(profile?.google_connected || profile?.google_sheet_id);
 
   return (
-    <SafeAreaView style={styles.safeArea}>
+    <SafeAreaView edges={['top']} style={styles.safeArea}>
       <StatusBar barStyle={isDark ? 'light-content' : 'dark-content'} backgroundColor={colors.bg} />
       <Toast visible={toast.visible} message={toast.message} type={toast.type} />
 
@@ -549,9 +549,12 @@ const getStyles = (COLORS) =>
   },
   cancelBtn: {
     flex: 1,
+    minHeight: 46,
     paddingVertical: 12,
+    paddingHorizontal: 12,
     borderRadius: 12,
     alignItems: 'center',
+    justifyContent: 'center',
     backgroundColor: COLORS.surfaceSunken,
     borderWidth: 1,
     borderColor: COLORS.border,
@@ -560,30 +563,39 @@ const getStyles = (COLORS) =>
     fontSize: 14,
     fontWeight: '600',
     color: COLORS.textSecondary,
+    textAlign: 'center',
   },
   saveBtn: {
     flex: 1,
+    minHeight: 46,
     paddingVertical: 12,
+    paddingHorizontal: 12,
     borderRadius: 12,
     alignItems: 'center',
+    justifyContent: 'center',
     backgroundColor: COLORS.brand,
   },
   saveBtnText: {
     fontSize: 14,
     fontWeight: '700',
     color: '#12141A',
+    textAlign: 'center',
   },
   destructiveConfirmBtn: {
     flex: 1,
+    minHeight: 46,
     paddingVertical: 12,
+    paddingHorizontal: 12,
     borderRadius: 12,
     alignItems: 'center',
+    justifyContent: 'center',
     backgroundColor: COLORS.expense,
   },
   destructiveConfirmText: {
     fontSize: 14,
     fontWeight: '700',
     color: '#ffffff',
+    textAlign: 'center',
   },
 });
 

@@ -7,10 +7,10 @@ import {
   TextInput,
   TouchableOpacity,
   ScrollView,
-  SafeAreaView,
   RefreshControl,
   StatusBar
 } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import { useFocusEffect } from '@react-navigation/native';
 import api from '../config/api';
 import { useAuth } from '../context/AuthContext';
@@ -195,7 +195,7 @@ const TransactionsScreen = ({ route }) => {
   }, [filteredList]);
 
   return (
-    <SafeAreaView style={styles.safeArea}>
+    <SafeAreaView edges={['top']} style={styles.safeArea}>
       <StatusBar barStyle={isDark ? 'light-content' : 'dark-content'} backgroundColor={colors.bg} />
       <Toast visible={toast.visible} message={toast.message} type={toast.type} />
 

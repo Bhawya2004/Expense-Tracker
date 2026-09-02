@@ -11,6 +11,7 @@ import {
   ActivityIndicator,
   Modal
 } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import Svg, { Path } from 'react-native-svg';
 import { useAuth } from '../context/AuthContext';
 import { COLORS } from '../theme/colors';
@@ -112,11 +113,12 @@ const AuthScreen = () => {
   };
 
   return (
-    <KeyboardAvoidingView
-      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-      style={styles.container}
-    >
-      <ScrollView contentContainerStyle={styles.scrollContent} keyboardShouldPersistTaps="handled">
+    <SafeAreaView edges={['top']} style={styles.container}>
+      <KeyboardAvoidingView
+        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+        style={{ flex: 1 }}
+      >
+        <ScrollView contentContainerStyle={styles.scrollContent} keyboardShouldPersistTaps="handled">
         {/* Logo & Header */}
         <View style={styles.logoSection}>
           <Text style={styles.logo}>
@@ -334,7 +336,8 @@ const AuthScreen = () => {
           </View>
         </View>
       </Modal>
-    </KeyboardAvoidingView>
+      </KeyboardAvoidingView>
+    </SafeAreaView>
   );
 };
 
@@ -455,7 +458,9 @@ const styles = StyleSheet.create({
   submitBtn: {
     backgroundColor: COLORS.lime,
     borderRadius: 14,
-    paddingVertical: 14,
+    minHeight: 48,
+    paddingVertical: 13,
+    paddingHorizontal: 16,
     alignItems: 'center',
     justifyContent: 'center',
     marginTop: 8,
@@ -464,6 +469,7 @@ const styles = StyleSheet.create({
     fontSize: 15,
     fontWeight: '800',
     color: COLORS.bgDark,
+    textAlign: 'center',
   },
   dividerRow: {
     flexDirection: 'row',
@@ -488,7 +494,9 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     backgroundColor: COLORS.surface2,
     borderRadius: 14,
+    minHeight: 48,
     paddingVertical: 13,
+    paddingHorizontal: 16,
     borderWidth: 1,
     borderColor: COLORS.border,
     gap: 10,
@@ -497,6 +505,7 @@ const styles = StyleSheet.create({
     fontSize: 14,
     fontWeight: '700',
     color: COLORS.text,
+    textAlign: 'center',
   },
 
   /* Google Popup Modal Styles */

@@ -61,6 +61,7 @@ const getStyles = (COLORS) =>
       fontSize: 16,
       fontWeight: '700',
       color: '#12141A',
+      textAlign: 'center',
     },
   });
 

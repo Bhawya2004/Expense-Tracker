@@ -124,14 +124,20 @@ DATABASES = {
     'default': dj_database_url.config(
         default=f'sqlite:///{BASE_DIR / "db.sqlite3"}',
         env='DATABASE_URL', # Tell it to look for this in env
-        conn_max_age=600,
+        conn_max_age=0,
+        conn_health_checks=True,
         ssl_require=True if config('DATABASE_URL', default='') else False
     )
 }
 
 # Explicitly load from decouple if os.environ is empty
 if config('DATABASE_URL', default=None):
-    DATABASES['default'] = dj_database_url.parse(config('DATABASE_URL'), conn_max_age=600, ssl_require=True)
+    DATABASES['default'] = dj_database_url.parse(
+        config('DATABASE_URL'),
+        conn_max_age=0,
+        conn_health_checks=True,
+        ssl_require=True
+    )
 
 
 # Password validation

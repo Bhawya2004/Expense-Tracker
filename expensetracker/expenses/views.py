@@ -427,6 +427,9 @@ def firebase_login(request):
     name = request.data.get('name', '')
 
     try:
+        from django.db import connection
+        connection.close_if_unusable_or_obsolete()
+
         if id_token:
             # Verify the Firebase ID token
             decoded_token = auth.verify_id_token(id_token)

@@ -1,0 +1,35 @@
+{
+  "expo": {
+    "name": "ExpenseTrack",
+    "slug": "expensetrack-mobile",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/icon.png",
+    "userInterfaceStyle": "automatic",
+    "splash": {
+      "image": "./assets/icon.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#12141A"
+    },
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "com.bhawya.expensetrack"
+    },
+    "android": {
+      "package": "com.bhawya.expensetrack",
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/adaptive-icon.png",
+        "backgroundColor": "#12141A"
+      }
+    },
+    "web": {
+      "bundler": "metro",
+      "favicon": "./assets/favicon.png"
+    },
+    "extra": {
+      "eas": {
+        "projectId": "2afffcab-9f4a-4339-9567-0aa63af16781"
+      }
+    }
+  }
+}

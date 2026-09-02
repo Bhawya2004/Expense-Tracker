@@ -4282,3 +4282,1067 @@ django.db.utils.OperationalError: could not translate host name "ep-muddy-math-a
 
 ERROR 2026-09-01 11:29:22,652 log "GET /api/budget/ HTTP/1.1" 500 28388
 DEBUG 2026-09-01 11:29:43,670 views User 10 fetched expenses | filters: category=None start=None end=None
+INFO 2026-09-01 16:15:26,567 views Logged in existing Django user via Firebase Auth: bfreestorage002
+DEBUG 2026-09-01 16:15:28,577 views User 10 fetched expenses | filters: category=None start=None end=None
+DEBUG 2026-09-01 16:16:08,028 views User 10 fetched expenses | filters: category=None start=None end=None
+DEBUG 2026-09-01 16:16:12,397 views User 10 fetched expenses | filters: category=None start=None end=None
+ERROR 2026-09-01 16:19:55,607 views ExpenseViewSet error: could not receive data from server: Operation timed out
+SSL SYSCALL error: Operation timed out
+Traceback (most recent call last):
+  File "/Users/bhawyagulati/Documents/Projects/Expense-Tracker-Mobile/venv/lib/python3.13/site-packages/django/db/backends/utils.py", line 105, in _execute
+    return self.cursor.execute(sql, params)
+           ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+psycopg2.OperationalError: could not receive data from server: Operation timed out
+SSL SYSCALL error: Operation timed out
+
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/Users/bhawyagulati/Documents/Projects/Expense-Tracker-Mobile/venv/lib/python3.13/site-packages/rest_framework/views.py", line 514, in dispatch
+    self.initial(request, *args, **kwargs)
+    ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/bhawyagulati/Documents/Projects/Expense-Tracker-Mobile/venv/lib/python3.13/site-packages/rest_framework/views.py", line 419, in initial
+    self.perform_authentication(request)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "/Users/bhawyagulati/Documents/Projects/Expense-Tracker-Mobile/venv/lib/python3.13/site-packages/rest_framework/views.py", line 329, in perform_authentication
+    request.user
+  File "/Users/bhawyagulati/Documents/Projects/Expense-Tracker-Mobile/venv/lib/python3.13/site-packages/rest_framework/request.py", line 232, in user
+    self._authenticate()
+    ~~~~~~~~~~~~~~~~~~^^
+  File "/Users/bhawyagulati/Documents/Projects/Expense-Tracker-Mobile/venv/lib/python3.13/site-packages/rest_framework/request.py", line 389, in _authenticate
+    user_auth_tuple = authenticator.authenticate(self)
+  File "/Users/bhawyagulati/Documents/Projects/Expense-Tracker-Mobile/venv/lib/python3.13/site-packages/rest_framework_simplejwt/authentication.py", line 51, in authenticate
+    return self.get_user(validated_token), validated_token
+           ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "/Users/bhawyagulati/Documents/Projects/Expense-Tracker-Mobile/venv/lib/python3.13/site-packages/rest_framework_simplejwt/authentication.py", line 132, in get_user
+    user = self.user_model.objects.get(**{api_settings.USER_ID_FIELD: user_id})
+  File "/Users/bhawyagulati/Documents/Projects/Expense-Tracker-Mobile/venv/lib/python3.13/site-packages/django/db/models/manager.py", line 87, in manager_method
+    return getattr(self.get_queryset(), name)(*args, **kwargs)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "/Users/bhawyagulati/Documents/Projects/Expense-Tracker-Mobile/venv/lib/python3.13/site-packages/django/db/models/query.py", line 679, in get
+    num = len(clone)
+  File "/Users/bhawyagulati/Documents/Projects/Expense-Tracker-Mobile/venv/lib/python3.13/site-packages/django/db/models/query.py", line 416, in __len__
+    self._fetch_all()
+    ~~~~~~~~~~~~~~~^^
+  File "/Users/bhawyagulati/Documents/Projects/Expense-Tracker-Mobile/venv/lib/python3.13/site-packages/django/db/models/query.py", line 2239, in _fetch_all
+    self._result_cache = list(self._iterable_class(self))
+                         ~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/bhawyagulati/Documents/Projects/Expense-Tracker-Mobile/venv/lib/python3.13/site-packages/django/db/models/query.py", line 98, in __iter__
+    results = compiler.execute_sql(
+        chunked_fetch=self.chunked_fetch, chunk_size=self.chunk_size
+    )
+  File "/Users/bhawyagulati/Documents/Projects/Expense-Tracker-Mobile/venv/lib/python3.13/site-packages/django/db/models/sql/compiler.py", line 1624, in execute_sql
+    cursor.execute(sql, params)
+    ~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "/Users/bhawyagulati/Documents/Projects/Expense-Tracker-Mobile/venv/lib/python3.13/site-packages/django/db/backends/utils.py", line 122, in execute
+    return super().execute(sql, params)
+           ~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "/Users/bhawyagulati/Documents/Projects/Expense-Tracker-Mobile/venv/lib/python3.13/site-packages/django/db/backends/utils.py", line 79, in execute
+    return self._execute_with_wrappers(
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        sql, params, many=False, executor=self._execute
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "/Users/bhawyagulati/Documents/Projects/Expense-Tracker-Mobile/venv/lib/python3.13/site-packages/django/db/backends/utils.py", line 92, in _execute_with_wrappers
+    return executor(sql, params, many, context)
+  File "/Users/bhawyagulati/Documents/Projects/Expense-Tracker-Mobile/venv/lib/python3.13/site-packages/django/db/backends/utils.py", line 100, in _execute
+    with self.db.wrap_database_errors:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/bhawyagulati/Documents/Projects/Expense-Tracker-Mobile/venv/lib/python3.13/site-packages/django/db/utils.py", line 94, in __exit__
+    raise dj_exc_value.with_traceback(traceback) from exc_value
+  File "/Users/bhawyagulati/Documents/Projects/Expense-Tracker-Mobile/venv/lib/python3.13/site-packages/django/db/backends/utils.py", line 105, in _execute
+    return self.cursor.execute(sql, params)
+           ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+django.db.utils.OperationalError: could not receive data from server: Operation timed out
+SSL SYSCALL error: Operation timed out
+
+ERROR 2026-09-01 16:19:55,652 log Internal Server Error: /api/expenses/
+Traceback (most recent call last):
+  File "/Users/bhawyagulati/Documents/Projects/Expense-Tracker-Mobile/venv/lib/python3.13/site-packages/django/db/backends/utils.py", line 105, in _execute
+    return self.cursor.execute(sql, params)
+           ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+psycopg2.OperationalError: could not receive data from server: Operation timed out
+SSL SYSCALL error: Operation timed out
+
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/Users/bhawyagulati/Documents/Projects/Expense-Tracker-Mobile/venv/lib/python3.13/site-packages/django/core/handlers/exception.py", line 56, in inner
+    response = get_response(request)
+  File "/Users/bhawyagulati/Documents/Projects/Expense-Tracker-Mobile/venv/lib/python3.13/site-packages/django/core/handlers/base.py", line 199, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/Users/bhawyagulati/Documents/Projects/Expense-Tracker-Mobile/venv/lib/python3.13/site-packages/django/views/decorators/csrf.py", line 64, in _view_wrapper
+    return view_func(request, *args, **kwargs)
+  File "/Users/bhawyagulati/Documents/Projects/Expense-Tracker-Mobile/venv/lib/python3.13/site-packages/rest_framework/viewsets.py", line 124, in view
+    return self.dispatch(request, *args, **kwargs)
+           ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/bhawyagulati/Documents/Projects/Expense-Tracker-Mobile/venv/lib/python3.13/site-packages/rest_framework/views.py", line 526, in dispatch
+    response = self.handle_exception(exc)
+  File "/Users/bhawyagulati/Documents/Projects/Expense-Tracker-Mobile/expensetracker/expenses/views.py", line 576, in handle_exception
+    return super().handle_exception(exc)
+           ~~~~~~~~~~~~~~~~~~~~~~~~^^^^^
+  File "/Users/bhawyagulati/Documents/Projects/Expense-Tracker-Mobile/venv/lib/python3.13/site-packages/rest_framework/views.py", line 474, in handle_exception
+    self.raise_uncaught_exception(exc)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^
+  File "/Users/bhawyagulati/Documents/Projects/Expense-Tracker-Mobile/venv/lib/python3.13/site-packages/rest_framework/views.py", line 485, in raise_uncaught_exception
+    raise exc
+  File "/Users/bhawyagulati/Documents/Projects/Expense-Tracker-Mobile/venv/lib/python3.13/site-packages/rest_framework/views.py", line 514, in dispatch
+    self.initial(request, *args, **kwargs)
+    ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/bhawyagulati/Documents/Projects/Expense-Tracker-Mobile/venv/lib/python3.13/site-packages/rest_framework/views.py", line 419, in initial
+    self.perform_authentication(request)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "/Users/bhawyagulati/Documents/Projects/Expense-Tracker-Mobile/venv/lib/python3.13/site-packages/rest_framework/views.py", line 329, in perform_authentication
+    request.user
+  File "/Users/bhawyagulati/Documents/Projects/Expense-Tracker-Mobile/venv/lib/python3.13/site-packages/rest_framework/request.py", line 232, in user
+    self._authenticate()
+    ~~~~~~~~~~~~~~~~~~^^
+  File "/Users/bhawyagulati/Documents/Projects/Expense-Tracker-Mobile/venv/lib/python3.13/site-packages/rest_framework/request.py", line 389, in _authenticate
+    user_auth_tuple = authenticator.authenticate(self)
+  File "/Users/bhawyagulati/Documents/Projects/Expense-Tracker-Mobile/venv/lib/python3.13/site-packages/rest_framework_simplejwt/authentication.py", line 51, in authenticate
+    return self.get_user(validated_token), validated_token
+           ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "/Users/bhawyagulati/Documents/Projects/Expense-Tracker-Mobile/venv/lib/python3.13/site-packages/rest_framework_simplejwt/authentication.py", line 132, in get_user
+    user = self.user_model.objects.get(**{api_settings.USER_ID_FIELD: user_id})
+  File "/Users/bhawyagulati/Documents/Projects/Expense-Tracker-Mobile/venv/lib/python3.13/site-packages/django/db/models/manager.py", line 87, in manager_method
+    return getattr(self.get_queryset(), name)(*args, **kwargs)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "/Users/bhawyagulati/Documents/Projects/Expense-Tracker-Mobile/venv/lib/python3.13/site-packages/django/db/models/query.py", line 679, in get
+    num = len(clone)
+  File "/Users/bhawyagulati/Documents/Projects/Expense-Tracker-Mobile/venv/lib/python3.13/site-packages/django/db/models/query.py", line 416, in __len__
+    self._fetch_all()
+    ~~~~~~~~~~~~~~~^^
+  File "/Users/bhawyagulati/Documents/Projects/Expense-Tracker-Mobile/venv/lib/python3.13/site-packages/django/db/models/query.py", line 2239, in _fetch_all
+    self._result_cache = list(self._iterable_class(self))
+                         ~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/bhawyagulati/Documents/Projects/Expense-Tracker-Mobile/venv/lib/python3.13/site-packages/django/db/models/query.py", line 98, in __iter__
+    results = compiler.execute_sql(
+        chunked_fetch=self.chunked_fetch, chunk_size=self.chunk_size
+    )
+  File "/Users/bhawyagulati/Documents/Projects/Expense-Tracker-Mobile/venv/lib/python3.13/site-packages/django/db/models/sql/compiler.py", line 1624, in execute_sql
+    cursor.execute(sql, params)
+    ~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "/Users/bhawyagulati/Documents/Projects/Expense-Tracker-Mobile/venv/lib/python3.13/site-packages/django/db/backends/utils.py", line 122, in execute
+    return super().execute(sql, params)
+           ~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "/Users/bhawyagulati/Documents/Projects/Expense-Tracker-Mobile/venv/lib/python3.13/site-packages/django/db/backends/utils.py", line 79, in execute
+    return self._execute_with_wrappers(
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        sql, params, many=False, executor=self._execute
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "/Users/bhawyagulati/Documents/Projects/Expense-Tracker-Mobile/venv/lib/python3.13/site-packages/django/db/backends/utils.py", line 92, in _execute_with_wrappers
+    return executor(sql, params, many, context)
+  File "/Users/bhawyagulati/Documents/Projects/Expense-Tracker-Mobile/venv/lib/python3.13/site-packages/django/db/backends/utils.py", line 100, in _execute
+    with self.db.wrap_database_errors:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/bhawyagulati/Documents/Projects/Expense-Tracker-Mobile/venv/lib/python3.13/site-packages/django/db/utils.py", line 94, in __exit__
+    raise dj_exc_value.with_traceback(traceback) from exc_value
+  File "/Users/bhawyagulati/Documents/Projects/Expense-Tracker-Mobile/venv/lib/python3.13/site-packages/django/db/backends/utils.py", line 105, in _execute
+    return self.cursor.execute(sql, params)
+           ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+django.db.utils.OperationalError: could not receive data from server: Operation timed out
+SSL SYSCALL error: Operation timed out
+
+ERROR 2026-09-01 16:21:27,038 views ExpenseViewSet error: could not receive data from server: Operation timed out
+SSL SYSCALL error: Operation timed out
+Traceback (most recent call last):
+  File "/Users/bhawyagulati/Documents/Projects/Expense-Tracker-Mobile/venv/lib/python3.13/site-packages/django/db/backends/utils.py", line 105, in _execute
+    return self.cursor.execute(sql, params)
+           ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+psycopg2.OperationalError: could not receive data from server: Operation timed out
+SSL SYSCALL error: Operation timed out
+
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/Users/bhawyagulati/Documents/Projects/Expense-Tracker-Mobile/venv/lib/python3.13/site-packages/rest_framework/views.py", line 514, in dispatch
+    self.initial(request, *args, **kwargs)
+    ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/bhawyagulati/Documents/Projects/Expense-Tracker-Mobile/venv/lib/python3.13/site-packages/rest_framework/views.py", line 419, in initial
+    self.perform_authentication(request)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "/Users/bhawyagulati/Documents/Projects/Expense-Tracker-Mobile/venv/lib/python3.13/site-packages/rest_framework/views.py", line 329, in perform_authentication
+    request.user
+  File "/Users/bhawyagulati/Documents/Projects/Expense-Tracker-Mobile/venv/lib/python3.13/site-packages/rest_framework/request.py", line 232, in user
+    self._authenticate()
+    ~~~~~~~~~~~~~~~~~~^^
+  File "/Users/bhawyagulati/Documents/Projects/Expense-Tracker-Mobile/venv/lib/python3.13/site-packages/rest_framework/request.py", line 389, in _authenticate
+    user_auth_tuple = authenticator.authenticate(self)
+  File "/Users/bhawyagulati/Documents/Projects/Expense-Tracker-Mobile/venv/lib/python3.13/site-packages/rest_framework_simplejwt/authentication.py", line 51, in authenticate
+    return self.get_user(validated_token), validated_token
+           ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "/Users/bhawyagulati/Documents/Projects/Expense-Tracker-Mobile/venv/lib/python3.13/site-packages/rest_framework_simplejwt/authentication.py", line 132, in get_user
+    user = self.user_model.objects.get(**{api_settings.USER_ID_FIELD: user_id})
+  File "/Users/bhawyagulati/Documents/Projects/Expense-Tracker-Mobile/venv/lib/python3.13/site-packages/django/db/models/manager.py", line 87, in manager_method
+    return getattr(self.get_queryset(), name)(*args, **kwargs)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "/Users/bhawyagulati/Documents/Projects/Expense-Tracker-Mobile/venv/lib/python3.13/site-packages/django/db/models/query.py", line 679, in get
+    num = len(clone)
+  File "/Users/bhawyagulati/Documents/Projects/Expense-Tracker-Mobile/venv/lib/python3.13/site-packages/django/db/models/query.py", line 416, in __len__
+    self._fetch_all()
+    ~~~~~~~~~~~~~~~^^
+  File "/Users/bhawyagulati/Documents/Projects/Expense-Tracker-Mobile/venv/lib/python3.13/site-packages/django/db/models/query.py", line 2239, in _fetch_all
+    self._result_cache = list(self._iterable_class(self))
+                         ~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/bhawyagulati/Documents/Projects/Expense-Tracker-Mobile/venv/lib/python3.13/site-packages/django/db/models/query.py", line 98, in __iter__
+    results = compiler.execute_sql(
+        chunked_fetch=self.chunked_fetch, chunk_size=self.chunk_size
+    )
+  File "/Users/bhawyagulati/Documents/Projects/Expense-Tracker-Mobile/venv/lib/python3.13/site-packages/django/db/models/sql/compiler.py", line 1624, in execute_sql
+    cursor.execute(sql, params)
+    ~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "/Users/bhawyagulati/Documents/Projects/Expense-Tracker-Mobile/venv/lib/python3.13/site-packages/django/db/backends/utils.py", line 122, in execute
+    return super().execute(sql, params)
+           ~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "/Users/bhawyagulati/Documents/Projects/Expense-Tracker-Mobile/venv/lib/python3.13/site-packages/django/db/backends/utils.py", line 79, in execute
+    return self._execute_with_wrappers(
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        sql, params, many=False, executor=self._execute
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "/Users/bhawyagulati/Documents/Projects/Expense-Tracker-Mobile/venv/lib/python3.13/site-packages/django/db/backends/utils.py", line 92, in _execute_with_wrappers
+    return executor(sql, params, many, context)
+  File "/Users/bhawyagulati/Documents/Projects/Expense-Tracker-Mobile/venv/lib/python3.13/site-packages/django/db/backends/utils.py", line 100, in _execute
+    with self.db.wrap_database_errors:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/bhawyagulati/Documents/Projects/Expense-Tracker-Mobile/venv/lib/python3.13/site-packages/django/db/utils.py", line 94, in __exit__
+    raise dj_exc_value.with_traceback(traceback) from exc_value
+  File "/Users/bhawyagulati/Documents/Projects/Expense-Tracker-Mobile/venv/lib/python3.13/site-packages/django/db/backends/utils.py", line 105, in _execute
+    return self.cursor.execute(sql, params)
+           ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+django.db.utils.OperationalError: could not receive data from server: Operation timed out
+SSL SYSCALL error: Operation timed out
+
+ERROR 2026-09-01 16:21:27,074 log Internal Server Error: /api/expenses/
+Traceback (most recent call last):
+  File "/Users/bhawyagulati/Documents/Projects/Expense-Tracker-Mobile/venv/lib/python3.13/site-packages/django/db/backends/utils.py", line 105, in _execute
+    return self.cursor.execute(sql, params)
+           ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+psycopg2.OperationalError: could not receive data from server: Operation timed out
+SSL SYSCALL error: Operation timed out
+
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/Users/bhawyagulati/Documents/Projects/Expense-Tracker-Mobile/venv/lib/python3.13/site-packages/django/core/handlers/exception.py", line 56, in inner
+    response = get_response(request)
+  File "/Users/bhawyagulati/Documents/Projects/Expense-Tracker-Mobile/venv/lib/python3.13/site-packages/django/core/handlers/base.py", line 199, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/Users/bhawyagulati/Documents/Projects/Expense-Tracker-Mobile/venv/lib/python3.13/site-packages/django/views/decorators/csrf.py", line 64, in _view_wrapper
+    return view_func(request, *args, **kwargs)
+  File "/Users/bhawyagulati/Documents/Projects/Expense-Tracker-Mobile/venv/lib/python3.13/site-packages/rest_framework/viewsets.py", line 124, in view
+    return self.dispatch(request, *args, **kwargs)
+           ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/bhawyagulati/Documents/Projects/Expense-Tracker-Mobile/venv/lib/python3.13/site-packages/rest_framework/views.py", line 526, in dispatch
+    response = self.handle_exception(exc)
+  File "/Users/bhawyagulati/Documents/Projects/Expense-Tracker-Mobile/expensetracker/expenses/views.py", line 576, in handle_exception
+    return super().handle_exception(exc)
+           ~~~~~~~~~~~~~~~~~~~~~~~~^^^^^
+  File "/Users/bhawyagulati/Documents/Projects/Expense-Tracker-Mobile/venv/lib/python3.13/site-packages/rest_framework/views.py", line 474, in handle_exception
+    self.raise_uncaught_exception(exc)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^
+  File "/Users/bhawyagulati/Documents/Projects/Expense-Tracker-Mobile/venv/lib/python3.13/site-packages/rest_framework/views.py", line 485, in raise_uncaught_exception
+    raise exc
+  File "/Users/bhawyagulati/Documents/Projects/Expense-Tracker-Mobile/venv/lib/python3.13/site-packages/rest_framework/views.py", line 514, in dispatch
+    self.initial(request, *args, **kwargs)
+    ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/bhawyagulati/Documents/Projects/Expense-Tracker-Mobile/venv/lib/python3.13/site-packages/rest_framework/views.py", line 419, in initial
+    self.perform_authentication(request)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "/Users/bhawyagulati/Documents/Projects/Expense-Tracker-Mobile/venv/lib/python3.13/site-packages/rest_framework/views.py", line 329, in perform_authentication
+    request.user
+  File "/Users/bhawyagulati/Documents/Projects/Expense-Tracker-Mobile/venv/lib/python3.13/site-packages/rest_framework/request.py", line 232, in user
+    self._authenticate()
+    ~~~~~~~~~~~~~~~~~~^^
+  File "/Users/bhawyagulati/Documents/Projects/Expense-Tracker-Mobile/venv/lib/python3.13/site-packages/rest_framework/request.py", line 389, in _authenticate
+    user_auth_tuple = authenticator.authenticate(self)
+  File "/Users/bhawyagulati/Documents/Projects/Expense-Tracker-Mobile/venv/lib/python3.13/site-packages/rest_framework_simplejwt/authentication.py", line 51, in authenticate
+    return self.get_user(validated_token), validated_token
+           ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "/Users/bhawyagulati/Documents/Projects/Expense-Tracker-Mobile/venv/lib/python3.13/site-packages/rest_framework_simplejwt/authentication.py", line 132, in get_user
+    user = self.user_model.objects.get(**{api_settings.USER_ID_FIELD: user_id})
+  File "/Users/bhawyagulati/Documents/Projects/Expense-Tracker-Mobile/venv/lib/python3.13/site-packages/django/db/models/manager.py", line 87, in manager_method
+    return getattr(self.get_queryset(), name)(*args, **kwargs)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "/Users/bhawyagulati/Documents/Projects/Expense-Tracker-Mobile/venv/lib/python3.13/site-packages/django/db/models/query.py", line 679, in get
+    num = len(clone)
+  File "/Users/bhawyagulati/Documents/Projects/Expense-Tracker-Mobile/venv/lib/python3.13/site-packages/django/db/models/query.py", line 416, in __len__
+    self._fetch_all()
+    ~~~~~~~~~~~~~~~^^
+  File "/Users/bhawyagulati/Documents/Projects/Expense-Tracker-Mobile/venv/lib/python3.13/site-packages/django/db/models/query.py", line 2239, in _fetch_all
+    self._result_cache = list(self._iterable_class(self))
+                         ~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/bhawyagulati/Documents/Projects/Expense-Tracker-Mobile/venv/lib/python3.13/site-packages/django/db/models/query.py", line 98, in __iter__
+    results = compiler.execute_sql(
+        chunked_fetch=self.chunked_fetch, chunk_size=self.chunk_size
+    )
+  File "/Users/bhawyagulati/Documents/Projects/Expense-Tracker-Mobile/venv/lib/python3.13/site-packages/django/db/models/sql/compiler.py", line 1624, in execute_sql
+    cursor.execute(sql, params)
+    ~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "/Users/bhawyagulati/Documents/Projects/Expense-Tracker-Mobile/venv/lib/python3.13/site-packages/django/db/backends/utils.py", line 122, in execute
+    return super().execute(sql, params)
+           ~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "/Users/bhawyagulati/Documents/Projects/Expense-Tracker-Mobile/venv/lib/python3.13/site-packages/django/db/backends/utils.py", line 79, in execute
+    return self._execute_with_wrappers(
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        sql, params, many=False, executor=self._execute
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "/Users/bhawyagulati/Documents/Projects/Expense-Tracker-Mobile/venv/lib/python3.13/site-packages/django/db/backends/utils.py", line 92, in _execute_with_wrappers
+    return executor(sql, params, many, context)
+  File "/Users/bhawyagulati/Documents/Projects/Expense-Tracker-Mobile/venv/lib/python3.13/site-packages/django/db/backends/utils.py", line 100, in _execute
+    with self.db.wrap_database_errors:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/bhawyagulati/Documents/Projects/Expense-Tracker-Mobile/venv/lib/python3.13/site-packages/django/db/utils.py", line 94, in __exit__
+    raise dj_exc_value.with_traceback(traceback) from exc_value
+  File "/Users/bhawyagulati/Documents/Projects/Expense-Tracker-Mobile/venv/lib/python3.13/site-packages/django/db/backends/utils.py", line 105, in _execute
+    return self.cursor.execute(sql, params)
+           ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+django.db.utils.OperationalError: could not receive data from server: Operation timed out
+SSL SYSCALL error: Operation timed out
+
+DEBUG 2026-09-01 16:30:55,573 views User 10 fetched expenses | filters: category=None start=None end=None
+DEBUG 2026-09-01 16:32:13,226 views User 10 fetched expenses | filters: category=None start=None end=None
+ERROR 2026-09-01 16:33:08,325 views ExpenseViewSet error: could not receive data from server: Operation timed out
+SSL SYSCALL error: Operation timed out
+Traceback (most recent call last):
+  File "/Users/bhawyagulati/Documents/Projects/Expense-Tracker-Mobile/venv/lib/python3.13/site-packages/django/db/backends/utils.py", line 105, in _execute
+    return self.cursor.execute(sql, params)
+           ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+psycopg2.OperationalError: could not receive data from server: Operation timed out
+SSL SYSCALL error: Operation timed out
+
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/Users/bhawyagulati/Documents/Projects/Expense-Tracker-Mobile/venv/lib/python3.13/site-packages/rest_framework/views.py", line 514, in dispatch
+    self.initial(request, *args, **kwargs)
+    ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/bhawyagulati/Documents/Projects/Expense-Tracker-Mobile/venv/lib/python3.13/site-packages/rest_framework/views.py", line 419, in initial
+    self.perform_authentication(request)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "/Users/bhawyagulati/Documents/Projects/Expense-Tracker-Mobile/venv/lib/python3.13/site-packages/rest_framework/views.py", line 329, in perform_authentication
+    request.user
+  File "/Users/bhawyagulati/Documents/Projects/Expense-Tracker-Mobile/venv/lib/python3.13/site-packages/rest_framework/request.py", line 232, in user
+    self._authenticate()
+    ~~~~~~~~~~~~~~~~~~^^
+  File "/Users/bhawyagulati/Documents/Projects/Expense-Tracker-Mobile/venv/lib/python3.13/site-packages/rest_framework/request.py", line 389, in _authenticate
+    user_auth_tuple = authenticator.authenticate(self)
+  File "/Users/bhawyagulati/Documents/Projects/Expense-Tracker-Mobile/venv/lib/python3.13/site-packages/rest_framework_simplejwt/authentication.py", line 51, in authenticate
+    return self.get_user(validated_token), validated_token
+           ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "/Users/bhawyagulati/Documents/Projects/Expense-Tracker-Mobile/venv/lib/python3.13/site-packages/rest_framework_simplejwt/authentication.py", line 132, in get_user
+    user = self.user_model.objects.get(**{api_settings.USER_ID_FIELD: user_id})
+  File "/Users/bhawyagulati/Documents/Projects/Expense-Tracker-Mobile/venv/lib/python3.13/site-packages/django/db/models/manager.py", line 87, in manager_method
+    return getattr(self.get_queryset(), name)(*args, **kwargs)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "/Users/bhawyagulati/Documents/Projects/Expense-Tracker-Mobile/venv/lib/python3.13/site-packages/django/db/models/query.py", line 679, in get
+    num = len(clone)
+  File "/Users/bhawyagulati/Documents/Projects/Expense-Tracker-Mobile/venv/lib/python3.13/site-packages/django/db/models/query.py", line 416, in __len__
+    self._fetch_all()
+    ~~~~~~~~~~~~~~~^^
+  File "/Users/bhawyagulati/Documents/Projects/Expense-Tracker-Mobile/venv/lib/python3.13/site-packages/django/db/models/query.py", line 2239, in _fetch_all
+    self._result_cache = list(self._iterable_class(self))
+                         ~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/bhawyagulati/Documents/Projects/Expense-Tracker-Mobile/venv/lib/python3.13/site-packages/django/db/models/query.py", line 98, in __iter__
+    results = compiler.execute_sql(
+        chunked_fetch=self.chunked_fetch, chunk_size=self.chunk_size
+    )
+  File "/Users/bhawyagulati/Documents/Projects/Expense-Tracker-Mobile/venv/lib/python3.13/site-packages/django/db/models/sql/compiler.py", line 1624, in execute_sql
+    cursor.execute(sql, params)
+    ~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "/Users/bhawyagulati/Documents/Projects/Expense-Tracker-Mobile/venv/lib/python3.13/site-packages/django/db/backends/utils.py", line 122, in execute
+    return super().execute(sql, params)
+           ~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "/Users/bhawyagulati/Documents/Projects/Expense-Tracker-Mobile/venv/lib/python3.13/site-packages/django/db/backends/utils.py", line 79, in execute
+    return self._execute_with_wrappers(
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        sql, params, many=False, executor=self._execute
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "/Users/bhawyagulati/Documents/Projects/Expense-Tracker-Mobile/venv/lib/python3.13/site-packages/django/db/backends/utils.py", line 92, in _execute_with_wrappers
+    return executor(sql, params, many, context)
+  File "/Users/bhawyagulati/Documents/Projects/Expense-Tracker-Mobile/venv/lib/python3.13/site-packages/django/db/backends/utils.py", line 100, in _execute
+    with self.db.wrap_database_errors:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/bhawyagulati/Documents/Projects/Expense-Tracker-Mobile/venv/lib/python3.13/site-packages/django/db/utils.py", line 94, in __exit__
+    raise dj_exc_value.with_traceback(traceback) from exc_value
+  File "/Users/bhawyagulati/Documents/Projects/Expense-Tracker-Mobile/venv/lib/python3.13/site-packages/django/db/backends/utils.py", line 105, in _execute
+    return self.cursor.execute(sql, params)
+           ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+django.db.utils.OperationalError: could not receive data from server: Operation timed out
+SSL SYSCALL error: Operation timed out
+
+ERROR 2026-09-01 16:33:08,360 log Internal Server Error: /api/expenses/
+Traceback (most recent call last):
+  File "/Users/bhawyagulati/Documents/Projects/Expense-Tracker-Mobile/venv/lib/python3.13/site-packages/django/db/backends/utils.py", line 105, in _execute
+    return self.cursor.execute(sql, params)
+           ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+psycopg2.OperationalError: could not receive data from server: Operation timed out
+SSL SYSCALL error: Operation timed out
+
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/Users/bhawyagulati/Documents/Projects/Expense-Tracker-Mobile/venv/lib/python3.13/site-packages/django/core/handlers/exception.py", line 56, in inner
+    response = get_response(request)
+  File "/Users/bhawyagulati/Documents/Projects/Expense-Tracker-Mobile/venv/lib/python3.13/site-packages/django/core/handlers/base.py", line 199, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/Users/bhawyagulati/Documents/Projects/Expense-Tracker-Mobile/venv/lib/python3.13/site-packages/django/views/decorators/csrf.py", line 64, in _view_wrapper
+    return view_func(request, *args, **kwargs)
+  File "/Users/bhawyagulati/Documents/Projects/Expense-Tracker-Mobile/venv/lib/python3.13/site-packages/rest_framework/viewsets.py", line 124, in view
+    return self.dispatch(request, *args, **kwargs)
+           ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/bhawyagulati/Documents/Projects/Expense-Tracker-Mobile/venv/lib/python3.13/site-packages/rest_framework/views.py", line 526, in dispatch
+    response = self.handle_exception(exc)
+  File "/Users/bhawyagulati/Documents/Projects/Expense-Tracker-Mobile/expensetracker/expenses/views.py", line 576, in handle_exception
+    return super().handle_exception(exc)
+           ~~~~~~~~~~~~~~~~~~~~~~~~^^^^^
+  File "/Users/bhawyagulati/Documents/Projects/Expense-Tracker-Mobile/venv/lib/python3.13/site-packages/rest_framework/views.py", line 474, in handle_exception
+    self.raise_uncaught_exception(exc)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^
+  File "/Users/bhawyagulati/Documents/Projects/Expense-Tracker-Mobile/venv/lib/python3.13/site-packages/rest_framework/views.py", line 485, in raise_uncaught_exception
+    raise exc
+  File "/Users/bhawyagulati/Documents/Projects/Expense-Tracker-Mobile/venv/lib/python3.13/site-packages/rest_framework/views.py", line 514, in dispatch
+    self.initial(request, *args, **kwargs)
+    ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/bhawyagulati/Documents/Projects/Expense-Tracker-Mobile/venv/lib/python3.13/site-packages/rest_framework/views.py", line 419, in initial
+    self.perform_authentication(request)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "/Users/bhawyagulati/Documents/Projects/Expense-Tracker-Mobile/venv/lib/python3.13/site-packages/rest_framework/views.py", line 329, in perform_authentication
+    request.user
+  File "/Users/bhawyagulati/Documents/Projects/Expense-Tracker-Mobile/venv/lib/python3.13/site-packages/rest_framework/request.py", line 232, in user
+    self._authenticate()
+    ~~~~~~~~~~~~~~~~~~^^
+  File "/Users/bhawyagulati/Documents/Projects/Expense-Tracker-Mobile/venv/lib/python3.13/site-packages/rest_framework/request.py", line 389, in _authenticate
+    user_auth_tuple = authenticator.authenticate(self)
+  File "/Users/bhawyagulati/Documents/Projects/Expense-Tracker-Mobile/venv/lib/python3.13/site-packages/rest_framework_simplejwt/authentication.py", line 51, in authenticate
+    return self.get_user(validated_token), validated_token
+           ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "/Users/bhawyagulati/Documents/Projects/Expense-Tracker-Mobile/venv/lib/python3.13/site-packages/rest_framework_simplejwt/authentication.py", line 132, in get_user
+    user = self.user_model.objects.get(**{api_settings.USER_ID_FIELD: user_id})
+  File "/Users/bhawyagulati/Documents/Projects/Expense-Tracker-Mobile/venv/lib/python3.13/site-packages/django/db/models/manager.py", line 87, in manager_method
+    return getattr(self.get_queryset(), name)(*args, **kwargs)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "/Users/bhawyagulati/Documents/Projects/Expense-Tracker-Mobile/venv/lib/python3.13/site-packages/django/db/models/query.py", line 679, in get
+    num = len(clone)
+  File "/Users/bhawyagulati/Documents/Projects/Expense-Tracker-Mobile/venv/lib/python3.13/site-packages/django/db/models/query.py", line 416, in __len__
+    self._fetch_all()
+    ~~~~~~~~~~~~~~~^^
+  File "/Users/bhawyagulati/Documents/Projects/Expense-Tracker-Mobile/venv/lib/python3.13/site-packages/django/db/models/query.py", line 2239, in _fetch_all
+    self._result_cache = list(self._iterable_class(self))
+                         ~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/bhawyagulati/Documents/Projects/Expense-Tracker-Mobile/venv/lib/python3.13/site-packages/django/db/models/query.py", line 98, in __iter__
+    results = compiler.execute_sql(
+        chunked_fetch=self.chunked_fetch, chunk_size=self.chunk_size
+    )
+  File "/Users/bhawyagulati/Documents/Projects/Expense-Tracker-Mobile/venv/lib/python3.13/site-packages/django/db/models/sql/compiler.py", line 1624, in execute_sql
+    cursor.execute(sql, params)
+    ~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "/Users/bhawyagulati/Documents/Projects/Expense-Tracker-Mobile/venv/lib/python3.13/site-packages/django/db/backends/utils.py", line 122, in execute
+    return super().execute(sql, params)
+           ~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "/Users/bhawyagulati/Documents/Projects/Expense-Tracker-Mobile/venv/lib/python3.13/site-packages/django/db/backends/utils.py", line 79, in execute
+    return self._execute_with_wrappers(
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        sql, params, many=False, executor=self._execute
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "/Users/bhawyagulati/Documents/Projects/Expense-Tracker-Mobile/venv/lib/python3.13/site-packages/django/db/backends/utils.py", line 92, in _execute_with_wrappers
+    return executor(sql, params, many, context)
+  File "/Users/bhawyagulati/Documents/Projects/Expense-Tracker-Mobile/venv/lib/python3.13/site-packages/django/db/backends/utils.py", line 100, in _execute
+    with self.db.wrap_database_errors:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/bhawyagulati/Documents/Projects/Expense-Tracker-Mobile/venv/lib/python3.13/site-packages/django/db/utils.py", line 94, in __exit__
+    raise dj_exc_value.with_traceback(traceback) from exc_value
+  File "/Users/bhawyagulati/Documents/Projects/Expense-Tracker-Mobile/venv/lib/python3.13/site-packages/django/db/backends/utils.py", line 105, in _execute
+    return self.cursor.execute(sql, params)
+           ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+django.db.utils.OperationalError: could not receive data from server: Operation timed out
+SSL SYSCALL error: Operation timed out
+
+ERROR 2026-09-01 16:33:47,092 views ExpenseViewSet error: could not receive data from server: Operation timed out
+SSL SYSCALL error: Operation timed out
+Traceback (most recent call last):
+  File "/Users/bhawyagulati/Documents/Projects/Expense-Tracker-Mobile/venv/lib/python3.13/site-packages/django/db/backends/utils.py", line 105, in _execute
+    return self.cursor.execute(sql, params)
+           ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+psycopg2.OperationalError: could not receive data from server: Operation timed out
+SSL SYSCALL error: Operation timed out
+
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/Users/bhawyagulati/Documents/Projects/Expense-Tracker-Mobile/venv/lib/python3.13/site-packages/rest_framework/views.py", line 514, in dispatch
+    self.initial(request, *args, **kwargs)
+    ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/bhawyagulati/Documents/Projects/Expense-Tracker-Mobile/venv/lib/python3.13/site-packages/rest_framework/views.py", line 419, in initial
+    self.perform_authentication(request)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "/Users/bhawyagulati/Documents/Projects/Expense-Tracker-Mobile/venv/lib/python3.13/site-packages/rest_framework/views.py", line 329, in perform_authentication
+    request.user
+  File "/Users/bhawyagulati/Documents/Projects/Expense-Tracker-Mobile/venv/lib/python3.13/site-packages/rest_framework/request.py", line 232, in user
+    self._authenticate()
+    ~~~~~~~~~~~~~~~~~~^^
+  File "/Users/bhawyagulati/Documents/Projects/Expense-Tracker-Mobile/venv/lib/python3.13/site-packages/rest_framework/request.py", line 389, in _authenticate
+    user_auth_tuple = authenticator.authenticate(self)
+  File "/Users/bhawyagulati/Documents/Projects/Expense-Tracker-Mobile/venv/lib/python3.13/site-packages/rest_framework_simplejwt/authentication.py", line 51, in authenticate
+    return self.get_user(validated_token), validated_token
+           ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "/Users/bhawyagulati/Documents/Projects/Expense-Tracker-Mobile/venv/lib/python3.13/site-packages/rest_framework_simplejwt/authentication.py", line 132, in get_user
+    user = self.user_model.objects.get(**{api_settings.USER_ID_FIELD: user_id})
+  File "/Users/bhawyagulati/Documents/Projects/Expense-Tracker-Mobile/venv/lib/python3.13/site-packages/django/db/models/manager.py", line 87, in manager_method
+    return getattr(self.get_queryset(), name)(*args, **kwargs)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "/Users/bhawyagulati/Documents/Projects/Expense-Tracker-Mobile/venv/lib/python3.13/site-packages/django/db/models/query.py", line 679, in get
+    num = len(clone)
+  File "/Users/bhawyagulati/Documents/Projects/Expense-Tracker-Mobile/venv/lib/python3.13/site-packages/django/db/models/query.py", line 416, in __len__
+    self._fetch_all()
+    ~~~~~~~~~~~~~~~^^
+  File "/Users/bhawyagulati/Documents/Projects/Expense-Tracker-Mobile/venv/lib/python3.13/site-packages/django/db/models/query.py", line 2239, in _fetch_all
+    self._result_cache = list(self._iterable_class(self))
+                         ~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/bhawyagulati/Documents/Projects/Expense-Tracker-Mobile/venv/lib/python3.13/site-packages/django/db/models/query.py", line 98, in __iter__
+    results = compiler.execute_sql(
+        chunked_fetch=self.chunked_fetch, chunk_size=self.chunk_size
+    )
+  File "/Users/bhawyagulati/Documents/Projects/Expense-Tracker-Mobile/venv/lib/python3.13/site-packages/django/db/models/sql/compiler.py", line 1624, in execute_sql
+    cursor.execute(sql, params)
+    ~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "/Users/bhawyagulati/Documents/Projects/Expense-Tracker-Mobile/venv/lib/python3.13/site-packages/django/db/backends/utils.py", line 122, in execute
+    return super().execute(sql, params)
+           ~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "/Users/bhawyagulati/Documents/Projects/Expense-Tracker-Mobile/venv/lib/python3.13/site-packages/django/db/backends/utils.py", line 79, in execute
+    return self._execute_with_wrappers(
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        sql, params, many=False, executor=self._execute
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "/Users/bhawyagulati/Documents/Projects/Expense-Tracker-Mobile/venv/lib/python3.13/site-packages/django/db/backends/utils.py", line 92, in _execute_with_wrappers
+    return executor(sql, params, many, context)
+  File "/Users/bhawyagulati/Documents/Projects/Expense-Tracker-Mobile/venv/lib/python3.13/site-packages/django/db/backends/utils.py", line 100, in _execute
+    with self.db.wrap_database_errors:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/bhawyagulati/Documents/Projects/Expense-Tracker-Mobile/venv/lib/python3.13/site-packages/django/db/utils.py", line 94, in __exit__
+    raise dj_exc_value.with_traceback(traceback) from exc_value
+  File "/Users/bhawyagulati/Documents/Projects/Expense-Tracker-Mobile/venv/lib/python3.13/site-packages/django/db/backends/utils.py", line 105, in _execute
+    return self.cursor.execute(sql, params)
+           ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+django.db.utils.OperationalError: could not receive data from server: Operation timed out
+SSL SYSCALL error: Operation timed out
+
+ERROR 2026-09-01 16:33:47,126 log Internal Server Error: /api/expenses/
+Traceback (most recent call last):
+  File "/Users/bhawyagulati/Documents/Projects/Expense-Tracker-Mobile/venv/lib/python3.13/site-packages/django/db/backends/utils.py", line 105, in _execute
+    return self.cursor.execute(sql, params)
+           ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+psycopg2.OperationalError: could not receive data from server: Operation timed out
+SSL SYSCALL error: Operation timed out
+
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/Users/bhawyagulati/Documents/Projects/Expense-Tracker-Mobile/venv/lib/python3.13/site-packages/django/core/handlers/exception.py", line 56, in inner
+    response = get_response(request)
+  File "/Users/bhawyagulati/Documents/Projects/Expense-Tracker-Mobile/venv/lib/python3.13/site-packages/django/core/handlers/base.py", line 199, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/Users/bhawyagulati/Documents/Projects/Expense-Tracker-Mobile/venv/lib/python3.13/site-packages/django/views/decorators/csrf.py", line 64, in _view_wrapper
+    return view_func(request, *args, **kwargs)
+  File "/Users/bhawyagulati/Documents/Projects/Expense-Tracker-Mobile/venv/lib/python3.13/site-packages/rest_framework/viewsets.py", line 124, in view
+    return self.dispatch(request, *args, **kwargs)
+           ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/bhawyagulati/Documents/Projects/Expense-Tracker-Mobile/venv/lib/python3.13/site-packages/rest_framework/views.py", line 526, in dispatch
+    response = self.handle_exception(exc)
+  File "/Users/bhawyagulati/Documents/Projects/Expense-Tracker-Mobile/expensetracker/expenses/views.py", line 576, in handle_exception
+    return super().handle_exception(exc)
+           ~~~~~~~~~~~~~~~~~~~~~~~~^^^^^
+  File "/Users/bhawyagulati/Documents/Projects/Expense-Tracker-Mobile/venv/lib/python3.13/site-packages/rest_framework/views.py", line 474, in handle_exception
+    self.raise_uncaught_exception(exc)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^
+  File "/Users/bhawyagulati/Documents/Projects/Expense-Tracker-Mobile/venv/lib/python3.13/site-packages/rest_framework/views.py", line 485, in raise_uncaught_exception
+    raise exc
+  File "/Users/bhawyagulati/Documents/Projects/Expense-Tracker-Mobile/venv/lib/python3.13/site-packages/rest_framework/views.py", line 514, in dispatch
+    self.initial(request, *args, **kwargs)
+    ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/bhawyagulati/Documents/Projects/Expense-Tracker-Mobile/venv/lib/python3.13/site-packages/rest_framework/views.py", line 419, in initial
+    self.perform_authentication(request)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "/Users/bhawyagulati/Documents/Projects/Expense-Tracker-Mobile/venv/lib/python3.13/site-packages/rest_framework/views.py", line 329, in perform_authentication
+    request.user
+  File "/Users/bhawyagulati/Documents/Projects/Expense-Tracker-Mobile/venv/lib/python3.13/site-packages/rest_framework/request.py", line 232, in user
+    self._authenticate()
+    ~~~~~~~~~~~~~~~~~~^^
+  File "/Users/bhawyagulati/Documents/Projects/Expense-Tracker-Mobile/venv/lib/python3.13/site-packages/rest_framework/request.py", line 389, in _authenticate
+    user_auth_tuple = authenticator.authenticate(self)
+  File "/Users/bhawyagulati/Documents/Projects/Expense-Tracker-Mobile/venv/lib/python3.13/site-packages/rest_framework_simplejwt/authentication.py", line 51, in authenticate
+    return self.get_user(validated_token), validated_token
+           ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "/Users/bhawyagulati/Documents/Projects/Expense-Tracker-Mobile/venv/lib/python3.13/site-packages/rest_framework_simplejwt/authentication.py", line 132, in get_user
+    user = self.user_model.objects.get(**{api_settings.USER_ID_FIELD: user_id})
+  File "/Users/bhawyagulati/Documents/Projects/Expense-Tracker-Mobile/venv/lib/python3.13/site-packages/django/db/models/manager.py", line 87, in manager_method
+    return getattr(self.get_queryset(), name)(*args, **kwargs)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "/Users/bhawyagulati/Documents/Projects/Expense-Tracker-Mobile/venv/lib/python3.13/site-packages/django/db/models/query.py", line 679, in get
+    num = len(clone)
+  File "/Users/bhawyagulati/Documents/Projects/Expense-Tracker-Mobile/venv/lib/python3.13/site-packages/django/db/models/query.py", line 416, in __len__
+    self._fetch_all()
+    ~~~~~~~~~~~~~~~^^
+  File "/Users/bhawyagulati/Documents/Projects/Expense-Tracker-Mobile/venv/lib/python3.13/site-packages/django/db/models/query.py", line 2239, in _fetch_all
+    self._result_cache = list(self._iterable_class(self))
+                         ~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/bhawyagulati/Documents/Projects/Expense-Tracker-Mobile/venv/lib/python3.13/site-packages/django/db/models/query.py", line 98, in __iter__
+    results = compiler.execute_sql(
+        chunked_fetch=self.chunked_fetch, chunk_size=self.chunk_size
+    )
+  File "/Users/bhawyagulati/Documents/Projects/Expense-Tracker-Mobile/venv/lib/python3.13/site-packages/django/db/models/sql/compiler.py", line 1624, in execute_sql
+    cursor.execute(sql, params)
+    ~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "/Users/bhawyagulati/Documents/Projects/Expense-Tracker-Mobile/venv/lib/python3.13/site-packages/django/db/backends/utils.py", line 122, in execute
+    return super().execute(sql, params)
+           ~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "/Users/bhawyagulati/Documents/Projects/Expense-Tracker-Mobile/venv/lib/python3.13/site-packages/django/db/backends/utils.py", line 79, in execute
+    return self._execute_with_wrappers(
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        sql, params, many=False, executor=self._execute
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "/Users/bhawyagulati/Documents/Projects/Expense-Tracker-Mobile/venv/lib/python3.13/site-packages/django/db/backends/utils.py", line 92, in _execute_with_wrappers
+    return executor(sql, params, many, context)
+  File "/Users/bhawyagulati/Documents/Projects/Expense-Tracker-Mobile/venv/lib/python3.13/site-packages/django/db/backends/utils.py", line 100, in _execute
+    with self.db.wrap_database_errors:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/bhawyagulati/Documents/Projects/Expense-Tracker-Mobile/venv/lib/python3.13/site-packages/django/db/utils.py", line 94, in __exit__
+    raise dj_exc_value.with_traceback(traceback) from exc_value
+  File "/Users/bhawyagulati/Documents/Projects/Expense-Tracker-Mobile/venv/lib/python3.13/site-packages/django/db/backends/utils.py", line 105, in _execute
+    return self.cursor.execute(sql, params)
+           ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+django.db.utils.OperationalError: could not receive data from server: Operation timed out
+SSL SYSCALL error: Operation timed out
+
+INFO 2026-09-01 16:34:07,096 views Logged in existing Django user via Firebase Auth: bfreestorage002
+DEBUG 2026-09-01 16:34:07,802 views User 10 fetched expenses | filters: category=None start=None end=None
+DEBUG 2026-09-01 16:34:16,371 views User 10 fetched expenses | filters: category=None start=None end=None
+INFO 2026-09-01 16:34:28,848 views Expense created: id=144 amount=90.00 user=10
+DEBUG 2026-09-01 16:34:29,218 views User 10 fetched expenses | filters: category=None start=None end=None
+DEBUG 2026-09-01 16:34:38,111 views User 10 fetched expenses | filters: category=None start=None end=None
+INFO 2026-09-01 16:34:55,789 views Expense created: id=145 amount=35.00 user=10
+DEBUG 2026-09-01 16:34:56,092 views User 10 fetched expenses | filters: category=None start=None end=None
+DEBUG 2026-09-01 16:35:09,754 views User 10 fetched expenses | filters: category=None start=None end=None
+DEBUG 2026-09-01 16:35:12,146 views User 10 fetched expenses | filters: category=None start=None end=None
+DEBUG 2026-09-02 07:17:57,263 views User 10 fetched expenses | filters: category=None start=None end=None
+DEBUG 2026-09-02 07:18:16,110 views User 10 fetched expenses | filters: category=None start=None end=None
+DEBUG 2026-09-02 07:18:29,956 views User 10 fetched expenses | filters: category=None start=None end=None
+DEBUG 2026-09-02 07:33:58,575 views User 10 fetched expenses | filters: category=None start=None end=None
+DEBUG 2026-09-02 07:33:59,162 views User 10 fetched expenses | filters: category=None start=None end=None
+DEBUG 2026-09-02 07:33:59,800 views User 10 fetched expenses | filters: category=None start=None end=None
+DEBUG 2026-09-02 07:34:03,556 views User 10 fetched expenses | filters: category=None start=None end=None
+DEBUG 2026-09-02 07:34:53,479 views User 10 fetched expenses | filters: category=None start=None end=None
+DEBUG 2026-09-02 07:35:20,546 views User 10 fetched expenses | filters: category=None start=None end=None
+DEBUG 2026-09-02 07:35:23,371 views User 10 fetched expenses | filters: category=None start=None end=None
+DEBUG 2026-09-02 07:35:32,029 views User 10 fetched expenses | filters: category=None start=None end=None
+DEBUG 2026-09-02 07:38:11,402 views User 10 fetched expenses | filters: category=None start=None end=None
+DEBUG 2026-09-02 07:39:23,409 views User 10 fetched expenses | filters: category=None start=None end=None
+DEBUG 2026-09-02 07:39:29,325 views User 10 fetched expenses | filters: category=None start=None end=None
+DEBUG 2026-09-02 07:41:11,925 views User 10 fetched expenses | filters: category=None start=None end=None
+DEBUG 2026-09-02 07:41:46,305 views User 10 fetched expenses | filters: category=None start=None end=None
+ERROR 2026-09-02 07:42:01,399 views ExpenseViewSet error: {'category': [ErrorDetail(string='"housing" is not a valid choice.', code='invalid_choice')]}
+Traceback (most recent call last):
+  File "/Users/bhawyagulati/Documents/Projects/Expense-Tracker-Mobile/venv/lib/python3.13/site-packages/rest_framework/views.py", line 523, in dispatch
+    response = handler(request, *args, **kwargs)
+  File "/Users/bhawyagulati/Documents/Projects/Expense-Tracker-Mobile/venv/lib/python3.13/site-packages/rest_framework/mixins.py", line 18, in create
+    serializer.is_valid(raise_exception=True)
+    ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/bhawyagulati/Documents/Projects/Expense-Tracker-Mobile/venv/lib/python3.13/site-packages/rest_framework/serializers.py", line 231, in is_valid
+    raise ValidationError(self.errors)
+rest_framework.exceptions.ValidationError: {'category': [ErrorDetail(string='"housing" is not a valid choice.', code='invalid_choice')]}
+WARNING 2026-09-02 07:42:01,407 log Bad Request: /api/expenses/
+WARNING 2026-09-02 07:42:01,407 log "POST /api/expenses/ HTTP/1.1" 400 51
+INFO 2026-09-02 07:42:25,393 views Updated profile name for user 10: Bhawya
+INFO 2026-09-02 07:44:26,799 views Logged in existing Django user via Firebase Auth: Bhawya
+DEBUG 2026-09-02 07:44:27,438 views User 10 fetched expenses | filters: category=None start=None end=None
+DEBUG 2026-09-02 07:44:36,666 views User 10 fetched expenses | filters: category=None start=None end=None
+DEBUG 2026-09-02 07:49:35,908 views User 10 fetched expenses | filters: category=None start=None end=None
+DEBUG 2026-09-02 07:50:03,631 views User 10 fetched expenses | filters: category=None start=None end=None
+DEBUG 2026-09-02 07:50:08,954 views User 10 fetched expenses | filters: category=None start=None end=None
+DEBUG 2026-09-02 07:52:12,865 views User 10 fetched expenses | filters: category=None start=None end=None
+DEBUG 2026-09-02 07:52:17,369 views User 10 fetched expenses | filters: category=None start=None end=None
+INFO 2026-09-02 08:02:55,343 views Expense created: id=146 amount=1.00 user=10
+DEBUG 2026-09-02 08:06:27,215 views User 10 fetched expenses | filters: category=None start=None end=None
+DEBUG 2026-09-02 08:06:30,002 views User 10 fetched expenses | filters: category=None start=None end=None
+DEBUG 2026-09-02 08:06:35,374 views User 10 fetched expenses | filters: category=None start=None end=None
+DEBUG 2026-09-02 08:07:19,377 views User 10 fetched expenses | filters: category=None start=None end=None
+DEBUG 2026-09-02 08:07:22,062 views User 10 fetched expenses | filters: category=None start=None end=None
+DEBUG 2026-09-02 08:07:42,083 views User 10 fetched expenses | filters: category=None start=None end=None
+DEBUG 2026-09-02 08:07:42,743 views User 10 fetched expenses | filters: category=None start=None end=None
+DEBUG 2026-09-02 08:07:43,305 views User 10 fetched expenses | filters: category=None start=None end=None
+DEBUG 2026-09-02 08:07:46,849 views User 10 fetched expenses | filters: category=None start=None end=None
+DEBUG 2026-09-02 08:07:47,401 views User 10 fetched expenses | filters: category=None start=None end=None
+DEBUG 2026-09-02 08:07:53,046 views User 10 fetched expenses | filters: category=None start=None end=None
+DEBUG 2026-09-02 08:07:53,719 views User 10 fetched expenses | filters: category=None start=None end=None
+INFO 2026-09-02 08:08:06,473 views Expense created: id=148 amount=1.00 user=10
+DEBUG 2026-09-02 08:08:06,767 views User 10 fetched expenses | filters: category=None start=None end=None
+DEBUG 2026-09-02 08:08:07,550 views User 10 fetched expenses | filters: category=None start=None end=None
+DEBUG 2026-09-02 08:08:08,113 views User 10 fetched expenses | filters: category=None start=None end=None
+DEBUG 2026-09-02 08:08:08,703 views User 10 fetched expenses | filters: category=None start=None end=None
+DEBUG 2026-09-02 08:08:14,093 views User 10 fetched expenses | filters: category=None start=None end=None
+DEBUG 2026-09-02 08:08:14,939 views User 10 fetched expenses | filters: category=None start=None end=None
+DEBUG 2026-09-02 08:08:15,266 views User 10 fetched expenses | filters: category=None start=None end=None
+ERROR 2026-09-02 08:08:15,553 views ExpenseViewSet error: No Expense matches the given query.
+Traceback (most recent call last):
+  File "/Users/bhawyagulati/Documents/Projects/Expense-Tracker-Mobile/venv/lib/python3.13/site-packages/django/shortcuts.py", line 100, in get_object_or_404
+    return queryset.get(*args, **kwargs)
+           ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "/Users/bhawyagulati/Documents/Projects/Expense-Tracker-Mobile/venv/lib/python3.13/site-packages/django/db/models/query.py", line 683, in get
+    raise self.model.DoesNotExist(
+        "%s matching query does not exist." % self.model._meta.object_name
+    )
+expenses.models.Expense.DoesNotExist: Expense matching query does not exist.
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/Users/bhawyagulati/Documents/Projects/Expense-Tracker-Mobile/venv/lib/python3.13/site-packages/rest_framework/views.py", line 523, in dispatch
+    response = handler(request, *args, **kwargs)
+  File "/Users/bhawyagulati/Documents/Projects/Expense-Tracker-Mobile/venv/lib/python3.13/site-packages/rest_framework/mixins.py", line 90, in destroy
+    instance = self.get_object()
+  File "/Users/bhawyagulati/Documents/Projects/Expense-Tracker-Mobile/venv/lib/python3.13/site-packages/rest_framework/generics.py", line 100, in get_object
+    obj = get_object_or_404(queryset, **filter_kwargs)
+  File "/Users/bhawyagulati/Documents/Projects/Expense-Tracker-Mobile/venv/lib/python3.13/site-packages/rest_framework/generics.py", line 19, in get_object_or_404
+    return _get_object_or_404(queryset, *filter_args, **filter_kwargs)
+  File "/Users/bhawyagulati/Documents/Projects/Expense-Tracker-Mobile/venv/lib/python3.13/site-packages/django/shortcuts.py", line 102, in get_object_or_404
+    raise Http404(
+    ...<4 lines>...
+    )
+django.http.response.Http404: No Expense matches the given query.
+WARNING 2026-09-02 08:08:15,569 log Not Found: /api/expenses/146/
+WARNING 2026-09-02 08:08:15,569 log "DELETE /api/expenses/146/ HTTP/1.1" 404 48
+DEBUG 2026-09-02 08:08:15,713 views User 10 fetched expenses | filters: category=None start=None end=None
+DEBUG 2026-09-02 08:08:16,262 views User 10 fetched expenses | filters: category=None start=None end=None
+DEBUG 2026-09-02 08:08:16,884 views User 10 fetched expenses | filters: category=None start=None end=None
+DEBUG 2026-09-02 08:08:24,571 views User 10 fetched expenses | filters: category=None start=None end=None
+DEBUG 2026-09-02 08:08:25,484 views User 10 fetched expenses | filters: category=None start=None end=None
+DEBUG 2026-09-02 08:08:26,310 views User 10 fetched expenses | filters: category=None start=None end=None
+DEBUG 2026-09-02 08:08:26,924 views User 10 fetched expenses | filters: category=None start=None end=None
+DEBUG 2026-09-02 08:08:27,500 views User 10 fetched expenses | filters: category=None start=None end=None
+INFO 2026-09-02 08:09:15,108 views Expense created: id=149 amount=1.00 user=10
+DEBUG 2026-09-02 08:09:15,401 views User 10 fetched expenses | filters: category=None start=None end=None
+DEBUG 2026-09-02 08:09:16,176 views User 10 fetched expenses | filters: category=None start=None end=None
+DEBUG 2026-09-02 08:09:16,782 views User 10 fetched expenses | filters: category=None start=None end=None
+DEBUG 2026-09-02 08:09:17,385 views User 10 fetched expenses | filters: category=None start=None end=None
+DEBUG 2026-09-02 08:09:27,440 views User 10 fetched expenses | filters: category=None start=None end=None
+DEBUG 2026-09-02 08:09:28,338 views User 10 fetched expenses | filters: category=None start=None end=None
+DEBUG 2026-09-02 08:09:29,101 views User 10 fetched expenses | filters: category=None start=None end=None
+DEBUG 2026-09-02 08:09:29,649 views User 10 fetched expenses | filters: category=None start=None end=None
+DEBUG 2026-09-02 08:09:30,213 views User 10 fetched expenses | filters: category=None start=None end=None
+DEBUG 2026-09-02 08:11:07,926 views User 10 fetched expenses | filters: category=None start=None end=None
+DEBUG 2026-09-02 08:11:08,510 views User 10 fetched expenses | filters: category=None start=None end=None
+DEBUG 2026-09-02 08:11:09,091 views User 10 fetched expenses | filters: category=None start=None end=None
+DEBUG 2026-09-02 08:11:48,740 views User 10 fetched expenses | filters: category=None start=None end=None
+DEBUG 2026-09-02 08:11:49,309 views User 10 fetched expenses | filters: category=None start=None end=None
+INFO 2026-09-02 08:11:55,809 views Expense created: id=150 amount=1.00 user=10
+DEBUG 2026-09-02 08:11:56,098 views User 10 fetched expenses | filters: category=None start=None end=None
+DEBUG 2026-09-02 08:11:56,741 views User 10 fetched expenses | filters: category=None start=None end=None
+DEBUG 2026-09-02 08:11:57,317 views User 10 fetched expenses | filters: category=None start=None end=None
+DEBUG 2026-09-02 08:12:13,519 views User 10 fetched expenses | filters: category=None start=None end=None
+DEBUG 2026-09-02 08:12:14,126 views User 10 fetched expenses | filters: category=None start=None end=None
+DEBUG 2026-09-02 08:12:35,405 views User 10 fetched expenses | filters: category=None start=None end=None
+ERROR 2026-09-02 08:12:36,050 views ExpenseViewSet error: Request was throttled. Expected available in 84551 seconds.
+Traceback (most recent call last):
+  File "/Users/bhawyagulati/Documents/Projects/Expense-Tracker-Mobile/venv/lib/python3.13/site-packages/rest_framework/views.py", line 514, in dispatch
+    self.initial(request, *args, **kwargs)
+    ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/bhawyagulati/Documents/Projects/Expense-Tracker-Mobile/venv/lib/python3.13/site-packages/rest_framework/views.py", line 421, in initial
+    self.check_throttles(request)
+    ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "/Users/bhawyagulati/Documents/Projects/Expense-Tracker-Mobile/venv/lib/python3.13/site-packages/rest_framework/views.py", line 376, in check_throttles
+    self.throttled(request, duration)
+    ~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^
+  File "/Users/bhawyagulati/Documents/Projects/Expense-Tracker-Mobile/venv/lib/python3.13/site-packages/rest_framework/views.py", line 186, in throttled
+    raise exceptions.Throttled(wait)
+rest_framework.exceptions.Throttled: Request was throttled. Expected available in 84551 seconds.
+WARNING 2026-09-02 08:12:36,055 log Too Many Requests: /api/expenses/
+WARNING 2026-09-02 08:12:36,055 log "GET /api/expenses/ HTTP/1.1" 429 72
+ERROR 2026-09-02 08:12:36,332 views ExpenseViewSet error: Request was throttled. Expected available in 84550 seconds.
+Traceback (most recent call last):
+  File "/Users/bhawyagulati/Documents/Projects/Expense-Tracker-Mobile/venv/lib/python3.13/site-packages/rest_framework/views.py", line 514, in dispatch
+    self.initial(request, *args, **kwargs)
+    ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/bhawyagulati/Documents/Projects/Expense-Tracker-Mobile/venv/lib/python3.13/site-packages/rest_framework/views.py", line 421, in initial
+    self.check_throttles(request)
+    ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "/Users/bhawyagulati/Documents/Projects/Expense-Tracker-Mobile/venv/lib/python3.13/site-packages/rest_framework/views.py", line 376, in check_throttles
+    self.throttled(request, duration)
+    ~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^
+  File "/Users/bhawyagulati/Documents/Projects/Expense-Tracker-Mobile/venv/lib/python3.13/site-packages/rest_framework/views.py", line 186, in throttled
+    raise exceptions.Throttled(wait)
+rest_framework.exceptions.Throttled: Request was throttled. Expected available in 84550 seconds.
+WARNING 2026-09-02 08:12:36,334 log Too Many Requests: /api/expenses/
+WARNING 2026-09-02 08:12:36,334 log "GET /api/expenses/ HTTP/1.1" 429 72
+WARNING 2026-09-02 08:12:37,123 log Too Many Requests: /api/budget/
+WARNING 2026-09-02 08:12:37,124 log "GET /api/budget/ HTTP/1.1" 429 72
+ERROR 2026-09-02 08:12:38,943 views ExpenseViewSet error: Request was throttled. Expected available in 84548 seconds.
+Traceback (most recent call last):
+  File "/Users/bhawyagulati/Documents/Projects/Expense-Tracker-Mobile/venv/lib/python3.13/site-packages/rest_framework/views.py", line 514, in dispatch
+    self.initial(request, *args, **kwargs)
+    ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/bhawyagulati/Documents/Projects/Expense-Tracker-Mobile/venv/lib/python3.13/site-packages/rest_framework/views.py", line 421, in initial
+    self.check_throttles(request)
+    ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "/Users/bhawyagulati/Documents/Projects/Expense-Tracker-Mobile/venv/lib/python3.13/site-packages/rest_framework/views.py", line 376, in check_throttles
+    self.throttled(request, duration)
+    ~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^
+  File "/Users/bhawyagulati/Documents/Projects/Expense-Tracker-Mobile/venv/lib/python3.13/site-packages/rest_framework/views.py", line 186, in throttled
+    raise exceptions.Throttled(wait)
+rest_framework.exceptions.Throttled: Request was throttled. Expected available in 84548 seconds.
+WARNING 2026-09-02 08:12:38,945 log Too Many Requests: /api/expenses/
+WARNING 2026-09-02 08:12:38,945 log "GET /api/expenses/ HTTP/1.1" 429 72
+ERROR 2026-09-02 08:12:39,222 views ExpenseViewSet error: Request was throttled. Expected available in 84548 seconds.
+Traceback (most recent call last):
+  File "/Users/bhawyagulati/Documents/Projects/Expense-Tracker-Mobile/venv/lib/python3.13/site-packages/rest_framework/views.py", line 514, in dispatch
+    self.initial(request, *args, **kwargs)
+    ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/bhawyagulati/Documents/Projects/Expense-Tracker-Mobile/venv/lib/python3.13/site-packages/rest_framework/views.py", line 421, in initial
+    self.check_throttles(request)
+    ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "/Users/bhawyagulati/Documents/Projects/Expense-Tracker-Mobile/venv/lib/python3.13/site-packages/rest_framework/views.py", line 376, in check_throttles
+    self.throttled(request, duration)
+    ~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^
+  File "/Users/bhawyagulati/Documents/Projects/Expense-Tracker-Mobile/venv/lib/python3.13/site-packages/rest_framework/views.py", line 186, in throttled
+    raise exceptions.Throttled(wait)
+rest_framework.exceptions.Throttled: Request was throttled. Expected available in 84548 seconds.
+WARNING 2026-09-02 08:12:39,224 log Too Many Requests: /api/expenses/
+WARNING 2026-09-02 08:12:39,224 log "GET /api/expenses/ HTTP/1.1" 429 72
+WARNING 2026-09-02 08:12:40,232 log Too Many Requests: /api/budget/
+WARNING 2026-09-02 08:12:40,233 log "GET /api/budget/ HTTP/1.1" 429 72
+ERROR 2026-09-02 08:12:40,240 views ExpenseViewSet error: Request was throttled. Expected available in 84547 seconds.
+Traceback (most recent call last):
+  File "/Users/bhawyagulati/Documents/Projects/Expense-Tracker-Mobile/venv/lib/python3.13/site-packages/rest_framework/views.py", line 514, in dispatch
+    self.initial(request, *args, **kwargs)
+    ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/bhawyagulati/Documents/Projects/Expense-Tracker-Mobile/venv/lib/python3.13/site-packages/rest_framework/views.py", line 421, in initial
+    self.check_throttles(request)
+    ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "/Users/bhawyagulati/Documents/Projects/Expense-Tracker-Mobile/venv/lib/python3.13/site-packages/rest_framework/views.py", line 376, in check_throttles
+    self.throttled(request, duration)
+    ~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^
+  File "/Users/bhawyagulati/Documents/Projects/Expense-Tracker-Mobile/venv/lib/python3.13/site-packages/rest_framework/views.py", line 186, in throttled
+    raise exceptions.Throttled(wait)
+rest_framework.exceptions.Throttled: Request was throttled. Expected available in 84547 seconds.
+WARNING 2026-09-02 08:12:40,243 log Too Many Requests: /api/expenses/
+WARNING 2026-09-02 08:12:40,244 log "GET /api/expenses/ HTTP/1.1" 429 72
+ERROR 2026-09-02 08:12:42,011 views ExpenseViewSet error: Request was throttled. Expected available in 84545 seconds.
+Traceback (most recent call last):
+  File "/Users/bhawyagulati/Documents/Projects/Expense-Tracker-Mobile/venv/lib/python3.13/site-packages/rest_framework/views.py", line 514, in dispatch
+    self.initial(request, *args, **kwargs)
+    ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/bhawyagulati/Documents/Projects/Expense-Tracker-Mobile/venv/lib/python3.13/site-packages/rest_framework/views.py", line 421, in initial
+    self.check_throttles(request)
+    ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "/Users/bhawyagulati/Documents/Projects/Expense-Tracker-Mobile/venv/lib/python3.13/site-packages/rest_framework/views.py", line 376, in check_throttles
+    self.throttled(request, duration)
+    ~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^
+  File "/Users/bhawyagulati/Documents/Projects/Expense-Tracker-Mobile/venv/lib/python3.13/site-packages/rest_framework/views.py", line 186, in throttled
+    raise exceptions.Throttled(wait)
+rest_framework.exceptions.Throttled: Request was throttled. Expected available in 84545 seconds.
+WARNING 2026-09-02 08:12:42,014 log Too Many Requests: /api/expenses/
+WARNING 2026-09-02 08:12:42,014 log "GET /api/expenses/ HTTP/1.1" 429 72
+ERROR 2026-09-02 08:12:48,552 views ExpenseViewSet error: Request was throttled. Expected available in 84538 seconds.
+Traceback (most recent call last):
+  File "/Users/bhawyagulati/Documents/Projects/Expense-Tracker-Mobile/venv/lib/python3.13/site-packages/rest_framework/views.py", line 514, in dispatch
+    self.initial(request, *args, **kwargs)
+    ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/bhawyagulati/Documents/Projects/Expense-Tracker-Mobile/venv/lib/python3.13/site-packages/rest_framework/views.py", line 421, in initial
+    self.check_throttles(request)
+    ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "/Users/bhawyagulati/Documents/Projects/Expense-Tracker-Mobile/venv/lib/python3.13/site-packages/rest_framework/views.py", line 376, in check_throttles
+    self.throttled(request, duration)
+    ~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^
+  File "/Users/bhawyagulati/Documents/Projects/Expense-Tracker-Mobile/venv/lib/python3.13/site-packages/rest_framework/views.py", line 186, in throttled
+    raise exceptions.Throttled(wait)
+rest_framework.exceptions.Throttled: Request was throttled. Expected available in 84538 seconds.
+WARNING 2026-09-02 08:12:48,557 log Too Many Requests: /api/expenses/
+WARNING 2026-09-02 08:12:48,558 log Too Many Requests: /api/budget/
+WARNING 2026-09-02 08:12:48,558 log "GET /api/expenses/ HTTP/1.1" 429 72
+WARNING 2026-09-02 08:12:48,559 log "GET /api/budget/ HTTP/1.1" 429 72
+ERROR 2026-09-02 08:12:48,837 views ExpenseViewSet error: Request was throttled. Expected available in 84538 seconds.
+Traceback (most recent call last):
+  File "/Users/bhawyagulati/Documents/Projects/Expense-Tracker-Mobile/venv/lib/python3.13/site-packages/rest_framework/views.py", line 514, in dispatch
+    self.initial(request, *args, **kwargs)
+    ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/bhawyagulati/Documents/Projects/Expense-Tracker-Mobile/venv/lib/python3.13/site-packages/rest_framework/views.py", line 421, in initial
+    self.check_throttles(request)
+    ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "/Users/bhawyagulati/Documents/Projects/Expense-Tracker-Mobile/venv/lib/python3.13/site-packages/rest_framework/views.py", line 376, in check_throttles
+    self.throttled(request, duration)
+    ~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^
+  File "/Users/bhawyagulati/Documents/Projects/Expense-Tracker-Mobile/venv/lib/python3.13/site-packages/rest_framework/views.py", line 186, in throttled
+    raise exceptions.Throttled(wait)
+rest_framework.exceptions.Throttled: Request was throttled. Expected available in 84538 seconds.
+WARNING 2026-09-02 08:12:48,838 log Too Many Requests: /api/budget/
+WARNING 2026-09-02 08:12:48,839 log Too Many Requests: /api/expenses/
+WARNING 2026-09-02 08:12:48,839 log "GET /api/budget/ HTTP/1.1" 429 72
+WARNING 2026-09-02 08:12:48,839 log "GET /api/expenses/ HTTP/1.1" 429 72
+WARNING 2026-09-02 08:12:51,922 log Too Many Requests: /api/budget/
+WARNING 2026-09-02 08:12:51,923 log "GET /api/budget/ HTTP/1.1" 429 72
+ERROR 2026-09-02 08:12:54,787 views ExpenseViewSet error: Request was throttled. Expected available in 84532 seconds.
+Traceback (most recent call last):
+  File "/Users/bhawyagulati/Documents/Projects/Expense-Tracker-Mobile/venv/lib/python3.13/site-packages/rest_framework/views.py", line 514, in dispatch
+    self.initial(request, *args, **kwargs)
+    ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/bhawyagulati/Documents/Projects/Expense-Tracker-Mobile/venv/lib/python3.13/site-packages/rest_framework/views.py", line 421, in initial
+    self.check_throttles(request)
+    ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "/Users/bhawyagulati/Documents/Projects/Expense-Tracker-Mobile/venv/lib/python3.13/site-packages/rest_framework/views.py", line 376, in check_throttles
+    self.throttled(request, duration)
+    ~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^
+  File "/Users/bhawyagulati/Documents/Projects/Expense-Tracker-Mobile/venv/lib/python3.13/site-packages/rest_framework/views.py", line 186, in throttled
+    raise exceptions.Throttled(wait)
+rest_framework.exceptions.Throttled: Request was throttled. Expected available in 84532 seconds.
+WARNING 2026-09-02 08:12:54,790 log Too Many Requests: /api/expenses/
+WARNING 2026-09-02 08:12:54,791 log "GET /api/expenses/ HTTP/1.1" 429 72
+WARNING 2026-09-02 08:12:57,167 log Too Many Requests: /api/budget/
+WARNING 2026-09-02 08:12:57,169 log "GET /api/budget/ HTTP/1.1" 429 72
+ERROR 2026-09-02 08:13:53,002 views ExpenseViewSet error: Request was throttled. Expected available in 84474 seconds.
+Traceback (most recent call last):
+  File "/Users/bhawyagulati/Documents/Projects/Expense-Tracker-Mobile/venv/lib/python3.13/site-packages/rest_framework/views.py", line 514, in dispatch
+    self.initial(request, *args, **kwargs)
+    ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/bhawyagulati/Documents/Projects/Expense-Tracker-Mobile/venv/lib/python3.13/site-packages/rest_framework/views.py", line 421, in initial
+    self.check_throttles(request)
+    ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "/Users/bhawyagulati/Documents/Projects/Expense-Tracker-Mobile/venv/lib/python3.13/site-packages/rest_framework/views.py", line 376, in check_throttles
+    self.throttled(request, duration)
+    ~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^
+  File "/Users/bhawyagulati/Documents/Projects/Expense-Tracker-Mobile/venv/lib/python3.13/site-packages/rest_framework/views.py", line 186, in throttled
+    raise exceptions.Throttled(wait)
+rest_framework.exceptions.Throttled: Request was throttled. Expected available in 84474 seconds.
+WARNING 2026-09-02 08:13:53,008 log Too Many Requests: /api/expenses/
+WARNING 2026-09-02 08:13:53,009 log "GET /api/expenses/ HTTP/1.1" 429 72
+ERROR 2026-09-02 08:13:54,909 views ExpenseViewSet error: Request was throttled. Expected available in 84472 seconds.
+Traceback (most recent call last):
+  File "/Users/bhawyagulati/Documents/Projects/Expense-Tracker-Mobile/venv/lib/python3.13/site-packages/rest_framework/views.py", line 514, in dispatch
+    self.initial(request, *args, **kwargs)
+    ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/bhawyagulati/Documents/Projects/Expense-Tracker-Mobile/venv/lib/python3.13/site-packages/rest_framework/views.py", line 421, in initial
+    self.check_throttles(request)
+    ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "/Users/bhawyagulati/Documents/Projects/Expense-Tracker-Mobile/venv/lib/python3.13/site-packages/rest_framework/views.py", line 376, in check_throttles
+    self.throttled(request, duration)
+    ~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^
+  File "/Users/bhawyagulati/Documents/Projects/Expense-Tracker-Mobile/venv/lib/python3.13/site-packages/rest_framework/views.py", line 186, in throttled
+    raise exceptions.Throttled(wait)
+rest_framework.exceptions.Throttled: Request was throttled. Expected available in 84472 seconds.
+WARNING 2026-09-02 08:13:54,910 log Too Many Requests: /api/expenses/
+WARNING 2026-09-02 08:13:54,910 log "GET /api/expenses/ HTTP/1.1" 429 72
+WARNING 2026-09-02 08:13:54,913 log Too Many Requests: /api/budget/
+WARNING 2026-09-02 08:13:54,914 log "GET /api/budget/ HTTP/1.1" 429 72
+DEBUG 2026-09-02 08:15:40,560 views User 10 fetched expenses | filters: category=None start=None end=None
+DEBUG 2026-09-02 08:15:43,362 views User 10 fetched expenses | filters: category=None start=None end=None
+DEBUG 2026-09-02 08:15:43,955 views User 10 fetched expenses | filters: category=None start=None end=None
+DEBUG 2026-09-02 08:16:13,263 views User 10 fetched expenses | filters: category=None start=None end=None
+DEBUG 2026-09-02 08:16:14,063 views User 10 fetched expenses | filters: category=None start=None end=None
+DEBUG 2026-09-02 08:17:17,149 views User 10 fetched expenses | filters: category=None start=None end=None
+DEBUG 2026-09-02 08:17:17,829 views User 10 fetched expenses | filters: category=None start=None end=None
+DEBUG 2026-09-02 08:17:23,538 views User 10 fetched expenses | filters: category=None start=None end=None
+INFO 2026-09-02 08:17:33,337 views Expense created: id=151 amount=1.00 user=10
+DEBUG 2026-09-02 08:17:33,636 views User 10 fetched expenses | filters: category=None start=None end=None
+DEBUG 2026-09-02 08:17:34,309 views User 10 fetched expenses | filters: category=None start=None end=None
+DEBUG 2026-09-02 08:17:34,894 views User 10 fetched expenses | filters: category=None start=None end=None
+DEBUG 2026-09-02 08:17:37,188 views User 10 fetched expenses | filters: category=None start=None end=None
+DEBUG 2026-09-02 08:19:20,577 views User 10 fetched expenses | filters: category=None start=None end=None
+DEBUG 2026-09-02 08:19:21,706 views User 10 fetched expenses | filters: category=None start=None end=None
+DEBUG 2026-09-02 08:19:54,897 views User 10 fetched expenses | filters: category=None start=None end=None
+DEBUG 2026-09-02 08:20:04,773 views User 10 fetched expenses | filters: category=None start=None end=None
+DEBUG 2026-09-02 08:20:25,256 views User 10 fetched expenses | filters: category=None start=None end=None
+DEBUG 2026-09-02 08:20:26,119 views User 10 fetched expenses | filters: category=None start=None end=None
+DEBUG 2026-09-02 08:20:26,973 views User 10 fetched expenses | filters: category=None start=None end=None
+DEBUG 2026-09-02 08:20:27,559 views User 10 fetched expenses | filters: category=None start=None end=None
+DEBUG 2026-09-02 08:20:28,134 views User 10 fetched expenses | filters: category=None start=None end=None
+DEBUG 2026-09-02 08:20:31,706 views User 10 fetched expenses | filters: category=None start=None end=None
+DEBUG 2026-09-02 08:20:32,626 views User 10 fetched expenses | filters: category=None start=None end=None
+DEBUG 2026-09-02 08:20:33,553 views User 10 fetched expenses | filters: category=None start=None end=None
+DEBUG 2026-09-02 08:20:36,208 views User 10 fetched expenses | filters: category=None start=None end=None
+DEBUG 2026-09-02 08:20:36,789 views User 10 fetched expenses | filters: category=None start=None end=None
+DEBUG 2026-09-02 08:23:23,266 views User 10 fetched expenses | filters: category=None start=None end=None
+DEBUG 2026-09-02 08:23:26,465 views User 10 fetched expenses | filters: category=None start=None end=None
+DEBUG 2026-09-02 08:23:40,636 views User 10 fetched expenses | filters: category=None start=None end=None
+DEBUG 2026-09-02 08:27:58,342 views User 10 fetched expenses | filters: category=None start=None end=None
+DEBUG 2026-09-02 08:30:50,749 views User 10 fetched expenses | filters: category=None start=None end=None
+DEBUG 2026-09-02 08:31:03,435 views User 10 fetched expenses | filters: category=None start=None end=None
+DEBUG 2026-09-02 08:31:55,980 views User 10 fetched expenses | filters: category=None start=None end=None
+DEBUG 2026-09-02 08:32:16,676 views User 10 fetched expenses | filters: category=None start=None end=None
+DEBUG 2026-09-02 08:32:20,647 views User 10 fetched expenses | filters: category=None start=None end=None
+DEBUG 2026-09-02 08:34:04,894 views User 10 fetched expenses | filters: category=None start=None end=None
+DEBUG 2026-09-02 08:37:53,524 views User 10 fetched expenses | filters: category=None start=None end=None
+DEBUG 2026-09-02 08:37:54,129 views User 10 fetched expenses | filters: category=None start=None end=None
+DEBUG 2026-09-02 08:37:57,551 views User 10 fetched expenses | filters: category=None start=None end=None
+DEBUG 2026-09-02 08:39:26,335 views User 10 fetched expenses | filters: category=None start=None end=None
+DEBUG 2026-09-02 08:39:26,998 views User 10 fetched expenses | filters: category=None start=None end=None
+DEBUG 2026-09-02 08:40:53,624 views User 10 fetched expenses | filters: category=None start=None end=None
+DEBUG 2026-09-02 08:40:56,417 views User 10 fetched expenses | filters: category=None start=None end=None
+DEBUG 2026-09-02 08:41:01,918 views User 10 fetched expenses | filters: category=None start=None end=None
+DEBUG 2026-09-02 08:41:09,555 views User 10 fetched expenses | filters: category=None start=None end=None
+DEBUG 2026-09-02 08:41:13,272 views User 10 fetched expenses | filters: category=None start=None end=None
+DEBUG 2026-09-02 09:27:58,500 views User 10 fetched expenses | filters: category=None start=None end=None
+DEBUG 2026-09-02 09:27:59,879 views User 10 fetched expenses | filters: category=None start=None end=None
+DEBUG 2026-09-02 09:28:21,752 views User 10 fetched expenses | filters: category=None start=None end=None
+DEBUG 2026-09-02 09:28:34,861 views User 10 fetched expenses | filters: category=None start=None end=None
+DEBUG 2026-09-02 09:29:07,324 views User 10 fetched expenses | filters: category=None start=None end=None
+DEBUG 2026-09-02 09:29:15,951 views User 10 fetched expenses | filters: category=None start=None end=None
+DEBUG 2026-09-02 09:29:23,711 views User 10 fetched expenses | filters: category=None start=None end=None
+DEBUG 2026-09-02 09:29:32,476 views User 10 fetched expenses | filters: category=None start=None end=None
+DEBUG 2026-09-02 09:29:39,336 views User 10 fetched expenses | filters: category=None start=None end=None
+DEBUG 2026-09-02 09:29:49,904 views User 10 fetched expenses | filters: category=None start=None end=None
+DEBUG 2026-09-02 09:29:57,957 views User 10 fetched expenses | filters: category=None start=None end=None
+DEBUG 2026-09-02 09:30:09,696 views User 10 fetched expenses | filters: category=None start=None end=None
+DEBUG 2026-09-02 09:30:12,801 views User 10 fetched expenses | filters: category=None start=None end=None
+DEBUG 2026-09-02 09:30:14,135 views User 10 fetched expenses | filters: category=None start=None end=None
+DEBUG 2026-09-02 09:30:25,966 views User 10 fetched expenses | filters: category=None start=None end=None
+DEBUG 2026-09-02 09:30:26,973 views User 10 fetched expenses | filters: category=None start=None end=None
+DEBUG 2026-09-02 09:30:51,368 views User 10 fetched expenses | filters: category=None start=None end=None
+DEBUG 2026-09-02 09:30:52,307 views User 10 fetched expenses | filters: category=None start=None end=None
+DEBUG 2026-09-02 09:31:02,006 views User 10 fetched expenses | filters: category=None start=None end=None
+DEBUG 2026-09-02 09:31:02,953 views User 10 fetched expenses | filters: category=None start=None end=None
+DEBUG 2026-09-02 09:31:22,317 views User 10 fetched expenses | filters: category=None start=None end=None
+DEBUG 2026-09-02 09:31:23,201 views User 10 fetched expenses | filters: category=None start=None end=None
+DEBUG 2026-09-02 09:31:45,450 views User 10 fetched expenses | filters: category=None start=None end=None
+DEBUG 2026-09-02 09:31:47,065 views User 10 fetched expenses | filters: category=None start=None end=None
+DEBUG 2026-09-02 09:32:25,076 views User 10 fetched expenses | filters: category=None start=None end=None
+DEBUG 2026-09-02 09:32:27,869 views User 10 fetched expenses | filters: category=None start=None end=None
+INFO 2026-09-02 09:32:55,856 views Expense created: id=152 amount=75.00 user=10
+DEBUG 2026-09-02 09:32:56,163 views User 10 fetched expenses | filters: category=None start=None end=None
+DEBUG 2026-09-02 09:32:56,937 views User 10 fetched expenses | filters: category=None start=None end=None
+DEBUG 2026-09-02 09:32:57,522 views User 10 fetched expenses | filters: category=None start=None end=None
+DEBUG 2026-09-02 09:32:58,104 views User 10 fetched expenses | filters: category=None start=None end=None
+DEBUG 2026-09-02 09:33:05,814 views User 10 fetched expenses | filters: category=None start=None end=None
+DEBUG 2026-09-02 09:33:06,737 views User 10 fetched expenses | filters: category=None start=None end=None
+DEBUG 2026-09-02 09:33:07,660 views User 10 fetched expenses | filters: category=None start=None end=None
+DEBUG 2026-09-02 09:33:08,242 views User 10 fetched expenses | filters: category=None start=None end=None
+DEBUG 2026-09-02 09:33:10,981 views User 10 fetched expenses | filters: category=None start=None end=None
+INFO 2026-09-02 09:33:21,717 views Logged in existing Django user via Firebase Auth: Bhawya
+DEBUG 2026-09-02 09:33:22,266 views User 10 fetched expenses | filters: category=None start=None end=None
+DEBUG 2026-09-02 09:33:22,841 views User 10 fetched expenses | filters: category=None start=None end=None
+DEBUG 2026-09-02 09:33:27,552 views User 10 fetched expenses | filters: category=None start=None end=None
+DEBUG 2026-09-02 09:33:28,968 views User 10 fetched expenses | filters: category=None start=None end=None
+DEBUG 2026-09-02 09:40:27,247 views User 10 fetched expenses | filters: category=None start=None end=None
+WARNING 2026-09-02 09:41:24,793 log Not Found: /api/health/
+WARNING 2026-09-02 09:41:24,795 log "GET /api/health/ HTTP/1.1" 404 6267
+DEBUG 2026-09-02 09:42:20,820 views User 10 fetched expenses | filters: category=None start=None end=None
+DEBUG 2026-09-02 09:42:21,518 views User 10 fetched expenses | filters: category=None start=None end=None

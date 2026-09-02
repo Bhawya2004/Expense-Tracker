@@ -21,6 +21,9 @@ class UserProfile(models.Model):
 class Expense(models.Model):
     CATEGORY_CHOICES = [
         ('food', 'Food'),
+        ('dining', 'Dining'),
+        ('groceries', 'Groceries'),
+        ('housing', 'Housing'),
         ('transport', 'Transport'),
         ('shopping', 'Shopping'),
         ('health', 'Health'),

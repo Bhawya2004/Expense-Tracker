@@ -33,6 +33,13 @@ firebase-service-account.json
 .DS_Store
 Thumbs.db
 
+# ── Mobile / React Native ──
+mobile/node_modules/
+mobile/.expo/
+node_modules/
+.expo/
+*.log
+
 # ── Misc ──
 check_quota.py
 clear_service_account.py

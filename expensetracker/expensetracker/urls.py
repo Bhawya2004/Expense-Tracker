@@ -12,6 +12,7 @@ urlpatterns = [
     path('api/token/refresh/', TokenRefreshView.as_view()),
     path('api/token/firebase/', firebase_login),
     path('api/register/', register_user),
+    path('api/user/update/', update_user_profile),
     path('api/user/delete/', delete_user),
     path('api/users/', user_count),
     path('api/budget/', get_budget),

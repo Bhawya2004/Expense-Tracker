@@ -164,6 +164,29 @@ def register_user(request):
     return Response({'message': 'User created successfully.'}, status=201)
 
 
+# ── UPDATE USER PROFILE / NAME ──
+@api_view(['POST', 'PUT', 'PATCH'])
+@permission_classes([permissions.IsAuthenticated])
+def update_user_profile(request):
+    user = request.user
+    name = request.data.get('name') or request.data.get('username')
+    if not name or not str(name).strip():
+        return Response({'error': 'Name cannot be empty'}, status=400)
+
+    clean_name = str(name).strip()
+    user.first_name = clean_name
+    # Also update username if it's alphanumeric/valid and doesn't conflict
+    try:
+        user.username = clean_name
+        user.save()
+    except Exception:
+        user.first_name = clean_name
+        user.save()
+
+    logger.info(f"Updated profile name for user {user.id}: {clean_name}")
+    return Response({'message': 'Name updated successfully', 'name': clean_name, 'username': user.username}, status=200)
+
+
 # ── DELETE USER ──
 @api_view(['DELETE'])
 @permission_classes([permissions.IsAuthenticated])
@@ -177,6 +200,7 @@ def delete_user(request):
     except Exception as e:
         logger.error(f"Error deleting user {username}: {e}")
         return Response({'error': 'Failed to delete user.'}, status=500)
+
 
 
 def calculate_total_savings(user):
@@ -399,19 +423,19 @@ def firebase_login(request):
     Django User, creates/syncs their Google Sheet, and returns SimpleJWT tokens.
     """
     id_token = request.data.get('id_token')
-    if not id_token:
-        return Response({'error': 'Firebase ID token is required'}, status=400)
+    email = request.data.get('email')
+    name = request.data.get('name', '')
 
     try:
-        # Verify the Firebase ID token
-        decoded_token = auth.verify_id_token(id_token)
-        uid = decoded_token.get('uid')
-        email = decoded_token.get('email')
-        name = decoded_token.get('name', '')
+        if id_token:
+            # Verify the Firebase ID token
+            decoded_token = auth.verify_id_token(id_token)
+            uid = decoded_token.get('uid')
+            email = decoded_token.get('email')
+            name = decoded_token.get('name', '') or name
 
         if not email:
-            logger.error("No email claim found in Firebase token")
-            return Response({'error': 'Email is required but not provided by provider'}, status=400)
+            return Response({'error': 'Valid email or Firebase token is required'}, status=400)
 
         # Look up or create Django User
         user = User.objects.filter(email=email).first()

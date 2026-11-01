@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Analytics } from "@vercel/analytics/react";
 import api from './api';
+import LandingPage from './components/LandingPage';
 import AuthScreen from './components/AuthScreen';
 import BudgetModal from './components/BudgetModal';
 import GoogleConnectModal from './components/GoogleConnectModal';
@@ -11,8 +12,73 @@ import ExpenseList from './components/ExpenseList';
 import AnalyticsDashboard from './components/AnalyticsDashboard';
 
 const App = () => {
+  const getInitialView = () => {
+    const hash = window.location.hash;
+    const params = new URLSearchParams(window.location.search);
+    if (hash === '#app' || hash === '#dashboard' || params.get('view') === 'app') {
+      return localStorage.getItem('access') ? 'app' : 'auth';
+    }
+    if (hash === '#login' || hash === '#register' || hash === '#auth') {
+      return 'auth';
+    }
+    return 'landing';
+  };
+
+  const getInitialAuthTab = () => {
+    const hash = window.location.hash;
+    return hash === '#register' ? 'register' : 'login';
+  };
+
+  const [currentView, setCurrentView] = useState(getInitialView);
+  const [authTab, setAuthTab] = useState(getInitialAuthTab);
   const [isLoggedIn, setIsLoggedIn] = useState(!!localStorage.getItem('access'));
   const [username, setUsername] = useState(localStorage.getItem('username') || '');
+
+  useEffect(() => {
+    const handleHashChange = () => {
+      const hash = window.location.hash;
+      if (hash === '#app' || hash === '#dashboard') {
+        setCurrentView(localStorage.getItem('access') ? 'app' : 'auth');
+      } else if (hash === '#login') {
+        setAuthTab('login');
+        setCurrentView('auth');
+      } else if (hash === '#register') {
+        setAuthTab('register');
+        setCurrentView('auth');
+      } else if (hash === '' || hash === '#') {
+        setCurrentView('landing');
+      }
+    };
+    window.addEventListener('hashchange', handleHashChange);
+    return () => window.removeEventListener('hashchange', handleHashChange);
+  }, []);
+
+  const navigateToLogin = () => {
+    if (localStorage.getItem('access')) {
+      setCurrentView('app');
+      window.location.hash = 'app';
+    } else {
+      setAuthTab('login');
+      setCurrentView('auth');
+      window.location.hash = 'login';
+    }
+  };
+
+  const navigateToSignUp = () => {
+    if (localStorage.getItem('access')) {
+      setCurrentView('app');
+      window.location.hash = 'app';
+    } else {
+      setAuthTab('register');
+      setCurrentView('auth');
+      window.location.hash = 'register';
+    }
+  };
+
+  const navigateToHome = () => {
+    setCurrentView('landing');
+    window.location.hash = '';
+  };
   const [budgetMode, setBudgetMode] = useState('monthly');
   const [monthlyBudget, setMonthlyBudget] = useState(0);
   const [currentBalance, setCurrentBalance] = useState(0);
@@ -95,6 +161,8 @@ const App = () => {
   const handleLoginSuccess = (user, isNew = false) => {
     setUsername(user);
     setIsLoggedIn(true);
+    setCurrentView('app');
+    window.location.hash = 'app';
   };
 
   const handleLogout = () => {
@@ -108,6 +176,8 @@ const App = () => {
     setGoogleConnected(false);
     setSheetUrl('');
     setIsNewMonth(false);
+    setCurrentView('landing');
+    window.location.hash = '';
   };
 
   const handleDeleteAccount = async () => {
@@ -368,13 +438,36 @@ const App = () => {
     };
   };
 
-  if (!isLoggedIn) {
+  if (currentView === 'landing') {
     return (
       <>
-        <AuthScreen onLoginSuccess={handleLoginSuccess} />
+        <LandingPage 
+          onLogin={navigateToLogin}
+          onSignUp={navigateToSignUp}
+          onLaunchApp={navigateToLogin}
+          isLoggedIn={isLoggedIn} 
+          username={username} 
+        />
         <div id="toast" className={`${toast.show ? 'show' : ''} ${toast.type}`}>
           {toast.msg}
         </div>
+        <Analytics />
+      </>
+    );
+  }
+
+  if (!isLoggedIn || currentView === 'auth') {
+    return (
+      <>
+        <AuthScreen 
+          onLoginSuccess={handleLoginSuccess} 
+          onNavigateHome={navigateToHome}
+          initialTab={authTab}
+        />
+        <div id="toast" className={`${toast.show ? 'show' : ''} ${toast.type}`}>
+          {toast.msg}
+        </div>
+        <Analytics />
       </>
     );
   }
@@ -409,6 +502,7 @@ const App = () => {
         selectedMonth={selectedMonth}
         onSelectMonth={setSelectedMonth}
         currentMonthName={monthName}
+        onNavigateHome={navigateToHome}
       />
 
       {/* Historical Month Notice Banner - Clean & Matching System Theme */}

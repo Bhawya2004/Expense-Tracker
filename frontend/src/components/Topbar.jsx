@@ -15,7 +15,8 @@ const Topbar = ({
   availableMonths = [],
   selectedMonth = '',
   onSelectMonth,
-  currentMonthName = ''
+  currentMonthName = '',
+  onNavigateHome
 }) => {
   const formatMonthName = (mStr) => {
     try {
@@ -38,7 +39,12 @@ const Topbar = ({
       background: '#0D0D0D',
       borderBottom: '1px solid #1E1E1E'
     }}>
-      <div className="topbar-logo" style={{ fontSize: '1.25rem', letterSpacing: '-0.02em', margin: 0 }}>
+      <div 
+        className="topbar-logo" 
+        style={{ fontSize: '1.25rem', letterSpacing: '-0.02em', margin: 0, cursor: onNavigateHome ? 'pointer' : 'default' }}
+        onClick={onNavigateHome}
+        title={onNavigateHome ? "Back to Landing Page" : undefined}
+      >
         expense<span style={{ color: 'var(--accent)' }}>.</span>track
       </div>
       

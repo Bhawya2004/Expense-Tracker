@@ -1,10 +1,14 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import api from '../api';
 import { auth, googleProvider } from '../firebaseConfig';
 import { signInWithPopup } from 'firebase/auth';
 
-const AuthScreen = ({ onLoginSuccess }) => {
-  const [tab, setTab] = useState('login');
+const AuthScreen = ({ onLoginSuccess, onNavigateHome, initialTab = 'login' }) => {
+  const [tab, setTab] = useState(initialTab);
+
+  useEffect(() => {
+    if (initialTab) setTab(initialTab);
+  }, [initialTab]);
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
   const [formData, setFormData] = useState({
@@ -85,6 +89,27 @@ const AuthScreen = ({ onLoginSuccess }) => {
   return (
     <div id="auth-screen">
       <div className="auth-box">
+        {onNavigateHome && (
+          <button 
+            type="button"
+            onClick={onNavigateHome}
+            style={{
+              background: 'none',
+              border: 'none',
+              color: 'var(--muted)',
+              fontSize: '0.8rem',
+              fontFamily: 'DM Mono',
+              cursor: 'pointer',
+              display: 'inline-flex',
+              alignItems: 'center',
+              gap: '0.4rem',
+              marginBottom: '1.2rem',
+              padding: 0
+            }}
+          >
+            ← Back to Home
+          </button>
+        )}
         <div className="auth-logo">expense<span>.</span>track</div>
         <div className="auth-sub">Personal finance API — Django + DRF</div>
         

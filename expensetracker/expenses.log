@@ -5346,3 +5346,24 @@ WARNING 2026-09-02 09:41:24,793 log Not Found: /api/health/
 WARNING 2026-09-02 09:41:24,795 log "GET /api/health/ HTTP/1.1" 404 6267
 DEBUG 2026-09-02 09:42:20,820 views User 10 fetched expenses | filters: category=None start=None end=None
 DEBUG 2026-09-02 09:42:21,518 views User 10 fetched expenses | filters: category=None start=None end=None
+INFO 2026-11-01 16:22:30,313 views Logged in existing Django user via Firebase Auth: bhawya12
+ERROR 2026-11-01 16:22:36,585 sheets Failed to sync sheet 1oS-5DNEefVc7HS7JAA7C2WynxVnM1uK7LNZnlrxi7Ag: APIError: [403]: The caller does not have permission
+ERROR 2026-11-01 16:22:36,585 views Background initial sheet sync failed: APIError: [403]: The caller does not have permission
+DEBUG 2026-11-01 16:22:38,420 views User 7 fetched expenses | filters: category=None start=None end=None
+INFO 2026-11-01 16:23:07,944 views Created new Django user via Firebase Auth: bhawyagulati33
+ERROR 2026-11-01 16:23:11,662 views Failed to auto-create Google Sheet for bhawyagulati33: APIError: [403]: Service Accounts do not have storage quota. Leverage shared drives (https://developers.google.com/workspace/drive/api/guides/about-shareddrives), or use OAuth delegation (http://support.google.com/a/answer/7281227) instead.
+Traceback (most recent call last):
+  File "/Users/bhawyagulati/Documents/Projects/Expense-Tracker-Mobile/expensetracker/expenses/views.py", line 483, in firebase_login
+    sheet_id = create_user_sheet_service_account(profile, user.username, email)
+  File "/Users/bhawyagulati/Documents/Projects/Expense-Tracker-Mobile/expensetracker/expenses/sheets.py", line 87, in create_user_sheet_service_account
+    sheet = client.create(f"Expense Tracker - {username}")
+  File "/Users/bhawyagulati/Documents/Projects/Expense-Tracker-Mobile/venv/lib/python3.13/site-packages/gspread/client.py", line 234, in create
+    r = self.http_client.request(
+        "post", DRIVE_FILES_API_V3_URL, json=payload, params=params
+    )
+  File "/Users/bhawyagulati/Documents/Projects/Expense-Tracker-Mobile/venv/lib/python3.13/site-packages/gspread/http_client.py", line 128, in request
+    raise APIError(response)
+gspread.exceptions.APIError: APIError: [403]: Service Accounts do not have storage quota. Leverage shared drives (https://developers.google.com/workspace/drive/api/guides/about-shareddrives), or use OAuth delegation (http://support.google.com/a/answer/7281227) instead.
+DEBUG 2026-11-01 16:23:18,991 views User 16 fetched expenses | filters: category=None start=None end=None
+INFO 2026-11-01 16:23:38,973 views Logged in existing Django user via Firebase Auth: Bhawya
+DEBUG 2026-11-01 16:23:46,008 views User 10 fetched expenses | filters: category=None start=None end=None

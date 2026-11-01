@@ -7,6 +7,7 @@ urlpatterns = [
     path('', health_check, name='health_check'),
     path('health/', health_check, name='health_check_alt'),
     path('healthz/', health_check, name='health_check_alt2'),
+    path('api/health/', health_check, name='health_check_api'),
     path('admin/', admin.site.urls),
     path('api/token/', TokenObtainPairView.as_view()),
     path('api/token/refresh/', TokenRefreshView.as_view()),

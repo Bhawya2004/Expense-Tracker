@@ -528,21 +528,35 @@ def firebase_login(request):
 @permission_classes([AllowAny])
 def health_check(request):
     """
-    Minimal overhead API keep-alive check.
-    Also verifies DB connectivity to catch offline databases.
+    Lightweight API keep-alive check for UptimeRobot / external monitors.
+    Does NOT query the database on standard pings to avoid exhausting
+    database compute units or connection limits.
+    Pass ?db=true or ?check_db=true for an explicit database ping check.
     """
-    db_ok = True
-    try:
-        connection.ensure_connection()
-    except Exception as e:
-        logger.error(f"Health check database connection failure: {e}")
-        db_ok = False
+    check_db = request.GET.get('db', '').lower() in ('1', 'true') or request.GET.get('check_db', '').lower() in ('1', 'true')
+    
+    if check_db:
+        try:
+            connection.ensure_connection()
+            return JsonResponse({
+                'status': 'healthy',
+                'timestamp': datetime.utcnow().isoformat() + 'Z',
+                'database': 'connected'
+            }, status=200)
+        except Exception as e:
+            logger.error(f"Health check database connection failure: {e}")
+            return JsonResponse({
+                'status': 'unhealthy',
+                'timestamp': datetime.utcnow().isoformat() + 'Z',
+                'database': 'disconnected',
+                'error': str(e)
+            }, status=500)
 
     return JsonResponse({
-        'status': 'healthy' if db_ok else 'unhealthy',
+        'status': 'healthy',
         'timestamp': datetime.utcnow().isoformat() + 'Z',
-        'database': 'connected' if db_ok else 'disconnected'
-    }, status=200 if db_ok else 500)
+        'database': 'skipped'
+    }, status=200)
 
 
 

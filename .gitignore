@@ -21,6 +21,7 @@ staticfiles/
 credentials.json
 oauth_credentials.json
 firebase-service-account.json
+*backup*.json
 
 # ── IDE ──
 .vscode/
